@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="10dp"
-    tools:context="instatiator.dailykittybot2.ui.AccountsActivity">
+    tools:context="instatiator.dailykittybot2.ui.AccountsListActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"

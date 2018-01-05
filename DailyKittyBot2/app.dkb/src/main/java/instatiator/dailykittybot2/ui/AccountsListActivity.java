@@ -22,8 +22,8 @@ import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class AccountsActivity extends AbstractBotActivity {
-    private static final String TAG = AccountsActivity.class.getName();
+public class AccountsListActivity extends AbstractBotActivity {
+    private static final String TAG = AccountsListActivity.class.getName();
     private static final int RC_AddAccount = 1001;
 
     @BindView(R.id.recycler) public RecyclerView recycler;
@@ -32,13 +32,13 @@ public class AccountsActivity extends AbstractBotActivity {
 
     private AuthDataAdapter adapter;
 
-    public AccountsActivity() {
+    public AccountsListActivity() {
         super(false, true, true);
     }
 
     @Override
     protected int getLayout() {
-        return R.layout.activity_accounts;
+        return R.layout.activity_accounts_list;
     }
 
     @Override

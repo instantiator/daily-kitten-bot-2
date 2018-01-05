@@ -25,7 +25,7 @@ import java.util.UUID;
 import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
-import instatiator.dailykittybot2.ui.AccountsActivity;
+import instatiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
     private static final String TAG = BotService.class.getName();
@@ -160,7 +160,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
         String content = getString(R.string.notification_running_content);
         String ticker = getString(R.string.notification_running_ticker);
         int icon = R.drawable.ic_adb_black_24dp;
-        Class activity = AccountsActivity.class;
+        Class activity = AccountsListActivity.class;
         defaults.setNotification(title, content, ticker, icon, activity);
         return defaults;
     }
