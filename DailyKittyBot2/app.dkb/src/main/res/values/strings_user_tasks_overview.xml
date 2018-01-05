@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="activity_title_view_tasks_overview_for">Rules for %s</string>
+    <string name="activity_title_rules_overview_for">Rules for %s</string>
 
     <string name="text_no_rules">
         There are currently no rules for this account.

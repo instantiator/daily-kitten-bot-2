@@ -11,9 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
             android:name=".ui.AccountsActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,8 +39,17 @@
             android:name="net.dean.jraw.android.REDIRECT_URL"
             android:value="http://localhost:5678" />
 
-        <activity android:name=".ui.UserTasksOverviewActivity" />
-        <activity android:name=".ui.AddAccountActivity"></activity>
+        <activity
+            android:name=".ui.UserRulesOverviewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+
+        <activity
+            android:name=".ui.AddAccountActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

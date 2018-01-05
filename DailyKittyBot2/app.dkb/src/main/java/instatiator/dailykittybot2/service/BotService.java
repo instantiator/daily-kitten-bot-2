@@ -1,6 +1,5 @@
 package instatiator.dailykittybot2.service;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -27,8 +26,6 @@ import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
 import instatiator.dailykittybot2.ui.AccountsActivity;
-import instatiator.dailykittybot2.ui.AddAccountActivity;
-import instatiator.dailykittybot2.ui.UserTasksOverviewActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
     private static final String TAG = BotService.class.getName();

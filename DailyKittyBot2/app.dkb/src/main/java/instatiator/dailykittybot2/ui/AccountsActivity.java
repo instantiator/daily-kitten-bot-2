@@ -2,8 +2,6 @@ package instatiator.dailykittybot2.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,25 +10,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.flt.servicelib.AbstractServiceBoundAppCompatActivity;
-
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
-import instatiator.dailykittybot2.service.BotService;
 import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotService, IBotService> {
+public class AccountsActivity extends AbstractBotActivity {
     private static final String TAG = AccountsActivity.class.getName();
     private static final int RC_AddAccount = 1001;
 
@@ -40,33 +32,18 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
 
     private AuthDataAdapter adapter;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_accounts);
-        ButterKnife.bind(this);
+    public AccountsActivity() {
+        super(false, true, true);
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        EventBus.getDefault().register(this);
+    protected int getLayout() {
+        return R.layout.activity_accounts;
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        EventBus.getDefault().unregister(this);
-    }
-
-    @Override
-    protected void onBoundChanged(boolean isBound) {
-        if (isBound) {
-            initRecycler();
-            updateUI();
-        } else {
-            clearRecycler();
-        }
+    protected void extractArguments(Intent intent) {
+        // NOP - no arguments for this activity
     }
 
     @Subscribe
@@ -74,7 +51,8 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
         updateUI();
     }
 
-    private void updateUI() {
+    @Override
+    protected void updateUI() {
         boolean permitted = !anyOutstandingPermissions();
         boolean enabled = bound && permitted && service.get_state() != IBotService.State.Authenticating;
         boolean nothing = adapter == null || adapter.getItemCount() == 0;
@@ -83,14 +61,16 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
         card_no_data.setVisibility(nothing ? VISIBLE : GONE);
     }
 
-    private void initRecycler() {
+    @Override
+    protected void initialise() {
         adapter = new AuthDataAdapter(this, service, recycler, recycler_listener);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);
     }
 
-    private void clearRecycler() {
+    @Override
+    protected void denitialise() {
         recycler.setAdapter(null);
     }
 
@@ -102,7 +82,7 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
     };
 
     private void show_user_overview(String user) {
-        Intent intent = UserTasksOverviewActivity.intent_view(this, user);
+        Intent intent = UserRulesOverviewActivity.create(this, user);
         startActivity(intent);
     }
 
@@ -140,8 +120,7 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
         switch (requestCode) {
             case RC_AddAccount:
                 if (resultCode == RESULT_OK) {
-                    initRecycler();
-                    updateUI();
+                    adapter.update();
                 }
                 break;
             default:
@@ -149,12 +128,4 @@ public class AccountsActivity extends AbstractServiceBoundAppCompatActivity<BotS
                 break;
         }
     }
-
-    @Override protected String[] getRequiredPermissions() { return BotApp.required_permissions; }
-    @Override protected void onPermissionsGranted() { updateUI(); }
-    @Override protected void onNotAllPermissionsGranted() { updateUI(); }
-
-    @Override protected void onUnecessaryCallToRequestOverlayPermission() { }
-    @Override protected void onGrantedOverlayPermission() { }
-    @Override protected void onRefusedOverlayPermission() { }
 }
