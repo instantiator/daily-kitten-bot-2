@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="notification_running_title">DKB running</string>
+    <string name="notification_running_content">Daily Kitten Bot is available. Tap to view.</string>
+    <string name="notification_running_ticker">DKB started</string>
+
+</resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="menu_refresh">Refresh</string>
+
+    <string name="text_access_token_status">Access token expires in %d minutes</string>
+    <string name="text_access_token_status_short">Expiry: %d mins</string>
+    <string name="text_has_refresh_token">Can refresh</string>
+    <string name="text_no_refresh_token">No refresh token</string>
+    <string name="text_access_token_expired">Access token expired</string>
+
+    <string name="text_no_stored_accounts">
+        You have not yet configured any accounts.
+        You can add accounts using the action button below.
+    </string>
+
+    <string name="text_new_user">New user</string>
+
+    <string name="toast_warning_busy_authenticating">Authenticating. Please wait...</string>
+
+</resources>
