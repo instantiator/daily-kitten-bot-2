@@ -62,11 +62,12 @@ public class AccountsListActivity extends AbstractBotActivity {
     }
 
     @Override
-    protected void initialise() {
+    protected boolean initialise() {
         adapter = new AuthDataAdapter(this, service, recycler, recycler_listener);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);
+        return true;
     }
 
     @Override
@@ -82,7 +83,7 @@ public class AccountsListActivity extends AbstractBotActivity {
     };
 
     private void show_user_overview(String user) {
-        Intent intent = UserRulesOverviewActivity.create(this, user);
+        Intent intent = UserOverviewActivity.create(this, user);
         startActivity(intent);
     }
 

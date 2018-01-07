@@ -36,16 +36,16 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     private Listener listener;
     private CardView empty_card;
 
-    public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<Rule>> rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
+    public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<Rule>> live_rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.listener = listener;
         this.empty_card = empty_card;
 
-        this.rules = rules.getValue();
+        this.rules = live_rules.getValue();
         update_empty_card();
 
-        rules.observe(activity, new Observer<List<Rule>>() {
+        live_rules.observe(activity, new Observer<List<Rule>>() {
             @Override
             public void onChanged(@Nullable List<Rule> rules) {
                 LiveRulesAdapter.this.rules = rules;
@@ -56,7 +56,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     }
 
     private void update_empty_card() {
-        boolean empty = rules.size() == 0;
+        boolean empty = rules == null || rules.size() == 0;
         empty_card.setVisibility(empty ? GONE : VISIBLE);
     }
 
@@ -76,7 +76,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
     @Override
     public int getItemCount() {
-        return rules.size();
+        return rules != null ? rules.size() : 0;
     }
 
     public class RuleHolder extends RecyclerView.ViewHolder {

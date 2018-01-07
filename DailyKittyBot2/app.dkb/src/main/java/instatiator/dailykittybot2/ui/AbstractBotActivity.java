@@ -103,12 +103,11 @@ public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatA
 
     private void init() {
         if (!initialised) {
-            initialise();
-            initialised = true;
+            initialised = initialise();
         }
     }
 
-    protected abstract void initialise();
+    protected abstract boolean initialise();
     protected abstract void denitialise();
 
     private void deinit() {

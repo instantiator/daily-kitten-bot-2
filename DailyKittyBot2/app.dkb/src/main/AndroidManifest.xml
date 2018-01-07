@@ -11,7 +11,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ui.AccountsListActivity"
             android:label="@string/app_name"
@@ -40,16 +39,14 @@
             android:value="http://localhost:5678" />
 
         <activity
-            android:name=".ui.UserRulesOverviewActivity"
+            android:name=".ui.UserOverviewActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.AddAccountActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
+        <activity android:name=".ui.EditRuleActivity"></activity>
     </application>
 
 </manifest>

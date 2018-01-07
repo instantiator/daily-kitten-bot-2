@@ -9,6 +9,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
 import java.util.List;
+import java.util.UUID;
 
 import instatiator.dailykittybot2.db.entities.Rule;
 
@@ -18,7 +19,10 @@ public interface RuleDao {
     LiveData<List<Rule>> getAll();
 
     @Query("SELECT * FROM rule WHERE uuid IN (:userIds)")
-    LiveData<List<Rule>> loadAllByIds(int[] userIds);
+    LiveData<List<Rule>> loadAllByIds(UUID[] userIds);
+
+    @Query("SELECT * FROM rule WHERE uuid LIKE (:rule) LIMIT 1")
+    Rule get(UUID rule);
 
     @Query("SELECT * FROM rule WHERE username LIKE :username ORDER BY username")
     LiveData<List<Rule>> loadAllByUsername(String username);

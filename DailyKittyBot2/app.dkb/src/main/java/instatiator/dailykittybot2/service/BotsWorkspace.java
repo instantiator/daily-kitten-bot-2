@@ -40,4 +40,17 @@ public class BotsWorkspace {
         return db.outcomeDao().loadAllByRule(rule);
     }
 
+    public Rule create_rule(String username, String rulename) {
+        Rule rule = new Rule();
+        rule.username = username;
+        rule.rulename = rulename;
+        db.ruleDao().insertAll(rule);
+        if (rule.uuid == null) { throw new IllegalStateException("Should have added a UUID to the rule."); }
+        return rule;
+    }
+
+    public Rule get_rule(UUID rule) {
+        return db.ruleDao().get(rule);
+    }
+
 }

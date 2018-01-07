@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_title_edit_rule">Edit rule</string>
+
+    <string name="tab_rule_details">Details</string>
+    <string name="tab_rule_conditions">Conditions</string>
+    <string name="tab_rule_outcomes">Outcomes</string>
+
+    <string name="toast_warning_rule_not_for_you">Attempt to view rule for the wrong user.</string>
+
+</resources>

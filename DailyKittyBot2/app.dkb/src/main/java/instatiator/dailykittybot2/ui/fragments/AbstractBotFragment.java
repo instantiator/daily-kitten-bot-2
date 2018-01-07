@@ -1,9 +1,9 @@
 package instatiator.dailykittybot2.ui.fragments;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +11,23 @@ import android.view.ViewGroup;
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
-import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.ui.AbstractBotActivity;
 
 public abstract class AbstractBotFragment<Listener> extends Fragment {
     protected final String TAG;
 
-    protected AbstractBotActivity activity;
+    protected AbstractBotActivity bot_activity;
     protected Listener listener;
     protected IBotService service;
     protected boolean initialised;
 
     protected final boolean uses_butterknife;
     protected final boolean uses_events;
+
+    protected boolean resumed;
+    protected boolean attached;
+    protected boolean view_ready;
 
     protected AbstractBotFragment(boolean uses_butterknife, boolean uses_events) {
         super();
@@ -48,6 +51,7 @@ public abstract class AbstractBotFragment<Listener> extends Fragment {
         if (uses_butterknife) {
             ButterKnife.bind(this, view);
         }
+        view_ready = true;
         return view;
     }
 
@@ -72,24 +76,25 @@ public abstract class AbstractBotFragment<Listener> extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        resumed = true;
         reinit();
-        updateUI();
+        safeUpdateUI();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        resumed = false;
         deinit();
     }
 
     private void init() {
-        if (!initialised) {
-            initialise();
-            initialised = true;
+        if (!initialised && view_ready && attached && resumed) {
+            initialised = initialise();
         }
     }
 
-    protected abstract void initialise();
+    protected abstract boolean initialise();
     protected abstract void denitialise();
 
     protected void reinit() {
@@ -104,23 +109,31 @@ public abstract class AbstractBotFragment<Listener> extends Fragment {
         }
     }
 
+    private void safeUpdateUI() {
+        if (initialised && view_ready && attached && resumed) {
+            updateUI();
+        }
+    }
+
     protected abstract void updateUI();
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         listener = (Listener) context;
-        activity = (AbstractBotActivity) context;
-        service = activity.getService();
+        bot_activity = (AbstractBotActivity) context;
+        service = bot_activity.getService();
+        attached = true;
         reinit();
-        updateUI();
+        safeUpdateUI();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        attached = false;
         listener = null;
-        activity = null;
+        bot_activity = null;
         service = null;
     }
 

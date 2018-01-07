@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_title_overview_for">Redditor: %s</string>
+
+    <string name="tab_rules">Rules</string>
+    <string name="tab_recommendations">Recommendations</string>
+
+</resources>
