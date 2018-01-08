@@ -18,11 +18,12 @@ import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
 import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
+import instatiator.dailykittybot2.ui.viewmodels.AccountsListViewModel;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class AccountsListActivity extends AbstractBotActivity {
+public class AccountsListActivity extends AbstractBotActivity<AccountsListViewModel> {
     private static final String TAG = AccountsListActivity.class.getName();
     private static final int RC_AddAccount = 1001;
 
@@ -37,6 +38,11 @@ public class AccountsListActivity extends AbstractBotActivity {
     }
 
     @Override
+    protected Class<AccountsListViewModel> getViewModelClass() {
+        return AccountsListViewModel.class;
+    }
+
+    @Override
     protected int getLayout() {
         return R.layout.activity_accounts_list;
     }
@@ -44,6 +50,11 @@ public class AccountsListActivity extends AbstractBotActivity {
     @Override
     protected void extractArguments(Intent intent) {
         // NOP - no arguments for this activity
+    }
+
+    @Override
+    protected void initialise_model() {
+        // NOP - model not used, data comes from the token store
     }
 
     @Subscribe

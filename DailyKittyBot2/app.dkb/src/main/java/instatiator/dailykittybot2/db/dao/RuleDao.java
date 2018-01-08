@@ -1,6 +1,7 @@
 package instatiator.dailykittybot2.db.dao;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -22,7 +23,7 @@ public interface RuleDao {
     LiveData<List<Rule>> loadAllByIds(UUID[] userIds);
 
     @Query("SELECT * FROM rule WHERE uuid LIKE (:rule) LIMIT 1")
-    Rule get(UUID rule);
+    LiveData<Rule> get(UUID rule);
 
     @Query("SELECT * FROM rule WHERE username LIKE :username ORDER BY username")
     LiveData<List<Rule>> loadAllByUsername(String username);

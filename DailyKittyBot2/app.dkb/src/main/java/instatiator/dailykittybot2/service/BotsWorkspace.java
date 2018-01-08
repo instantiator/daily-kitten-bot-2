@@ -1,6 +1,7 @@
 package instatiator.dailykittybot2.service;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Room;
 import android.content.SharedPreferences;
 
@@ -42,14 +43,14 @@ public class BotsWorkspace {
 
     public Rule create_rule(String username, String rulename) {
         Rule rule = new Rule();
+        rule.uuid = UUID.randomUUID();
         rule.username = username;
         rule.rulename = rulename;
         db.ruleDao().insertAll(rule);
-        if (rule.uuid == null) { throw new IllegalStateException("Should have added a UUID to the rule."); }
         return rule;
     }
 
-    public Rule get_rule(UUID rule) {
+    public LiveData<Rule> get_rule(UUID rule) {
         return db.ruleDao().get(rule);
     }
 

@@ -1,5 +1,7 @@
 package instatiator.dailykittybot2.ui;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,13 +16,16 @@ import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.service.BotService;
 import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.ui.viewmodels.AbstractBotViewModel;
 
-public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatActivity<BotService, IBotService> {
+public abstract class AbstractBotActivity<VM extends AbstractBotViewModel> extends AbstractServiceBoundAppCompatActivity<BotService, IBotService> {
     protected final String TAG;
 
     protected final boolean uses_butterknife;
     protected final boolean uses_events;
     protected final boolean uses_back_button;
+
+    protected VM model;
 
     protected boolean initialised;
 
@@ -33,10 +38,14 @@ public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatA
         this.uses_back_button = uses_back_button;
     }
 
+    protected abstract Class<VM> getViewModelClass();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+
+        model = ViewModelProviders.of(this).get(getViewModelClass());
 
         if (uses_butterknife) {
             ButterKnife.bind(this);
@@ -56,7 +65,7 @@ public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatA
     protected void onPause() {
         super.onPause();
         if (uses_events) {
-            EventBus.getDefault().register(this);
+            EventBus.getDefault().unregister(this);
         }
     }
 
@@ -64,7 +73,7 @@ public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatA
     protected void onResume() {
         super.onResume();
         if (uses_events) {
-            EventBus.getDefault().unregister(this);
+            EventBus.getDefault().register(this);
         }
     }
 
@@ -89,12 +98,16 @@ public abstract class AbstractBotActivity extends AbstractServiceBoundAppCompatA
     @Override
     protected void onBoundChanged(boolean isBound) {
         if (isBound) {
+            model.setService(service);
+            initialise_model();
             reinit();
             updateUI();
         } else {
             deinit();
         }
     }
+
+    protected abstract void initialise_model();
 
     protected void reinit() {
         initialised = false;

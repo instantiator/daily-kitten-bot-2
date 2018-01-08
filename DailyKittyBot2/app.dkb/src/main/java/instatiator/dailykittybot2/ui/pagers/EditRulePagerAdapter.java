@@ -23,6 +23,10 @@ public class EditRulePagerAdapter extends FragmentPagerAdapter {
         this.rule_id = rule_id;
     }
 
+    public void set_rule_id(UUID uuid) {
+        rule_id = uuid;
+    }
+
     @Override
     public CharSequence getPageTitle(int position) {
         switch (position) {

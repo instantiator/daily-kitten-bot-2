@@ -1,6 +1,7 @@
 package instatiator.dailykittybot2.ui.fragments;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -23,18 +24,18 @@ import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.ui.AbstractBotActivity;
 import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
 import instatiator.dailykittybot2.ui.adapters.LiveRulesAdapter;
+import instatiator.dailykittybot2.ui.viewmodels.UserOverviewViewModel;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class UserRulesFragment extends AbstractBotFragment<UserRulesFragment.Listener> {
+public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel, UserRulesFragment.Listener> {
 
     private static final String KEY_username = "username";
 
     private String username;
 
     private LiveRulesAdapter adapter;
-    private LiveData<List<Rule>> data;
 
     @BindView(R.id.recycler) public RecyclerView recycler;
     @BindView(R.id.card_no_rules) public CardView card_no_rules;
@@ -53,6 +54,11 @@ public class UserRulesFragment extends AbstractBotFragment<UserRulesFragment.Lis
     }
 
     @Override
+    protected Class<UserOverviewViewModel> getViewModelClass() {
+        return UserOverviewViewModel.class;
+    }
+
+    @Override
     protected void extractArguments(Bundle arguments) {
         username = getArguments().getString(KEY_username);
     }
@@ -62,8 +68,7 @@ public class UserRulesFragment extends AbstractBotFragment<UserRulesFragment.Lis
 
     @Override
     protected boolean initialise() {
-        data = service.get_workspace().rules_for(username);
-        adapter = new LiveRulesAdapter(bot_activity, data, recycler, rules_listener, card_no_rules);
+        adapter = new LiveRulesAdapter(bot_activity, model.getRules(), recycler, rules_listener, card_no_rules);
         LinearLayoutManager layout = new LinearLayoutManager(bot_activity);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);
@@ -79,7 +84,6 @@ public class UserRulesFragment extends AbstractBotFragment<UserRulesFragment.Lis
     protected void updateUI() {
         boolean no_adapter = adapter == null;
         boolean no_items = no_adapter || adapter.getItemCount() == 0;
-
         card_no_rules.setVisibility(no_items ? VISIBLE : GONE);
     }
 

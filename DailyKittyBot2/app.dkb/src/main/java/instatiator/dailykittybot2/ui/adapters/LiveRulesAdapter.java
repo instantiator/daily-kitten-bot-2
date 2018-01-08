@@ -57,7 +57,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
     private void update_empty_card() {
         boolean empty = rules == null || rules.size() == 0;
-        empty_card.setVisibility(empty ? GONE : VISIBLE);
+        empty_card.setVisibility(empty ? VISIBLE : GONE);
     }
 
     @Override

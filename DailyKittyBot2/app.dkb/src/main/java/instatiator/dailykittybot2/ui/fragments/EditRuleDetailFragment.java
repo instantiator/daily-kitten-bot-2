@@ -1,26 +1,19 @@
 package instatiator.dailykittybot2.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.UUID;
 
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Rule;
-import instatiator.dailykittybot2.service.BotsWorkspace;
+import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 
-public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleDetailFragment.Listener> {
+public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewModel, EditRuleDetailFragment.Listener> {
 
-    private static final String KEY_rule_id = "rule.id";
-
-    UUID rule_id;
-    Rule edit_rule;
 
     public static EditRuleDetailFragment create(UUID id) {
         EditRuleDetailFragment fragment = new EditRuleDetailFragment();
-        Bundle args = new Bundle();
-        args.putString(KEY_rule_id, id.toString());
-        fragment.setArguments(args);
+        // no args - the rule comes from the model - shared with the activity
         return fragment;
     }
 
@@ -29,9 +22,13 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleDetailFr
     }
 
     @Override
+    protected Class<EditRuleViewModel> getViewModelClass() {
+        return EditRuleViewModel.class;
+    }
+
+    @Override
     protected void extractArguments(Bundle args) {
-        String rule_id_str = args.getString(KEY_rule_id);
-        rule_id = UUID.fromString(rule_id_str);
+        // no args - the rule comes from the model - shared with the activity
     }
 
     @Override
@@ -41,15 +38,13 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleDetailFr
 
     @Override
     protected boolean initialise() {
-        BotsWorkspace workspace = service.get_workspace();
-        edit_rule = workspace.get_rule(rule_id);
+        // rule comes from the model
+        // observe the rule in case it changes or something
         return true;
     }
 
     @Override
-    protected void denitialise() {
-
-    }
+    protected void denitialise() { }
 
     @Override
     protected void updateUI() {

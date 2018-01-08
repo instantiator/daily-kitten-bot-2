@@ -1,25 +1,23 @@
 package instatiator.dailykittybot2.ui;
 
-import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
-import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
-import instatiator.dailykittybot2.db.entities.Condition;
-import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
-import instatiator.dailykittybot2.service.BotsWorkspace;
 import instatiator.dailykittybot2.ui.pagers.EditRulePagerAdapter;
-import instatiator.dailykittybot2.ui.pagers.UserOverviewPagerAdapter;
+import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 
-public class EditRuleActivity extends AbstractBotActivity {
+public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel> {
 
     private static final String KEY_mode = "mode";
     private static final String KEY_rule_id = "rule.id";
@@ -35,8 +33,6 @@ public class EditRuleActivity extends AbstractBotActivity {
     private Mode mode;
     private UUID rule_uuid;
     private String username;
-
-    private Rule edit_rule;
 
     public EditRuleActivity() {
         super(true, true, false);
@@ -58,6 +54,11 @@ public class EditRuleActivity extends AbstractBotActivity {
     }
 
     @Override
+    protected Class<EditRuleViewModel> getViewModelClass() {
+        return EditRuleViewModel.class;
+    }
+
+    @Override
     protected int getLayout() {
         return R.layout.activity_edit_rule;
     }
@@ -74,25 +75,48 @@ public class EditRuleActivity extends AbstractBotActivity {
     }
 
     @Override
+    protected void initialise_model() {
+        model.init(rule_uuid, username);
+    }
+
+    @Override
     protected boolean initialise() {
-        BotsWorkspace workspace = service.get_workspace();
 
-        if (rule_uuid == null) {
-            edit_rule = workspace.create_rule(username, null);
-            rule_uuid = edit_rule.uuid;
-        } else {
-            edit_rule = workspace.get_rule(rule_uuid);
+        if (model.getRule().getValue() == null && mode == Mode.Create) {
+            new AsyncTask<Void, Void, Rule>() {
+                @Override
+                protected Rule doInBackground(Void... voids) {
+                    return service.get_workspace().create_rule(model.getUsername(), null);
+                }
+                @Override
+                protected void onPostExecute(Rule rule) {
+                    model.setRule(rule);
+                }
+            }.execute();
         }
 
+        model.getRule().observe(this, new Observer<Rule>() {
+            @Override
+            public void onChanged(@Nullable Rule rule) {
 
-        boolean rule_ok = check_rule_ok(edit_rule);
+                /*
+                boolean rule_ok = check_rule_ok(model.getRule().getValue());
+                if (!rule_ok) {
+                    Log.w(TAG, "Attempt to read rule for wrong user.");
+                    informUser(R.string.toast_warning_rule_not_for_you);
+                    finish();
+                } else {
+                    pager_adapter.set_rule_id(model.getRule().getValue().uuid);
+                }
+                */
 
-        if (!rule_ok) {
-            Log.w(TAG, "Attempt to read rule for wrong user.");
-            informUser(R.string.toast_warning_rule_not_for_you);
-            finish();
-            return false;
-        }
+                if (rule != null) {
+                    pager_adapter.set_rule_id(model.getRule().getValue().uuid);
+                }
+
+            }
+        });
+
 
         pager_adapter = new EditRulePagerAdapter(this, getSupportFragmentManager(), rule_uuid);
         pager.setAdapter(pager_adapter);
@@ -102,7 +126,8 @@ public class EditRuleActivity extends AbstractBotActivity {
 
     private boolean check_rule_ok(Rule rule) {
         boolean rule_not_null = rule != null;
-        boolean rule_username_ok = rule_not_null && edit_rule.username.equals(username);
+        boolean rule_username_ok =
+                rule_not_null && rule.username.equals(username);
         return
             rule_not_null &&
             rule_username_ok;

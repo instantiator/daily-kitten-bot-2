@@ -1,5 +1,7 @@
 package instatiator.dailykittybot2.ui.fragments;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,7 +16,7 @@ import butterknife.ButterKnife;
 import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.ui.AbstractBotActivity;
 
-public abstract class AbstractBotFragment<Listener> extends Fragment {
+public abstract class AbstractBotFragment<VM extends ViewModel, Listener> extends Fragment {
     protected final String TAG;
 
     protected AbstractBotActivity bot_activity;
@@ -29,6 +31,8 @@ public abstract class AbstractBotFragment<Listener> extends Fragment {
     protected boolean attached;
     protected boolean view_ready;
 
+    protected VM model;
+
     protected AbstractBotFragment(boolean uses_butterknife, boolean uses_events) {
         super();
         this.TAG = getClass().getName();
@@ -40,8 +44,11 @@ public abstract class AbstractBotFragment<Listener> extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extractArguments(getArguments());
+        model = ViewModelProviders.of(getActivity()).get(getViewModelClass());
         initialised = false;
     }
+
+    protected abstract Class<VM> getViewModelClass();
 
     protected abstract void extractArguments(Bundle args);
 
