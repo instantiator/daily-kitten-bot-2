@@ -10,8 +10,7 @@ import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 
 public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewModel, EditRuleDetailFragment.Listener> {
 
-
-    public static EditRuleDetailFragment create(UUID id) {
+    public static EditRuleDetailFragment create() {
         EditRuleDetailFragment fragment = new EditRuleDetailFragment();
         // no args - the rule comes from the model - shared with the activity
         return fragment;

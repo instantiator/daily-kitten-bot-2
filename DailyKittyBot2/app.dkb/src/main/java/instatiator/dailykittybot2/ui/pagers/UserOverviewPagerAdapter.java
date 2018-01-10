@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.ui.fragments.UserRecommendationsFragment;
 import instatiator.dailykittybot2.ui.fragments.UserRulesFragment;
 
 public class UserOverviewPagerAdapter extends FragmentPagerAdapter {
@@ -38,7 +39,7 @@ public class UserOverviewPagerAdapter extends FragmentPagerAdapter {
                 return UserRulesFragment.create(username);
 
             case 1:
-                return UserRulesFragment.create(username); // TODO - replace
+                return UserRecommendationsFragment.create(username); // TODO - replace
 
             default:
                 throw new IllegalStateException("No fragment at index: " + position);

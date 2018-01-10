@@ -13,11 +13,17 @@ import java.util.UUID;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.ui.fragments.EditRuleConditionsFragment;
+import instatiator.dailykittybot2.ui.fragments.EditRuleDetailFragment;
+import instatiator.dailykittybot2.ui.fragments.EditRuleOutcomesFragment;
 import instatiator.dailykittybot2.ui.pagers.EditRulePagerAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 
-public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel> {
+public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
+        implements EditRuleDetailFragment.Listener, EditRuleConditionsFragment.Listener, EditRuleOutcomesFragment.Listener {
 
     private static final String KEY_mode = "mode";
     private static final String KEY_rule_id = "rule.id";
@@ -90,7 +96,7 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel> {
                 }
                 @Override
                 protected void onPostExecute(Rule rule) {
-                    model.setRule(rule);
+                    model.init(rule.uuid, username);
                 }
             }.execute();
         }
@@ -110,15 +116,17 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel> {
                 }
                 */
 
+                /*
                 if (rule != null) {
                     pager_adapter.set_rule_id(model.getRule().getValue().uuid);
+                } else {
+                    Log.w(TAG, "Null rule found.");
                 }
-
+                */
             }
         });
 
-
-        pager_adapter = new EditRulePagerAdapter(this, getSupportFragmentManager(), rule_uuid);
+        pager_adapter = new EditRulePagerAdapter(this, getSupportFragmentManager());
         pager.setAdapter(pager_adapter);
         tabs.setupWithViewPager(pager);
         return true;
@@ -148,4 +156,30 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel> {
         }
 
     }
+
+    @Override
+    public void save_selected(Rule rule) {
+        informUser("TODO: Rule save selected");
+    }
+
+    @Override
+    public void outcome_selected(Outcome outcome) {
+        informUser("TODO: outcome selected");
+    }
+
+    @Override
+    public void request_create_outcome() {
+        informUser("TODO: create outcome requested");
+    }
+
+    @Override
+    public void condition_selected(Condition condition) {
+        informUser("TODO: condition selected");
+    }
+
+    @Override
+    public void request_create_condition() {
+        informUser("TODO: create condition requested");
+    }
+
 }

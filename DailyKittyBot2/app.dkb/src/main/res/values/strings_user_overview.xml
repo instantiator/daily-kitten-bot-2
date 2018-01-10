@@ -6,4 +6,20 @@
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
 
+    <string name="text_no_rules">
+        There are currently no rules for this account.
+        Add some rules for this account using the action
+        button below.
+        \n\nA rule has conditions and outcomes.
+        \n\nWhen a rule\'s conditions are satisfied, DKB then transforms its outcomes into recommendations.
+    </string>
+
+    <string name="text_no_recommendations">
+        To generate recommendations, create and run rules.
+        \n\nEach rule will test reddit for its conditions - and if they
+        are satisfied, it will use the rule's outcomes to create recommendations
+        for you that appear here.
+        \n\nYou can then choose to enact those recommendations.
+    </string>
+
 </resources>

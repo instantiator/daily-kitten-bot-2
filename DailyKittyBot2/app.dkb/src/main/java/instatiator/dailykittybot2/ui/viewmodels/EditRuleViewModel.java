@@ -1,51 +1,73 @@
 package instatiator.dailykittybot2.ui.viewmodels;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 
+import java.util.List;
 import java.util.UUID;
 
+import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 
 public class EditRuleViewModel extends AbstractBotViewModel {
 
-    private UUID rule_id;
-    private String username;
-    private MutableLiveData<Rule> rule;
+    private UUID init_rule_id;
+    private String init_username;
+
+    private LiveData<Rule> rule;
+    private LiveData<List<Condition>> conditions;
+    private LiveData<List<Outcome>> outcomes;
 
     public void init(UUID rule_id, String username) {
-        this.rule_id = rule_id;
-        this.username = username;
+        this.init_rule_id = rule_id;
+        this.init_username = username;
+        nullifyData();
     }
 
     public UUID getRuleId() {
-        return rule_id;
+        return init_rule_id;
     }
 
     public String getUsername() {
-        return username;
+        return init_username;
     }
 
     public LiveData<Rule> getRule() {
         if (rule == null) {
-            rule = new MutableLiveData<Rule>();
-            load_rule();
+            rule = service.get_workspace().get_rule(init_rule_id);
         }
         return rule;
     }
 
+    /*
     public void setRule(Rule rule) {
         ((MutableLiveData<Rule>)getRule()).setValue(rule);
     }
+    */
 
-    private void load_rule() {
-        setRule(service.get_workspace().get_rule(rule_id).getValue());
+    public LiveData<List<Condition>> getRuleConditions() {
+        if (conditions == null) {
+            conditions = service.get_workspace().conditions_for(init_rule_id);
+        }
+        return conditions;
+    }
+
+    public LiveData<List<Outcome>> getRuleOutcomes() {
+        if (outcomes == null) {
+            outcomes = service.get_workspace().outcomes_for(init_rule_id);
+        }
+        return outcomes;
     }
 
     @Override
     protected void onCleared() {
         super.onCleared();
+        nullifyData();
+    }
+
+    private void nullifyData() {
         rule = null;
-        rule_id = null;
+        conditions = null;
+        outcomes = null;
     }
 }

@@ -11,6 +11,7 @@ import java.util.UUID;
 import instatiator.dailykittybot2.db.BotDatabase;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
+import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
 
 public class BotsWorkspace {
@@ -24,6 +25,7 @@ public class BotsWorkspace {
                 service.getApplicationContext(),
                 BotDatabase.class,
                 "dkb-database")
+                    .fallbackToDestructiveMigration() // TODO: provide migrations for live
                     .build();
     }
 
@@ -31,6 +33,10 @@ public class BotsWorkspace {
 
     public LiveData<List<Rule>> rules_for(String username) {
         return db.ruleDao().loadAllByUsername(username);
+    }
+
+    public LiveData<List<Recommendation>> recommendations_for(String username) {
+        return db.recommendationDao().loadAllByUsername(username);
     }
 
     public LiveData<List<Condition>> conditions_for(UUID rule) {

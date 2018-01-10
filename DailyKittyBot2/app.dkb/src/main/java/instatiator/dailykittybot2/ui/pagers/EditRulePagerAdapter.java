@@ -9,23 +9,22 @@ import java.util.UUID;
 
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.ui.fragments.EditRuleConditionsFragment;
 import instatiator.dailykittybot2.ui.fragments.EditRuleDetailFragment;
-import instatiator.dailykittybot2.ui.fragments.UserRulesFragment;
+import instatiator.dailykittybot2.ui.fragments.EditRuleOutcomesFragment;
 
 public class EditRulePagerAdapter extends FragmentPagerAdapter {
 
-    private UUID rule_id;
     private Context context;
 
-    public EditRulePagerAdapter(Context context, FragmentManager fm, UUID rule_id) {
+    public EditRulePagerAdapter(Context context, FragmentManager fm) {
         super(fm);
         this.context = context;
-        this.rule_id = rule_id;
     }
 
-    public void set_rule_id(UUID uuid) {
-        rule_id = uuid;
-    }
+//    public void set_rule_id(UUID uuid) {
+//        rule_id = uuid;
+//    }
 
     @Override
     public CharSequence getPageTitle(int position) {
@@ -45,13 +44,13 @@ public class EditRulePagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return EditRuleDetailFragment.create(rule_id); // TODO
+                return EditRuleDetailFragment.create();
 
             case 1:
-                return EditRuleDetailFragment.create(rule_id); // TODO
+                return EditRuleConditionsFragment.create();
 
             case 2:
-                return EditRuleDetailFragment.create(rule_id); // TODO
+                return EditRuleOutcomesFragment.create();
 
             default:
                 throw new IllegalStateException("No fragment at index: " + position);
