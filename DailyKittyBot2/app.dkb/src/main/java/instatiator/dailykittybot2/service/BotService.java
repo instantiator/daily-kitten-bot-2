@@ -21,10 +21,13 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
+import instatiator.dailykittybot2.service.helpers.TestDataInjector;
 import instatiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
@@ -129,12 +132,33 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
         }
     }
 
+    @Override
+    public void update_rule(final Rule rule) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.update_rule(rule);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating rule", e);
+            }
+        });
+    }
+
+    @Override
+    public void injectTestData(final String user) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                TestDataInjector injector = new TestDataInjector(workspace.db, user);
+                injector.inject_full_test_rule(3, 3);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered injecting test data", e);
+            }
+        });
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void became_authenticated(BotServiceStateEvent event) {
         if (event.state == State.Authenticated) {
-
             // TODO: confirm mode, do stuff - eg. task sets
-
         }
     }
 

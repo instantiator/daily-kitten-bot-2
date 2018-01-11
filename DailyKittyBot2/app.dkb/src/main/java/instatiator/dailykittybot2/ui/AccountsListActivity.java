@@ -2,6 +2,8 @@ package instatiator.dailykittybot2.ui;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +37,12 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
 
     public AccountsListActivity() {
         super(false, true, true);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setTitleBarToVersionWith(getString(R.string.activity_title_accounts));
     }
 
     @Override

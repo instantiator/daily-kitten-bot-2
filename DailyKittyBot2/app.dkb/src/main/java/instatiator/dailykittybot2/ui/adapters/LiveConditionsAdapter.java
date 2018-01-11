@@ -37,11 +37,12 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
         this.empty_card = empty_card;
 
         this.conditions = live_conditions.getValue();
+
         update_empty_card();
 
         live_conditions.observe(activity, new Observer<List<Condition>>() {
             @Override
-            public void onChanged(@Nullable List<Condition> rules) {
+            public void onChanged(@Nullable List<Condition> conditions) {
                 LiveConditionsAdapter.this.conditions = conditions;
                 notifyDataSetChanged();
                 update_empty_card();

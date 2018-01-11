@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="activity_title_accounts">Daily Kitten Bot</string>
+
     <string name="menu_refresh">Refresh</string>
 
     <string name="text_access_token_status">Access token expires in %d minutes</string>

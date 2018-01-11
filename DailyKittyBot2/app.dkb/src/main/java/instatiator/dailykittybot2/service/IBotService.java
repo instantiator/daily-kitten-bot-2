@@ -3,6 +3,8 @@ package instatiator.dailykittybot2.service;
 import net.dean.jraw.oauth.AccountHelper;
 import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 
+import instatiator.dailykittybot2.db.entities.Rule;
+
 public interface IBotService {
 
     BotsWorkspace get_workspace();
@@ -12,6 +14,9 @@ public interface IBotService {
 
     State get_state();
     void authenticate_as(String user);
+
+    void update_rule(Rule rule);
+    void injectTestData(String user);
 
     enum State {
         Initialised, Authenticating, Authenticated

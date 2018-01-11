@@ -3,6 +3,8 @@
 
     <string name="activity_title_overview_for">Redditor: %s</string>
 
+    <string name="menu_inject_test_data">Inject test data</string>
+
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
 

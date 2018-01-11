@@ -56,6 +56,10 @@ public class BotsWorkspace {
         return rule;
     }
 
+    public void update_rule(Rule rule) {
+        db.ruleDao().updateAll(rule);
+    }
+
     public LiveData<Rule> get_rule(UUID rule) {
         return db.ruleDao().get(rule);
     }

@@ -158,8 +158,8 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
     }
 
     @Override
-    public void save_selected(Rule rule) {
-        informUser("TODO: Rule save selected");
+    public void save_rule_detail_now(Rule rule) {
+        service.update_rule(rule);
     }
 
     @Override

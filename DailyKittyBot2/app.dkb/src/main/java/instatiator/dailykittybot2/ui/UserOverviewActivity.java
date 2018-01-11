@@ -7,6 +7,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import java.util.List;
 
@@ -85,8 +87,27 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, R.string.menu_inject_test_data, 0, R.string.menu_inject_test_data);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.string.menu_inject_test_data:
+                service.injectTestData(username);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void rule_selected(Rule rule) {
-        informUser("User rule selected.");
+        Intent intent = EditRuleActivity.edit(this, username, rule);
+        startActivity(intent);
     }
 
     @Override

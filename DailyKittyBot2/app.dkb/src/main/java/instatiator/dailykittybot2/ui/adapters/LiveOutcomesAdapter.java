@@ -36,11 +36,12 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
         this.empty_card = empty_card;
 
         this.outcomes = live_outcomes.getValue();
+
         update_empty_card();
 
         live_outcomes.observe(activity, new Observer<List<Outcome>>() {
             @Override
-            public void onChanged(@Nullable List<Outcome> rules) {
+            public void onChanged(@Nullable List<Outcome> outcomes) {
                 LiveOutcomesAdapter.this.outcomes = outcomes;
                 notifyDataSetChanged();
                 update_empty_card();

@@ -21,7 +21,7 @@ public interface RecommendationDao {
     LiveData<List<Recommendation>> getAll();
 
     @Query("SELECT * FROM recommendation WHERE uuid IN (:ids)")
-    LiveData<List<Rule>> loadAllByIds(UUID[] ids);
+    LiveData<List<Recommendation>> loadAllByIds(UUID[] ids);
 
     @Query("SELECT * FROM recommendation WHERE uuid LIKE (:recommendation) LIMIT 1")
     LiveData<Recommendation> get(UUID recommendation);

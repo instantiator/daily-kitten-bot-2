@@ -1,13 +1,30 @@
 package instatiator.dailykittybot2.db.util;
 
 import android.arch.persistence.room.TypeConverter;
+import android.text.TextUtils;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.StringJoiner;
 import java.util.UUID;
 
 public class Converters {
+
+    @TypeConverter
+    public static String fromListString(List<String> data) {
+        if (data == null) { return null; }
+        return TextUtils.join("_%_", data);
+    }
+
+    @TypeConverter
+    public static List<String> fromString(String data) {
+        if (data == null) { return new LinkedList<String>(); }
+        return Arrays.asList(TextUtils.split(data, "_%_"));
+    }
 
     @TypeConverter
     public static Long fromDate(Date date) {
