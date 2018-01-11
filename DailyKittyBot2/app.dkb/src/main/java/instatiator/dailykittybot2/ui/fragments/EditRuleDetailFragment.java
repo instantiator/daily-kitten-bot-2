@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
@@ -66,9 +67,23 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     }
 
     private void updateFromRule(Rule source) {
+        View had_focus = getView().findFocus();
+        int selection_start = 0;
+        int selection_end = 0;
+        if (had_focus == edit_name) {
+            selection_start = edit_name.getSelectionStart();
+            selection_end = edit_name.getSelectionEnd();
+        }
+
         edit_name.setText(source.rulename);
-        edit_subreddits.setTags(source.subreddits);
         edit_autorun.setChecked(source.run_periodically);
+        edit_subreddits.setTags(source.subreddits);
+
+        // tags is naughty and grabs the focus when modified
+        had_focus.requestFocus();
+        if (had_focus == edit_name) {
+            edit_name.setSelection(selection_start, selection_end);
+        }
     }
 
     private void save() {
