@@ -8,6 +8,11 @@
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
 
+    <string name="summary_rule_subreddits">Subreddits: %s.</string>
+    <string name="summary_rule_no_subreddits">No subreddits selected.</string>
+    <string name="summary_rule_autorun">Auto run enabled.</string>
+    <string name="summary_rule_no_autorun"></string>
+
     <string name="text_no_rules">
         There are currently no rules for this account.
         Add some rules for this account using the action
@@ -19,7 +24,7 @@
     <string name="text_no_recommendations">
         To generate recommendations, create and run rules.
         \n\nEach rule will test reddit for its conditions - and if they
-        are satisfied, it will use the rule's outcomes to create recommendations
+        are satisfied, it will use the rule\'s outcomes to create recommendations
         for you that appear here.
         \n\nYou can then choose to enact those recommendations.
     </string>

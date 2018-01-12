@@ -31,7 +31,7 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     }
 
     public EditRuleDetailFragment() {
-        super(true, false); // TODO
+        super(true, false);
     }
 
     @Override

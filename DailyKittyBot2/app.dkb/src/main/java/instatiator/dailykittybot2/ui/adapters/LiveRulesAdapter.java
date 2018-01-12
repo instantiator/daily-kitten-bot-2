@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,7 +72,20 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         Rule rule = rules.get(position);
         holder.rule = rule;
         holder.text_rule_name.setText(rule.rulename);
-        holder.text_rule_summary.setText("");
+        holder.text_rule_summary.setText(summarise(rule));
+    }
+
+    private String summarise(Rule rule) {
+        String summary_subs =
+            rule.subreddits.size() > 0 ?
+                    activity.getString(R.string.summary_rule_subreddits, TextUtils.join(", ", rule.subreddits)) :
+                    activity.getString(R.string.summary_rule_no_subreddits);
+        String summary_autorun =
+            rule.run_periodically ?
+                    activity.getString(R.string.summary_rule_autorun) :
+                    activity.getString(R.string.summary_rule_no_autorun);
+
+        return TextUtils.join(" ", new String[] { summary_subs, summary_autorun });
     }
 
     @Override

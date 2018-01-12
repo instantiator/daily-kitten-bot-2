@@ -33,5 +33,7 @@ public class Condition {
     @ColumnInfo(name = "modifier")
     public String modifier;
 
+    @ColumnInfo(name = "ordering")
+    public int order;
 
 }
