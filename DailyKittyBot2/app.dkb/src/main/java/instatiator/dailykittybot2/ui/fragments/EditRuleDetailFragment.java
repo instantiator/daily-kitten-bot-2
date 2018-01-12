@@ -2,11 +2,15 @@ package instatiator.dailykittybot2.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -14,7 +18,13 @@ import butterknife.BindView;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
+import instatiator.dailykittybot2.validation.RuleValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
 import me.gujun.android.taggroup.TagGroup;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static instatiator.dailykittybot2.util.TextHelper.create_list_html;
 
 public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewModel, EditRuleDetailFragment.Listener> {
 
@@ -22,7 +32,14 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     @BindView(R.id.edit_rule_subreddits) TagGroup edit_subreddits;
     @BindView(R.id.edit_rule_autorun) CheckBox edit_autorun;
 
+    @BindView(R.id.card_rule_errors) CardView card_rule_errors;
+    @BindView(R.id.text_rule_errors) TextView text_rule_errors;
+    @BindView(R.id.card_rule_warnings) CardView card_rule_warnings;
+    @BindView(R.id.text_rule_warnings) TextView text_rule_warnings;
+
     private boolean watchers_enabled;
+
+    private RuleValidator validator;
 
     public static EditRuleDetailFragment create() {
         EditRuleDetailFragment fragment = new EditRuleDetailFragment();
@@ -56,6 +73,8 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
         edit_name.addTextChangedListener(text_edits_listener);
         edit_subreddits.setOnTagChangeListener(subreddits_change_listener);
         edit_autorun.setOnCheckedChangeListener(autorun_change_listener);
+
+        validator = new RuleValidator(bot_activity);
 
         model.getRule().observe(this, rule -> {
             watchers_enabled = false;
@@ -91,6 +110,26 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
                 }
             }
         }
+
+        // update validation content
+        ValidationResult result = validator.validate(source);
+
+        if (result.errors.size() > 0) {
+            card_rule_errors.setVisibility(VISIBLE);
+            Spanned errorSpan = Html.fromHtml(create_list_html(result.errors));
+            text_rule_errors.setText(errorSpan);
+        } else {
+            card_rule_errors.setVisibility(GONE);
+        }
+
+        if (result.warnings.size() > 0) {
+            card_rule_warnings.setVisibility(VISIBLE);
+            Spanned warningSpan = Html.fromHtml(create_list_html(result.warnings));
+            text_rule_warnings.setText(warningSpan);
+        } else {
+            card_rule_warnings.setVisibility(GONE);
+        }
+
     }
 
     private void save() {

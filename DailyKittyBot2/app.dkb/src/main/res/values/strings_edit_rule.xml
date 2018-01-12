@@ -35,4 +35,7 @@
         \n\nWhen a rule\'s conditions are satisfied, DKB then transforms its outcomes into recommendations.
     </string>
 
+    <string name="text_heading_rule_errors">Errors</string>
+    <string name="text_heading_rule_warnings">Warnings</string>
+
 </resources>

@@ -11,8 +11,8 @@ import instatiator.dailykittybot2.db.entities.Condition;
 
 public class ConditionValidator extends AbstractValidator<Condition> {
 
-    public ConditionValidator(Context context, Condition item) {
-        super(context, item);
+    public ConditionValidator(Context context) {
+        super(context);
     }
 
     @Override

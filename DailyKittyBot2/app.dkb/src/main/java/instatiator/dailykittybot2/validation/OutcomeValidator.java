@@ -12,8 +12,8 @@ import instatiator.dailykittybot2.db.entities.Outcome;
 public class OutcomeValidator extends AbstractValidator<Outcome> {
 
 
-    public OutcomeValidator(Context context, Outcome item) {
-        super(context, item);
+    public OutcomeValidator(Context context) {
+        super(context);
     }
 
     @Override

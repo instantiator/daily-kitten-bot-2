@@ -5,21 +5,15 @@ import android.content.Context;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class AbstractValidator<T> implements IEntityValidator {
+public abstract class AbstractValidator<T> {
 
     protected Context context;
-    protected T item;
 
-    protected AbstractValidator(Context context, T item) {
-        this.item = item;
+    protected AbstractValidator(Context context) {
         this.context = context;
     }
 
-    public T getItem() { return item; }
-    public void setItem(T item) { this.item = item; }
-
-    @Override
-    public ValidationResult validate() {
+    public ValidationResult validate(T item) {
         List<String> errors = new LinkedList<>();
         List<String> warnings = new LinkedList<>();
         errors.addAll(check_errors(item));

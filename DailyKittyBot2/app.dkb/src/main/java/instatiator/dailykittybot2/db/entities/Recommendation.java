@@ -3,6 +3,7 @@ package instatiator.dailykittybot2.db.entities;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -17,12 +18,13 @@ import static android.arch.persistence.room.ForeignKey.NO_ACTION;
         foreignKeys = {
             @ForeignKey(entity = Rule.class,
                 parentColumns = "uuid",
-                childColumns = "outcomeUuid",
+                childColumns = "ruleUuid",
                 onDelete = NO_ACTION),
             @ForeignKey(entity = Outcome.class,
-                    parentColumns = "uuid",
-                    childColumns = "ruleUuid",
-                    onDelete = NO_ACTION) })
+                parentColumns = "uuid",
+                childColumns = "outcomeUuid",
+                onDelete = NO_ACTION) },
+        indices = { @Index("ruleUuid"), @Index("outcomeUuid") })
 public class Recommendation {
 
     @PrimaryKey

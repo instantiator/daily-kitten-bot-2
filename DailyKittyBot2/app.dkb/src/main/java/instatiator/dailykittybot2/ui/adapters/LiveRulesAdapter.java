@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import net.dean.jraw.models.PersistedAuthData;
@@ -25,6 +26,8 @@ import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.validation.RuleValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -37,11 +40,14 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     private Listener listener;
     private CardView empty_card;
 
+    private RuleValidator validator;
+
     public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<Rule>> live_rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.listener = listener;
         this.empty_card = empty_card;
+        this.validator = new RuleValidator(activity);
 
         this.rules = live_rules.getValue();
         update_empty_card();
@@ -73,6 +79,10 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         holder.rule = rule;
         holder.text_rule_name.setText(rule.rulename);
         holder.text_rule_summary.setText(summarise(rule));
+
+        ValidationResult result = validator.validate(rule);
+        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
+        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
     }
 
     private String summarise(Rule rule) {
@@ -97,7 +107,9 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         public Rule rule;
 
         @BindView(R.id.text_rule_name) public TextView text_rule_name;
-        @BindView(R.id.text_rule_summary)public TextView text_rule_summary;
+        @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
+        @BindView(R.id.icon_warning) public ImageView icon_warning;
+        @BindView(R.id.icon_error) public ImageView icon_error;
 
         public RuleHolder(View itemView) {
             super(itemView);

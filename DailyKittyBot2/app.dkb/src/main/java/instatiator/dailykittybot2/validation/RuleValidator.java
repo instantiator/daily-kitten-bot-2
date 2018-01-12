@@ -12,8 +12,8 @@ import instatiator.dailykittybot2.db.entities.Rule;
 
 public class RuleValidator extends AbstractValidator<Rule> {
 
-    public RuleValidator(Context context, Rule item) {
-        super(context, item);
+    public RuleValidator(Context context) {
+        super(context);
     }
 
     @Override
