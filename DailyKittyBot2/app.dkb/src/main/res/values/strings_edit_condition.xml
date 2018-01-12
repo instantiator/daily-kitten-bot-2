@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_title_edit_condition">Edit condition</string>
+
+    <string name="spinner_condition_type_blank">Please choose a condition type...</string>
+    <string name="hint_edit_condition_modifier">Specifics</string>
+
+</resources>

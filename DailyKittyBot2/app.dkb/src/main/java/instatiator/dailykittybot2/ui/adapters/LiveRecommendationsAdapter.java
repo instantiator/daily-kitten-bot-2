@@ -64,7 +64,7 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
     public void onBindViewHolder(RecommendationHolder holder, int position) {
         Recommendation recommendation = recommendations.get(position);
         holder.recommendation = recommendation;
-        holder.text_recommendation_name.setText(recommendation.type);
+        holder.text_recommendation_name.setText(recommendation.type.getDescription());
         holder.text_recommendation_summary.setText(recommendation.modifier);
     }
 

@@ -65,7 +65,7 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
     public void onBindViewHolder(ConditionHolder holder, int position) {
         Condition condition = conditions.get(position);
         holder.condition = condition;
-        holder.text_condition_name.setText(condition.type);
+        holder.text_condition_name.setText(activity.getString(condition.type.getDescription()));
         holder.text_condition_summary.setText(condition.modifier);
     }
 

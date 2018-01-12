@@ -9,6 +9,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -104,25 +106,7 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
         model.getRule().observe(this, new Observer<Rule>() {
             @Override
             public void onChanged(@Nullable Rule rule) {
-
-                /*
-                boolean rule_ok = check_rule_ok(model.getRule().getValue());
-                if (!rule_ok) {
-                    Log.w(TAG, "Attempt to read rule for wrong user.");
-                    informUser(R.string.toast_warning_rule_not_for_you);
-                    finish();
-                } else {
-                    pager_adapter.set_rule_id(model.getRule().getValue().uuid);
-                }
-                */
-
-                /*
-                if (rule != null) {
-                    pager_adapter.set_rule_id(model.getRule().getValue().uuid);
-                } else {
-                    Log.w(TAG, "Null rule found.");
-                }
-                */
+                updateTitle(rule);
             }
         });
 
@@ -132,29 +116,30 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
         return true;
     }
 
-    private boolean check_rule_ok(Rule rule) {
-        boolean rule_not_null = rule != null;
-        boolean rule_username_ok =
-                rule_not_null && rule.username.equals(username);
-        return
-            rule_not_null &&
-            rule_username_ok;
-    }
-
     @Override
     protected void denitialise() {
         // NOP
     }
 
+    private void updateTitle(Rule rule) {
+        if (!bound) {
+            getSupportActionBar().setTitle(R.string.please_wait);
+        } else {
+            if (rule != null && !StringUtils.isEmpty(rule.rulename)) {
+                getSupportActionBar().setTitle(getString(R.string.activity_title_edit_rule_named, rule.rulename));
+            } else {
+                getSupportActionBar().setTitle(getString(R.string.activity_title_edit_rule));
+            }
+        }
+    }
+
     @Override
     protected void updateUI() {
-        if (bound) {
-            String title = getString(R.string.activity_title_edit_rule);
-            getSupportActionBar().setTitle(title);
+        if (model != null && model.getRule() != null) {
+            updateTitle(model.getRule().getValue());
         } else {
-            getSupportActionBar().setTitle(R.string.please_wait);
+            updateTitle(null);
         }
-
     }
 
     @Override
@@ -174,12 +159,14 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     public void condition_selected(Condition condition) {
-        informUser("TODO: condition selected");
+        Intent intent = EditConditionActivity.edit(this, username, condition);
+        startActivity(intent);
     }
 
     @Override
     public void request_create_condition() {
-        informUser("TODO: create condition requested");
+        Intent intent = EditConditionActivity.create(this, username, rule_uuid);
+        startActivity(intent);
     }
 
 }

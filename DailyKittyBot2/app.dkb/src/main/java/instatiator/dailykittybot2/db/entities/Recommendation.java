@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 import java.util.UUID;
 
+import instatiator.dailykittybot2.db.data.OutcomeType;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 import static android.arch.persistence.room.ForeignKey.NO_ACTION;
 
@@ -38,7 +40,7 @@ public class Recommendation {
     public UUID ruleUuid;
 
     @ColumnInfo(name = "type")
-    public String type;
+    public OutcomeType type;
 
     @ColumnInfo(name = "modifier")
     public String modifier;

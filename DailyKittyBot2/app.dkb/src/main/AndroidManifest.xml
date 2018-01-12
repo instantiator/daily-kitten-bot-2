@@ -46,7 +46,9 @@
             android:name=".ui.AddAccountActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.EditRuleActivity"></activity>
+        <activity android:name=".ui.EditRuleActivity" />
+        <activity android:name=".ui.EditConditionActivity" />
+        <activity android:name=".ui.EditOutcomeActivity"></activity>
     </application>
 
 </manifest>

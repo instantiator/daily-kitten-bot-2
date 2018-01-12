@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="outcome_type_nothing">Do nothing</string>
+    <string name="outcome_type_add_comment">Add this comment</string>
+    <string name="outcome_upvote_post">Upvote the post</string>
+    <string name="outcome_downvote_post">Downvote the post</string>
+
+</resources>

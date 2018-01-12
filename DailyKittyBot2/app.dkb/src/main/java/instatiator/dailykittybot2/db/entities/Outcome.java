@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 
 import java.util.UUID;
 
+import instatiator.dailykittybot2.db.data.OutcomeType;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "outcome",
@@ -26,7 +28,7 @@ public class Outcome {
     public UUID ruleUuid;
 
     @ColumnInfo(name = "type")
-    public String type;
+    public OutcomeType type;
 
     @ColumnInfo(name = "modifier")
     public String modifier;

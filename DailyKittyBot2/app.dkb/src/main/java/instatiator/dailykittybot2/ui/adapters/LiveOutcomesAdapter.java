@@ -64,7 +64,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
     public void onBindViewHolder(OutcomeHolder holder, int position) {
         Outcome outcome = outcomes.get(position);
         holder.outcome = outcome;
-        holder.text_outcome_name.setText(outcome.type);
+        holder.text_outcome_name.setText(outcome.type.getDescription());
         holder.text_outcome_summary.setText(outcome.modifier);
     }
 

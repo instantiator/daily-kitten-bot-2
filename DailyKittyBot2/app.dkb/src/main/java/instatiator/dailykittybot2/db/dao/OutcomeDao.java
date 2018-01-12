@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Recommendation;
 
 @Dao
 public interface OutcomeDao {
@@ -21,6 +22,9 @@ public interface OutcomeDao {
 
     @Query("SELECT * FROM outcome WHERE ruleUuid LIKE (:ruleUuid) ORDER BY ordering")
     public LiveData<List<Outcome>> loadAllByRule(UUID ruleUuid);
+
+    @Query("SELECT * FROM outcome WHERE uuid LIKE (:outcome) LIMIT 1")
+    LiveData<Outcome> get(UUID outcome);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(Outcome... outcomes);

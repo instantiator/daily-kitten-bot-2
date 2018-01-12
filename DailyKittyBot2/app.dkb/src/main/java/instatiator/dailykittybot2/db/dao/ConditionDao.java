@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 
 @Dao
@@ -21,6 +22,9 @@ public interface ConditionDao {
 
     @Query("SELECT * FROM condition WHERE ruleUuid LIKE (:ruleUuid)")
     public LiveData<List<Condition>> loadAllByRule(UUID ruleUuid);
+
+    @Query("SELECT * FROM condition WHERE uuid LIKE (:condition) LIMIT 1")
+    LiveData<Condition> get(UUID condition);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     public void insertAll(Condition... conditions);

@@ -12,7 +12,34 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.UUID;
 
+import instatiator.dailykittybot2.db.data.ConditionType;
+import instatiator.dailykittybot2.db.data.OutcomeType;
+
 public class Converters {
+
+    @TypeConverter
+    public static String fromConditionType(ConditionType type) {
+        if (type == null) { return null; }
+        return type.name();
+    }
+
+    @TypeConverter
+    public static ConditionType toConditionType(String type) {
+        if (type == null) { return null; }
+        return ConditionType.valueOf(type);
+    }
+
+    @TypeConverter
+    public static String fromConditionType(OutcomeType type) {
+        if (type == null) { return null; }
+        return type.name();
+    }
+
+    @TypeConverter
+    public static OutcomeType toOutcomeType(String type) {
+        if (type == null) { return null; }
+        return OutcomeType.valueOf(type);
+    }
 
     @TypeConverter
     public static String fromListString(List<String> data) {

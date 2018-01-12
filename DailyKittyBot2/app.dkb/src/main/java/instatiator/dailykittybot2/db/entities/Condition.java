@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 
 import java.util.UUID;
 
+import instatiator.dailykittybot2.db.data.ConditionType;
+
 import static android.arch.persistence.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "condition",
@@ -26,7 +28,7 @@ public class Condition {
     public UUID ruleUuid;
 
     @ColumnInfo(name = "type")
-    public String type;
+    public ConditionType type;
 
     @ColumnInfo(name = "modifier")
     public String modifier;

@@ -25,6 +25,8 @@ import java.util.concurrent.Executors;
 
 import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
 import instatiator.dailykittybot2.service.helpers.TestDataInjector;
@@ -39,7 +41,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     private SharedPreferencesTokenStore tokenStore;
 
     private UUID device_uuid;
-    private BotsWorkspace workspace;
+    private BotWorkspace workspace;
 
     private static final String KEY_Device_UUID = "device.uuid";
 
@@ -66,7 +68,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     private void init_workspace() {
-        workspace = new BotsWorkspace(this);
+        workspace = new BotWorkspace(this);
     }
 
     private void init_reddit() {
@@ -144,6 +146,28 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
+    public void update_condition(final Condition condition) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.update_condition(condition);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating condition", e);
+            }
+        });
+    }
+
+    @Override
+    public void update_outcome(Outcome outcome) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.update_outcome(outcome);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating outcome", e);
+            }
+        });
+    }
+
+    @Override
     public void injectTestData(final String user) {
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
@@ -163,7 +187,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
-    public BotsWorkspace get_workspace() {
+    public BotWorkspace get_workspace() {
         return workspace;
     }
 

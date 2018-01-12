@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="condition_type_nothing">Never match</string>
+    <string name="condition_type_title_contains_string">Title contains</string>
+    <string name="condition_type_title_contains_words">Titles contains any of these words</string>
+    <string name="condition_type_is_exact_link">Post is this exact link</string>
+    <string name="condition_type_is_link_with_domains">Post links to one of these domains</string>
+
+</resources>

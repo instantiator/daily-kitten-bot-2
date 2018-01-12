@@ -4,11 +4,14 @@ import android.util.Log;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import instatiator.dailykittybot2.db.BotDatabase;
+import instatiator.dailykittybot2.db.data.ConditionType;
+import instatiator.dailykittybot2.db.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
@@ -19,10 +22,7 @@ public class TestDataInjector {
     private static final String TAG = TestDataInjector.class.getName();
     private static final int LEN_RULE_NAME = 8;
 
-    private static final int LEN_CONDITION_TYPE = 8;
     private static final int LEN_CONDITION_MODIFIER = 11;
-
-    private static final int LEN_OUTCOME_TYPE = 8;
     private static final int LEN_OUTCOME_MODIFIER = 11;
 
     private BotDatabase db;
@@ -62,7 +62,7 @@ public class TestDataInjector {
         Condition condition = new Condition();
         condition.uuid = UUID.randomUUID();
         condition.ruleUuid = rule;
-        condition.type = generate_word(LEN_CONDITION_TYPE, "Condition type");
+        condition.type = choose_random(ConditionType.values());
         condition.modifier = generate_word(LEN_CONDITION_MODIFIER, "Condition modifier");
         return condition;
     }
@@ -71,12 +71,17 @@ public class TestDataInjector {
         Outcome outcome = new Outcome();
         outcome.uuid = UUID.randomUUID();
         outcome.ruleUuid = rule;
-        outcome.type = generate_word(LEN_OUTCOME_TYPE, "Outcome type");
+        outcome.type = choose_random(OutcomeType.values());
         outcome.modifier = generate_word(LEN_OUTCOME_MODIFIER, "Outcome modifier");
         return outcome;
     }
 
-    private String generate_word(int length, String fallback) {
+    private static Random random = new Random();
+    public static<T extends Enum<T>> T choose_random(T[] values) {
+        return values[random.nextInt(values.length)];
+    }
+
+    public static String generate_word(int length, String fallback) {
         try {
             return RandomWord.getNewWord(length);
         } catch (WordLengthException e) {

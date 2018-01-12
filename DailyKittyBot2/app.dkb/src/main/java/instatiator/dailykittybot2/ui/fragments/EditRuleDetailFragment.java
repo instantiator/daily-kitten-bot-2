@@ -80,9 +80,11 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
         edit_subreddits.setTags(source.subreddits);
 
         // tags is naughty and grabs the focus when modified
-        had_focus.requestFocus();
-        if (had_focus == edit_name) {
-            edit_name.setSelection(selection_start, selection_end);
+        if (had_focus != null) {
+            had_focus.requestFocus();
+            if (had_focus == edit_name) {
+                edit_name.setSelection(selection_start, selection_end);
+            }
         }
     }
 
