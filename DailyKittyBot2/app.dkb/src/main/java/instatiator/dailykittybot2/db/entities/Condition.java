@@ -34,6 +34,6 @@ public class Condition {
     public String modifier;
 
     @ColumnInfo(name = "ordering")
-    public int order;
+    public int ordering;
 
 }

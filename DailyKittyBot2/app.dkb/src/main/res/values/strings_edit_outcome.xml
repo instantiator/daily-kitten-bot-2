@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_title_edit_outcome">Edit outcome</string>
+
+    <string name="hint_edit_outcome_modifier">Specifics</string>
+
+</resources>

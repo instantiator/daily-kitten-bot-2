@@ -45,10 +45,15 @@ public class Recommendation {
     @ColumnInfo(name = "modifier")
     public String modifier;
 
-    @ColumnInfo(name = "ordering")
+    @ColumnInfo(name = "created")
     public Date created;
 
-    @ColumnInfo(name = "satisfied")
-    public boolean satisfied;
+    @ColumnInfo(name = "is_complete")
+    public boolean complete;
 
+    @ColumnInfo(name = "completed")
+    public Date completed;
+
+    @ColumnInfo(name = "accepted")
+    public boolean accepted;
 }

@@ -14,7 +14,7 @@ import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.db.util.Converters;
 
-@Database(entities = {Rule.class, Condition.class, Outcome.class, Recommendation.class}, version = 5)
+@Database(entities = {Rule.class, Condition.class, Outcome.class, Recommendation.class}, version = 6)
 @TypeConverters({Converters.class})
 public abstract class BotDatabase extends RoomDatabase {
 

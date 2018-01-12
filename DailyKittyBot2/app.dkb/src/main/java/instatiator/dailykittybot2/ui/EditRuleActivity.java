@@ -141,12 +141,14 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     public void outcome_selected(Outcome outcome) {
-        informUser("TODO: outcome selected");
+        Intent intent = EditOutcomeActivity.edit(this, username, outcome);
+        startActivity(intent);
     }
 
     @Override
     public void request_create_outcome() {
-        informUser("TODO: create outcome requested");
+        Intent intent = EditOutcomeActivity.create(this, username, rule_uuid);
+        startActivity(intent);
     }
 
     @Override

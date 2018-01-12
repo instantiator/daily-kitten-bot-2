@@ -16,16 +16,16 @@ import instatiator.dailykittybot2.db.entities.Rule;
 
 @Dao
 public interface RuleDao {
-    @Query("SELECT * FROM rule")
+    @Query("SELECT * FROM rule ORDER BY rulename")
     LiveData<List<Rule>> getAll();
 
-    @Query("SELECT * FROM rule WHERE uuid IN (:userIds)")
+    @Query("SELECT * FROM rule WHERE uuid IN (:userIds) ORDER BY rulename")
     LiveData<List<Rule>> loadAllByIds(UUID[] userIds);
 
     @Query("SELECT * FROM rule WHERE uuid LIKE (:rule) LIMIT 1")
     LiveData<Rule> get(UUID rule);
 
-    @Query("SELECT * FROM rule WHERE username LIKE :username ORDER BY username")
+    @Query("SELECT * FROM rule WHERE username LIKE :username ORDER BY rulename")
     LiveData<List<Rule>> loadAllByUsername(String username);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

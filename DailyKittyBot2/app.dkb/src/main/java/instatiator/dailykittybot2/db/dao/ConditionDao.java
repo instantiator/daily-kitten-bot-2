@@ -20,7 +20,7 @@ public interface ConditionDao {
     @Query("SELECT * FROM condition")
     LiveData<List<Condition>> getAll();
 
-    @Query("SELECT * FROM condition WHERE ruleUuid LIKE (:ruleUuid)")
+    @Query("SELECT * FROM condition WHERE ruleUuid LIKE (:ruleUuid) ORDER BY ordering")
     public LiveData<List<Condition>> loadAllByRule(UUID ruleUuid);
 
     @Query("SELECT * FROM condition WHERE uuid LIKE (:condition) LIMIT 1")
