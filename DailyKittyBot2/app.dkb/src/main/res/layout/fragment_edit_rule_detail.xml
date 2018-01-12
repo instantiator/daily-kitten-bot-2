@@ -98,6 +98,7 @@
                     android:layout_alignLeft="@id/text_heading_rule_errors"
                     android:layout_below="@id/text_heading_rule_errors"
                     android:text="errors"
+                    android:layout_marginTop="10dp"
                     />
 
             </RelativeLayout>
@@ -142,6 +143,7 @@
                     android:layout_alignLeft="@id/text_heading_rule_warnings"
                     android:layout_below="@id/text_heading_rule_warnings"
                     android:text="warnings"
+                    android:layout_marginTop="10dp"
                     />
 
             </RelativeLayout>

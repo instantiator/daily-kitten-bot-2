@@ -5,4 +5,7 @@
 
     <string name="hint_edit_condition_modifier">Specifics</string>
 
+    <string name="text_heading_condition_errors">Errors</string>
+    <string name="text_heading_condition_warnings">Warnings</string>
+
 </resources>

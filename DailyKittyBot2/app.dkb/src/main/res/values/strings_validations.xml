@@ -4,6 +4,15 @@
     <string name="validation_rule_has_blank_name">Rule name is blank.</string>
     <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>
 
+    <string name="validation_rule_has_X_condition_errors">%d conditions have errors.</string>
+    <string name="validation_rule_has_X_outcome_errors">%d outcomes have errors.</string>
+
+    <string name="validation_rule_has_X_condition_warnings">%d conditions have warnings.</string>
+    <string name="validation_rule_has_X_outcome_warnings">%d outcomes have warnings.</string>
+
+    <string name="validation_rule_has_no_conditions">Rule has no conditions.</string>
+    <string name="validation_rule_has_no_outcomes">Rule has no outcomes.</string>
+
     <string name="validation_condition_does_nothing">Condition does not match anything.</string>
     <string name="validation_outcome_does_nothing">Outcome does nothing.</string>
 

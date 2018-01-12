@@ -2,13 +2,17 @@ package instatiator.dailykittybot2.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +22,24 @@ import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.ConditionType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.ui.viewmodels.EditConditionViewModel;
+import instatiator.dailykittybot2.validation.ConditionValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static instatiator.dailykittybot2.util.TextHelper.create_list_html;
 
 public class EditConditionDetailFragment extends AbstractBotFragment<EditConditionViewModel, EditConditionDetailFragment.Listener> {
 
     @BindView(R.id.spin_condition_type) Spinner spin_type;
     @BindView(R.id.edit_condition_modifier) TextInputEditText edit_modifier;
+
+    @BindView(R.id.card_errors) CardView card_errors;
+    @BindView(R.id.text_errors) TextView text_errors;
+    @BindView(R.id.card_warnings) CardView card_warnings;
+    @BindView(R.id.text_warnings) TextView text_warnings;
+
+    private ConditionValidator validator;
 
     private boolean watchers_enabled;
 
@@ -57,6 +74,8 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
     @Override
     protected boolean initialise() {
         watchers_enabled = true;
+
+        validator = new ConditionValidator(bot_activity);
 
         conditionTypes = Arrays.asList(ConditionType.values());
 
@@ -104,6 +123,12 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
                 }
             }
         }
+
+        // update validation content
+        ValidationResult result = validator.validate(source);
+        result.updateUI(
+                card_errors, text_errors,
+                card_warnings, text_warnings);
     }
 
     private void save() {

@@ -2,6 +2,7 @@ package instatiator.dailykittybot2.ui.fragments;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.CardView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,11 +20,21 @@ import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.ui.viewmodels.EditOutcomeViewModel;
+import instatiator.dailykittybot2.validation.ConditionValidator;
+import instatiator.dailykittybot2.validation.OutcomeValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
 
 public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeViewModel, EditOutcomeDetailFragment.Listener> {
 
     @BindView(R.id.spin_outcome_type) Spinner spin_type;
     @BindView(R.id.edit_outcome_modifier) TextInputEditText edit_modifier;
+
+    @BindView(R.id.card_errors) CardView card_errors;
+    @BindView(R.id.text_errors) TextView text_errors;
+    @BindView(R.id.card_warnings) CardView card_warnings;
+    @BindView(R.id.text_warnings) TextView text_warnings;
+
+    private OutcomeValidator validator;
 
     private boolean watchers_enabled;
 
@@ -59,6 +71,8 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
         watchers_enabled = true;
 
         outcomeTypes = Arrays.asList(OutcomeType.values());
+
+        validator = new OutcomeValidator(bot_activity);
 
         type_adapter = new ArrayAdapter<OutcomeType>(
                 bot_activity,
@@ -104,6 +118,12 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
                 }
             }
         }
+
+        // update validation content
+        ValidationResult result = validator.validate(source);
+        result.updateUI(
+                card_errors, text_errors,
+                card_warnings, text_warnings);
     }
 
     private void save() {

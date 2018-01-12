@@ -12,10 +12,15 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+
 import java.util.Arrays;
+import java.util.List;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 import instatiator.dailykittybot2.validation.RuleValidator;
@@ -82,6 +87,14 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
             watchers_enabled = true;
         });
 
+        model.getRuleConditions().observe(this, conditions -> {
+            updateValidationContent();
+        });
+
+        model.getRuleOutcomes().observe(this, outcomes -> {
+            updateValidationContent();
+        });
+
         return true;
     }
 
@@ -112,24 +125,20 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
         }
 
         // update validation content
-        ValidationResult result = validator.validate(source);
+        updateValidationContent();
+    }
 
-        if (result.errors.size() > 0) {
-            card_rule_errors.setVisibility(VISIBLE);
-            Spanned errorSpan = Html.fromHtml(create_list_html(result.errors));
-            text_rule_errors.setText(errorSpan);
-        } else {
-            card_rule_errors.setVisibility(GONE);
-        }
+    private void updateValidationContent() {
+        ImmutableTriple<Rule, List<Condition>, List<Outcome>> validation_target =
+                new ImmutableTriple<>(
+                        model.getRule().getValue(),
+                        model.getRuleConditions().getValue(),
+                        model.getRuleOutcomes().getValue());
 
-        if (result.warnings.size() > 0) {
-            card_rule_warnings.setVisibility(VISIBLE);
-            Spanned warningSpan = Html.fromHtml(create_list_html(result.warnings));
-            text_rule_warnings.setText(warningSpan);
-        } else {
-            card_rule_warnings.setVisibility(GONE);
-        }
-
+        ValidationResult result = validator.validate(validation_target);
+        result.updateUI(
+                card_rule_errors, text_rule_errors,
+                card_rule_warnings, text_rule_warnings);
     }
 
     private void save() {

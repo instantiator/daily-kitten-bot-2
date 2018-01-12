@@ -12,7 +12,7 @@ public class TextHelper {
     }
 
     private static String ul(List<String> data) {
-        return "<ul>\n" + TextUtils.join("\n", itemise(data)) + "\n</ul>\n";
+        return "<ul>" + TextUtils.join("\n", itemise(data)) + "</ul>";
     }
 
     private static List<String> itemise(List<String> source) {

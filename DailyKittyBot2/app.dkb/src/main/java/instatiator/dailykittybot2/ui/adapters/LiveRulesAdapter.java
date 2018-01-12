@@ -17,6 +17,8 @@ import android.widget.TextView;
 import net.dean.jraw.models.PersistedAuthData;
 import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 
+import org.apache.commons.lang3.tuple.ImmutableTriple;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -24,6 +26,8 @@ import java.util.TreeMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.validation.RuleValidator;
@@ -80,7 +84,14 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         holder.text_rule_name.setText(rule.rulename);
         holder.text_rule_summary.setText(summarise(rule));
 
-        ValidationResult result = validator.validate(rule);
+        ImmutableTriple<Rule, List<Condition>, List<Outcome>> triple = new ImmutableTriple<>(
+                rule,
+                null,
+                null
+        );
+
+        ValidationResult result = validator.validate(triple);
+
         holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
         holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
     }
