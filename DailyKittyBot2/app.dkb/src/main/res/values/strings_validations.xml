@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="validation_rule_has_blank_name">Rule name is blank.</string>
+    <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>
+
+    <string name="validation_condition_does_nothing">Condition does not match anything.</string>
+    <string name="validation_outcome_does_nothing">Outcome does nothing.</string>
+
+</resources>
