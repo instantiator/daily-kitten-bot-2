@@ -49,31 +49,16 @@ public class BotWorkspace {
         return db.outcomeDao().loadAllByRule(rule);
     }
 
-    public Rule create_rule(String username, String rulename) {
-        Rule rule = new Rule();
-        rule.uuid = UUID.randomUUID();
-        rule.username = username;
-        rule.rulename = rulename;
+    public void insert_rule(Rule rule) {
         db.ruleDao().insertAll(rule);
-        return rule;
     }
 
-    public Condition create_condition(UUID rule_id) {
-        Condition condition = new Condition();
-        condition.uuid = UUID.randomUUID();
-        condition.type = ConditionType.NothingSelected;
-        condition.ruleUuid = rule_id;
+    public void insert_condition(Condition condition) {
         db.conditionDao().insertAll(condition);
-        return condition;
     }
 
-    public Outcome create_outcome(UUID rule_id) {
-        Outcome outcome = new Outcome();
-        outcome.uuid = UUID.randomUUID();
-        outcome.type = OutcomeType.NothingSelected;
-        outcome.ruleUuid = rule_id;
+    public void insert_outcome(Outcome outcome) {
         db.outcomeDao().insertAll(outcome);
-        return outcome;
     }
 
     public void update_rule(Rule rule) {

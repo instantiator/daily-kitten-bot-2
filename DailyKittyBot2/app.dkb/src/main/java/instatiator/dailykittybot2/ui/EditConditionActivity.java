@@ -54,7 +54,7 @@ public class EditConditionActivity extends AbstractBotActivity<EditConditionView
     public static Intent create(Context context, String username, UUID rule_id) {
         Intent intent = new Intent(context, EditConditionActivity.class);
         intent.putExtra(KEY_mode, Mode.Create.name());
-        intent.putExtra(KEY_rule_id, rule_id);
+        intent.putExtra(KEY_rule_id, rule_id.toString());
         intent.putExtra(KEY_username, username);
         return intent;
     }
@@ -106,16 +106,8 @@ public class EditConditionActivity extends AbstractBotActivity<EditConditionView
     protected boolean initialise() {
 
         if (model.getItem().getValue() == null && mode == Mode.Create) {
-            new AsyncTask<Void, Void, Condition>() {
-                @Override
-                protected Condition doInBackground(Void... voids) {
-                    return service.get_workspace().create_condition(rule_id);
-                }
-                @Override
-                protected void onPostExecute(Condition condition) {
-                    model.init(condition.uuid, username);
-                }
-            }.execute();
+            Condition condition = service.create_condition(rule_id);
+            model.init(condition.uuid, username);
         }
 
         model.getItem().observe(this, new Observer<Condition>() {

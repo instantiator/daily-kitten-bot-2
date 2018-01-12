@@ -29,6 +29,7 @@ import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
+import instatiator.dailykittybot2.service.helpers.DataFactory;
 import instatiator.dailykittybot2.service.helpers.TestDataInjector;
 import instatiator.dailykittybot2.ui.AccountsListActivity;
 
@@ -132,6 +133,45 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
             Log.e(TAG, "Unable to switch to user " + user);
             switch_state(State.Initialised);
         }
+    }
+
+    @Override
+    public Rule create_rule(String username, String rule_name) {
+        final Rule rule = DataFactory.create_rule(username, rule_name);
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_rule(rule);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating rule", e);
+            }
+        });
+        return rule;
+    }
+
+    @Override
+    public Condition create_condition(UUID rule_id) {
+        final Condition condition = DataFactory.create_condition(rule_id);
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_condition(condition);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating rule", e);
+            }
+        });
+        return condition;
+    }
+
+    @Override
+    public Outcome create_outcome(UUID rule_id) {
+        final Outcome outcome = DataFactory.create_outcome(rule_id);
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_outcome(outcome);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating rule", e);
+            }
+        });
+        return outcome;
     }
 
     @Override

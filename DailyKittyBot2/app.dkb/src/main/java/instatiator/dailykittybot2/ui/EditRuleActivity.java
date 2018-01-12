@@ -91,16 +91,8 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
     protected boolean initialise() {
 
         if (model.getRule().getValue() == null && mode == Mode.Create) {
-            new AsyncTask<Void, Void, Rule>() {
-                @Override
-                protected Rule doInBackground(Void... voids) {
-                    return service.get_workspace().create_rule(model.getUsername(), null);
-                }
-                @Override
-                protected void onPostExecute(Rule rule) {
-                    model.init(rule.uuid, username);
-                }
-            }.execute();
+            Rule rule = service.create_rule(username, null);
+            model.init(rule.uuid, username);
         }
 
         model.getRule().observe(this, new Observer<Rule>() {

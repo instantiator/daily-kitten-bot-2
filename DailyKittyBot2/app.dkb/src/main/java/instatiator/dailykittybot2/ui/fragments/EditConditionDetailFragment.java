@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -88,20 +89,28 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
             selection_end = edit_modifier.getSelectionEnd();
         }
 
-        spin_type.setSelection(conditionTypes.indexOf(source.type));
-        edit_modifier.setText(source.modifier);
+        if (source != null) {
+            spin_type.setSelection(conditionTypes.indexOf(source.type));
+            edit_modifier.setText(source.modifier);
+        }
 
         if (had_focus != null) {
             had_focus.requestFocus();
             if (had_focus == edit_modifier) {
-                edit_modifier.setSelection(selection_start, selection_end);
+                if (selection_start > edit_modifier.getText().length() ||
+                    selection_end > edit_modifier.getText().length()) {
+                    edit_modifier.setSelection(edit_modifier.getText().length());
+                } else {
+                    edit_modifier.setSelection(selection_start, selection_end);
+                }
             }
         }
     }
 
     private void save() {
         Condition condition = model.getItem().getValue();
-        condition.type = (ConditionType)spin_type.getSelectedItem();
+        condition.modifier = edit_modifier.getText().toString();
+        condition.type = (ConditionType) spin_type.getSelectedItem();
         listener.save_condition_detail_now(condition);
     }
 
@@ -116,8 +125,8 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
     }
 
     private Spinner.OnItemSelectedListener spinner_listener = new AdapterView.OnItemSelectedListener() {
-        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { save(); }
-        @Override public void onNothingSelected(AdapterView<?> adapterView) { save(); }
+        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { if (watchers_enabled) { save(); } }
+        @Override public void onNothingSelected(AdapterView<?> adapterView) { if (watchers_enabled) { save(); } }
     };
 
     private TextWatcher text_edits_listener = new TextWatcher() {

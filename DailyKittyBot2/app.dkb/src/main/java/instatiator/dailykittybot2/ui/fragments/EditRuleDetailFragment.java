@@ -83,7 +83,12 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
         if (had_focus != null) {
             had_focus.requestFocus();
             if (had_focus == edit_name) {
-                edit_name.setSelection(selection_start, selection_end);
+                if (selection_start > edit_name.getText().length() ||
+                        selection_end > edit_name.getText().length()) {
+                    edit_name.setSelection(edit_name.getText().length());
+                } else {
+                    edit_name.setSelection(selection_start, selection_end);
+                }
             }
         }
     }
