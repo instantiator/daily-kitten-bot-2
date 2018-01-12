@@ -6,12 +6,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import instatiator.dailykittybot2.db.BotDatabase;
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
+import instatiator.dailykittybot2.data.ConditionType;
+import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;

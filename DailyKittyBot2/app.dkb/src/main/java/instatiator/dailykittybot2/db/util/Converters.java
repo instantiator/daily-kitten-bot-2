@@ -9,11 +9,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.StringJoiner;
 import java.util.UUID;
 
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
+import instatiator.dailykittybot2.data.ConditionType;
+import instatiator.dailykittybot2.data.OutcomeType;
 
 public class Converters {
 

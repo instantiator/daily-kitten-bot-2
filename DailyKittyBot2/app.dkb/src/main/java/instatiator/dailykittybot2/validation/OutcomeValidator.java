@@ -1,4 +1,4 @@
-package instatiator.dailykittybot2.service.validation;
+package instatiator.dailykittybot2.validation;
 
 import android.content.Context;
 
@@ -6,9 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import instatiator.dailykittybot2.R;
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
-import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Outcome;
 
 public class OutcomeValidator extends AbstractValidator<Outcome> {

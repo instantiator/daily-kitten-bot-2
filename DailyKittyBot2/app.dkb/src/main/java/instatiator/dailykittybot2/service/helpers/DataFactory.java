@@ -2,8 +2,8 @@ package instatiator.dailykittybot2.service.helpers;
 
 import java.util.UUID;
 
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
+import instatiator.dailykittybot2.data.ConditionType;
+import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;

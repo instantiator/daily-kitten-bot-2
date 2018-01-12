@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,11 +15,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
-import instatiator.dailykittybot2.db.entities.Condition;
+import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Outcome;
-import instatiator.dailykittybot2.ui.viewmodels.EditConditionViewModel;
 import instatiator.dailykittybot2.ui.viewmodels.EditOutcomeViewModel;
 
 public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeViewModel, EditOutcomeDetailFragment.Listener> {

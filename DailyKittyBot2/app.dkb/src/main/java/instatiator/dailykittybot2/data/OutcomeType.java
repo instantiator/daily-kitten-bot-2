@@ -1,4 +1,4 @@
-package instatiator.dailykittybot2.db.data;
+package instatiator.dailykittybot2.data;
 
 import instatiator.dailykittybot2.R;
 

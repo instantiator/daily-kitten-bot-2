@@ -1,4 +1,4 @@
-package instatiator.dailykittybot2.service.validation;
+package instatiator.dailykittybot2.validation;
 
 import java.util.LinkedList;
 import java.util.List;

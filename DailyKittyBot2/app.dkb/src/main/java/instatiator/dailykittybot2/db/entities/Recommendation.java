@@ -9,9 +9,8 @@ import android.support.annotation.NonNull;
 import java.util.Date;
 import java.util.UUID;
 
-import instatiator.dailykittybot2.db.data.OutcomeType;
+import instatiator.dailykittybot2.data.OutcomeType;
 
-import static android.arch.persistence.room.ForeignKey.CASCADE;
 import static android.arch.persistence.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = "recommendation",

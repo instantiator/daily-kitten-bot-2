@@ -1,16 +1,12 @@
 package instatiator.dailykittybot2.service;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.Room;
-import android.content.SharedPreferences;
 
 import java.util.List;
 import java.util.UUID;
 
 import instatiator.dailykittybot2.db.BotDatabase;
-import instatiator.dailykittybot2.db.data.ConditionType;
-import instatiator.dailykittybot2.db.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
