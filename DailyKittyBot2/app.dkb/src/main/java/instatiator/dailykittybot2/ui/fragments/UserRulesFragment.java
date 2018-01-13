@@ -68,7 +68,7 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
 
     @Override
     protected boolean initialise() {
-        adapter = new LiveRulesAdapter(bot_activity, model.getRules(), recycler, rules_listener, card_no_rules);
+        adapter = new LiveRulesAdapter(bot_activity, model.getTriplets(), recycler, rules_listener, card_no_rules);
         LinearLayoutManager layout = new LinearLayoutManager(bot_activity);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);

@@ -10,11 +10,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 
-public class RuleValidator extends AbstractValidator<ImmutableTriple<Rule,List<Condition>, List<Outcome>>> {
+public class RuleValidator extends AbstractValidator<RuleTriplet> {
 
     private ConditionValidator conditionValidator;
     private OutcomeValidator outcomeValidator;
@@ -26,24 +27,29 @@ public class RuleValidator extends AbstractValidator<ImmutableTriple<Rule,List<C
     }
 
     @Override
-    protected List<String> check_errors(ImmutableTriple<Rule,List<Condition>, List<Outcome>> subject) {
+    protected List<String> check_errors(RuleTriplet triplet) {
         List<String> errors = new LinkedList<>();
 
-        if (subject.getLeft().subreddits.size() == 0) {
+        if (triplet.rule == null) {
+            errors.add(context.getString(R.string.validation_rule_is_null));
+            return errors;
+        }
+
+        if (triplet.rule.subreddits.size() == 0) {
             errors.add(context.getString(R.string.validation_rule_has_no_subreddits));
         }
 
         int condition_errors = 0;
-        if (subject.getMiddle() != null) {
-            for (Condition condition : subject.getMiddle()) {
+        if (triplet.conditions != null) {
+            for (Condition condition : triplet.conditions) {
                 ValidationResult result = conditionValidator.validate(condition);
                 if (result.errors.size() > 0) { condition_errors++; }
             }
         }
 
         int outcome_errors = 0;
-        if (subject.getRight() != null) {
-            for (Outcome outcome : subject.getRight()) {
+        if (triplet.outcomes != null) {
+            for (Outcome outcome : triplet.outcomes) {
                 ValidationResult result = outcomeValidator.validate(outcome);
                 if (result.errors.size() > 0) { outcome_errors++; }
             }
@@ -61,33 +67,37 @@ public class RuleValidator extends AbstractValidator<ImmutableTriple<Rule,List<C
     }
 
     @Override
-    protected List<String> check_warnings(ImmutableTriple<Rule,List<Condition>, List<Outcome>> subject) {
+    protected List<String> check_warnings(RuleTriplet triplet) {
         List<String> warnings = new LinkedList<>();
 
-        if (StringUtils.isBlank(subject.getLeft().rulename)) {
+        if (triplet.rule == null) {
+            return warnings; // do not process - a serious lack of rule has already occurred!
+        }
+
+        if (StringUtils.isBlank(triplet.rule.rulename)) {
             warnings.add(context.getString(R.string.validation_rule_has_blank_name));
         }
 
         int condition_warnings = 0;
-        if (subject.getMiddle() != null) {
-            for (Condition condition : subject.getMiddle()) {
+        if (triplet.conditions != null) {
+            for (Condition condition : triplet.conditions) {
                 ValidationResult result = conditionValidator.validate(condition);
                 if (result.warnings.size() > 0) { condition_warnings++; }
             }
 
-            if (subject.getMiddle().size() == 0) {
+            if (triplet.conditions.size() == 0) {
                 warnings.add(context.getString(R.string.validation_rule_has_no_conditions));
             }
         }
 
         int outcome_warnings = 0;
-        if (subject.getRight() != null) {
-            for (Outcome outcome : subject.getRight()) {
+        if (triplet.outcomes != null) {
+            for (Outcome outcome : triplet.outcomes) {
                 ValidationResult result = outcomeValidator.validate(outcome);
                 if (result.warnings.size() > 0) { outcome_warnings++; }
             }
 
-            if (subject.getRight().size() == 0) {
+            if (triplet.outcomes.size() == 0) {
                 warnings.add(context.getString(R.string.validation_rule_has_no_outcomes));
             }
         }

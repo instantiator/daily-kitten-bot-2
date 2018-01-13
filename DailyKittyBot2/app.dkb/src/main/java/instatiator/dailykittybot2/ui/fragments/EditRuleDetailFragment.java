@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
@@ -129,13 +130,12 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     }
 
     private void updateValidationContent() {
-        ImmutableTriple<Rule, List<Condition>, List<Outcome>> validation_target =
-                new ImmutableTriple<>(
-                        model.getRule().getValue(),
-                        model.getRuleConditions().getValue(),
-                        model.getRuleOutcomes().getValue());
+        RuleTriplet triplet = new RuleTriplet();
+        triplet.rule = model.getRule().getValue();
+        triplet.conditions = model.getRuleConditions().getValue();
+        triplet.outcomes = model.getRuleOutcomes().getValue();
 
-        ValidationResult result = validator.validate(validation_target);
+        ValidationResult result = validator.validate(triplet);
         result.updateUI(
                 card_rule_errors, text_rule_errors,
                 card_rule_warnings, text_rule_warnings);

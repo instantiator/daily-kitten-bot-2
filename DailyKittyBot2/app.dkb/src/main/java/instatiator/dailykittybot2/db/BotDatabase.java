@@ -9,6 +9,7 @@ import instatiator.dailykittybot2.db.dao.OutcomeDao;
 import instatiator.dailykittybot2.db.dao.RecommendationDao;
 import instatiator.dailykittybot2.db.dao.ResultDao;
 import instatiator.dailykittybot2.db.dao.RuleDao;
+import instatiator.dailykittybot2.db.dao.RuleTripletDao;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
@@ -25,5 +26,6 @@ public abstract class BotDatabase extends RoomDatabase {
     public abstract OutcomeDao outcomeDao();
     public abstract RecommendationDao recommendationDao();
     public abstract ResultDao resultDao();
+    public abstract RuleTripletDao ruleTripletDao();
 
 }

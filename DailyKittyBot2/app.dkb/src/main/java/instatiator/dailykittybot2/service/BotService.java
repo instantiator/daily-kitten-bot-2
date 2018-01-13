@@ -1,5 +1,6 @@
 package instatiator.dailykittybot2.service;
 
+import android.arch.lifecycle.LiveData;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -20,11 +21,13 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
 
 import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
@@ -133,6 +136,11 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
             Log.e(TAG, "Unable to switch to user " + user);
             switch_state(State.Initialised);
         }
+    }
+
+    @Override
+    public LiveData<List<RuleTriplet>> get_rule_triplets_for(String username) {
+        return workspace.rule_triplets_for(username);
     }
 
     @Override

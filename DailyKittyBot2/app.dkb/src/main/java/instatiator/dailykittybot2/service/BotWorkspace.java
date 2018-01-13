@@ -6,6 +6,7 @@ import android.arch.persistence.room.Room;
 import java.util.List;
 import java.util.UUID;
 
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.BotDatabase;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
@@ -67,6 +68,10 @@ public class BotWorkspace {
 
     public void update_outcome(Outcome outcome) {
         db.outcomeDao().updateAll(outcome);
+    }
+
+    public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {
+        return db.ruleTripletDao().loadAllByUsername(username);
     }
 
     public LiveData<Rule> get_rule(UUID rule) {

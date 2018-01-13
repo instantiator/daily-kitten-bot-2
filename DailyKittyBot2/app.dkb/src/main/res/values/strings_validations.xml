@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="validation_item_is_null">Object not found.</string>
+    <string name="validation_rule_is_null">No rule found.</string>
+
     <string name="validation_rule_has_blank_name">Rule name is blank.</string>
     <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>
 

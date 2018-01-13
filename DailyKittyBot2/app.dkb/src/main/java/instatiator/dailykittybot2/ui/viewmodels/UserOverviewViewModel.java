@@ -6,13 +6,14 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.service.IBotService;
 
 public class UserOverviewViewModel extends AbstractBotViewModel {
     private String username;
-    private LiveData<List<Rule>> rules;
+    private LiveData<List<RuleTriplet>> triplets;
     private LiveData<List<Recommendation>> recommendations;
 
     public void init(String username) {
@@ -23,11 +24,11 @@ public class UserOverviewViewModel extends AbstractBotViewModel {
         return username;
     }
 
-    public LiveData<List<Rule>> getRules() {
-        if (rules == null) {
-            rules = service.get_workspace().rules_for(username);
+    public LiveData<List<RuleTriplet>> getTriplets() {
+        if (triplets == null) {
+            triplets = service.get_rule_triplets_for(username);
         }
-        return rules;
+        return triplets;
     }
 
     public LiveData<List<Recommendation>> getRecommendations() {
@@ -41,7 +42,7 @@ public class UserOverviewViewModel extends AbstractBotViewModel {
     protected void onCleared() {
         super.onCleared();
         username = null;
-        rules = null;
+        triplets = null;
         recommendations = null;
     }
 }

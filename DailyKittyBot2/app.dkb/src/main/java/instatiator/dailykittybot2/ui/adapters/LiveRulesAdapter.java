@@ -26,6 +26,7 @@ import java.util.TreeMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
@@ -39,27 +40,27 @@ import static android.view.View.VISIBLE;
 public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.RuleHolder> {
 
     private final AppCompatActivity activity;
-    private List<Rule> rules;
+    private List<RuleTriplet> triplets;
     private RecyclerView recyclerView;
     private Listener listener;
     private CardView empty_card;
 
     private RuleValidator validator;
 
-    public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<Rule>> live_rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
+    public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<RuleTriplet>> live_rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.listener = listener;
         this.empty_card = empty_card;
         this.validator = new RuleValidator(activity);
 
-        this.rules = live_rules.getValue();
+        this.triplets = live_rules.getValue();
         update_empty_card();
 
-        live_rules.observe(activity, new Observer<List<Rule>>() {
+        live_rules.observe(activity, new Observer<List<RuleTriplet>>() {
             @Override
-            public void onChanged(@Nullable List<Rule> rules) {
-                LiveRulesAdapter.this.rules = rules;
+            public void onChanged(@Nullable List<RuleTriplet> triplets) {
+                LiveRulesAdapter.this.triplets = triplets;
                 notifyDataSetChanged();
                 update_empty_card();
             }
@@ -67,7 +68,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     }
 
     private void update_empty_card() {
-        boolean empty = rules == null || rules.size() == 0;
+        boolean empty = triplets == null || triplets.size() == 0;
         empty_card.setVisibility(empty ? VISIBLE : GONE);
     }
 
@@ -79,18 +80,12 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
     @Override
     public void onBindViewHolder(RuleHolder holder, int position) {
-        Rule rule = rules.get(position);
-        holder.rule = rule;
-        holder.text_rule_name.setText(rule.rulename);
-        holder.text_rule_summary.setText(summarise(rule));
+        RuleTriplet triplet = triplets.get(position);
+        holder.triplet = triplet;
+        holder.text_rule_name.setText(triplet.rule.rulename);
+        holder.text_rule_summary.setText(summarise(triplet.rule));
 
-        ImmutableTriple<Rule, List<Condition>, List<Outcome>> triple = new ImmutableTriple<>(
-                rule,
-                null,
-                null
-        );
-
-        ValidationResult result = validator.validate(triple);
+        ValidationResult result = validator.validate(triplet);
 
         holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
         holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
@@ -111,11 +106,11 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
     @Override
     public int getItemCount() {
-        return rules != null ? rules.size() : 0;
+        return triplets != null ? triplets.size() : 0;
     }
 
     public class RuleHolder extends RecyclerView.ViewHolder {
-        public Rule rule;
+        public RuleTriplet triplet;
 
         @BindView(R.id.text_rule_name) public TextView text_rule_name;
         @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
@@ -129,7 +124,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    listener.rule_selected(rule);
+                    listener.rule_selected(triplet.rule);
                 }
             });
         }

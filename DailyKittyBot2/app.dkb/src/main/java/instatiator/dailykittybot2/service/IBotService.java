@@ -1,10 +1,14 @@
 package instatiator.dailykittybot2.service;
 
+import android.arch.lifecycle.LiveData;
+
 import net.dean.jraw.oauth.AccountHelper;
 import net.dean.jraw.oauth.DeferredPersistentTokenStore;
 
+import java.util.List;
 import java.util.UUID;
 
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
@@ -18,6 +22,8 @@ public interface IBotService {
 
     State get_state();
     void authenticate_as(String user);
+
+    LiveData<List<RuleTriplet>> get_rule_triplets_for(String username);
 
     Rule create_rule(String username, String rule_name);
     Condition create_condition(UUID rule_id);
