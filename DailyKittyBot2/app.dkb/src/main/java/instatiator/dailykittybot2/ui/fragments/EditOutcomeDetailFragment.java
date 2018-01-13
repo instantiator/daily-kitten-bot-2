@@ -27,6 +27,7 @@ import instatiator.dailykittybot2.validation.ValidationResult;
 public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeViewModel, EditOutcomeDetailFragment.Listener> {
 
     @BindView(R.id.spin_outcome_type) Spinner spin_type;
+    @BindView(R.id.text_option_hint) TextView text_hint;
     @BindView(R.id.edit_outcome_modifier) TextInputEditText edit_modifier;
 
     @BindView(R.id.card_errors) CardView card_errors;
@@ -126,6 +127,11 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
                 card_warnings, text_warnings);
     }
 
+    private void updateHint() {
+        OutcomeType selection = (OutcomeType)spin_type.getSelectedItem();
+        text_hint.setText(selection.getHint());
+    }
+
     private void save() {
         Outcome outcome = model.getItem().getValue();
         outcome.modifier = edit_modifier.getText().toString();
@@ -144,8 +150,14 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
     }
 
     private Spinner.OnItemSelectedListener spinner_listener = new AdapterView.OnItemSelectedListener() {
-        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { if (watchers_enabled) { save(); } }
-        @Override public void onNothingSelected(AdapterView<?> adapterView) { if (watchers_enabled) { save(); } }
+        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if (watchers_enabled) { save(); }
+            updateHint();
+        }
+        @Override public void onNothingSelected(AdapterView<?> adapterView) {
+            if (watchers_enabled) { save(); }
+            updateHint();
+        }
     };
 
     private TextWatcher text_edits_listener = new TextWatcher() {

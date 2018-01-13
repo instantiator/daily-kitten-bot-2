@@ -20,6 +20,7 @@ import java.util.List;
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.ConditionType;
+import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.ui.viewmodels.EditConditionViewModel;
 import instatiator.dailykittybot2.validation.ConditionValidator;
@@ -33,6 +34,7 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
 
     @BindView(R.id.spin_condition_type) Spinner spin_type;
     @BindView(R.id.edit_condition_modifier) TextInputEditText edit_modifier;
+    @BindView(R.id.text_option_hint) TextView text_hint;
 
     @BindView(R.id.card_errors) CardView card_errors;
     @BindView(R.id.text_errors) TextView text_errors;
@@ -129,6 +131,13 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
         result.updateUI(
                 card_errors, text_errors,
                 card_warnings, text_warnings);
+
+        updateHint();
+    }
+
+    private void updateHint() {
+        ConditionType selection = (ConditionType)spin_type.getSelectedItem();
+        text_hint.setText(selection.getHint());
     }
 
     private void save() {
@@ -149,8 +158,14 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
     }
 
     private Spinner.OnItemSelectedListener spinner_listener = new AdapterView.OnItemSelectedListener() {
-        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) { if (watchers_enabled) { save(); } }
-        @Override public void onNothingSelected(AdapterView<?> adapterView) { if (watchers_enabled) { save(); } }
+        @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+            if (watchers_enabled) { save(); }
+            updateHint();
+        }
+        @Override public void onNothingSelected(AdapterView<?> adapterView) {
+            if (watchers_enabled) { save(); }
+            updateHint();
+        }
     };
 
     private TextWatcher text_edits_listener = new TextWatcher() {

@@ -2,9 +2,40 @@
 <resources>
 
     <string name="condition_type_nothing">Never match</string>
-    <string name="condition_type_title_contains_string">Title contains</string>
-    <string name="condition_type_title_contains_words">Titles contains any of these words</string>
-    <string name="condition_type_is_exact_link">Post is this exact link</string>
-    <string name="condition_type_is_link_with_domains">Post links to one of these domains</string>
+    <string name="condition_type_nothing_hint">
+        Does not match any posts. You can use this Condition to disable a particular Rule.
+    </string>
+
+    <string name="condition_type_title_contains_string">If post title contains</string>
+    <string name="condition_type_title_contains_string_hint">
+        Matches posts with a title containing the text you provide.
+    </string>
+
+    <string name="condition_type_title_contains_words">If post title contains a word from</string>
+    <string name="condition_type_title_contains_words_hint">
+        Matches posts with a title that contains one or more of the words you provide.
+        \n\nComma-separate the words (eg. one,two,three).
+    </string>
+
+    <string name="condition_type_is_exact_link">If post is exact link</string>
+    <string name="condition_type_is_exact_link_hint">
+        Matches posts that are a link to the exact URL you provide.
+    </string>
+
+    <string name="condition_type_is_link_with_domains">If post links to a domain from</string>
+    <string name="condition_type_is_link_with_domains_hint">
+        Matches posts that link to one of the domains you provide.
+        \n\nComma-separate the domains (eg. google.com,yahoo.com,bing.com).
+    </string>
+
+    <string name="condition_type_any_comment_contains_string">If any comment on the post contains</string>
+    <string name="condition_type_any_comment_contains_string_hint">
+        Matches posts that have a comment containing the text you provide.
+    </string>
+
+    <string name="condition_type_no_comment_contains_string">If no comment on the post contains</string>
+    <string name="condition_type_no_comment_contains_string_hint">
+        Matches posts that have no comments containing the text you provide.
+    </string>
 
 </resources>

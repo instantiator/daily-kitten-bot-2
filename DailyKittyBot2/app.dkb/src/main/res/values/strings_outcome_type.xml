@@ -2,8 +2,24 @@
 <resources>
 
     <string name="outcome_type_nothing">Do nothing</string>
+    <string name="outcome_type_nothing_hint">
+        Does nothing, except alert you to the post.
+        \n\nYou can use this as a placeholder outcome to test your conditions and rules.
+    </string>
+
     <string name="outcome_type_add_comment">Add this comment</string>
+    <string name="outcome_type_add_comment_hint">
+        Adds the comment you provide to the matching posts.
+    </string>
+
     <string name="outcome_upvote_post">Upvote the post</string>
+    <string name="outcome_upvote_post_hint">
+        Upvotes the matching posts.
+    </string>
+
     <string name="outcome_downvote_post">Downvote the post</string>
+    <string name="outcome_downvote_post_hint">
+        Downvotes the matching posts.
+    </string>
 
 </resources>

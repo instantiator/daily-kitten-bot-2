@@ -2,6 +2,8 @@ package instatiator.dailykittybot2.validation;
 
 import android.content.Context;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,6 +21,11 @@ public class OutcomeValidator extends AbstractValidator<Outcome> {
     @Override
     protected List<String> check_errors(Outcome object) {
         List<String> errors = new LinkedList<>();
+
+        if (object.type.getRequiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
+            errors.add(context.getString(R.string.validation_outcome_requires_specifics));
+        }
+
         return errors;
     }
 
@@ -26,7 +33,7 @@ public class OutcomeValidator extends AbstractValidator<Outcome> {
     protected List<String> check_warnings(Outcome object) {
         List<String> warnings = new LinkedList<>();
 
-        if (object.type == OutcomeType.NothingSelected) {
+        if (object.type == OutcomeType.DoNothing) {
             warnings.add(context.getString(R.string.validation_outcome_does_nothing));
         }
 

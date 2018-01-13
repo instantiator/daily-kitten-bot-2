@@ -10,7 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:name=".BotApp">
         <activity
             android:name=".ui.AccountsListActivity"
             android:label="@string/app_name"
@@ -30,25 +31,43 @@
 
         <meta-data
             android:name="net.dean.jraw.android.REDDIT_USERNAME"
-            android:value="instantiator" />
+            android:value="instantiator"
+            />
         <meta-data
             android:name="net.dean.jraw.android.CLIENT_ID"
-            android:value="k0QPcxqXcaKV9g" />
+            android:value="k0QPcxqXcaKV9g"
+            />
         <meta-data
             android:name="net.dean.jraw.android.REDIRECT_URL"
-            android:value="http://localhost:5678" />
+            android:value="http://localhost:5678"
+            />
 
         <activity
             android:name=".ui.UserOverviewActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".ui.AddAccountActivity"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
-        <activity android:name=".ui.EditRuleActivity" />
-        <activity android:name=".ui.EditConditionActivity" />
-        <activity android:name=".ui.EditOutcomeActivity"></activity>
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ui.EditRuleActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ui.EditConditionActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".ui.EditOutcomeActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            />
+
     </application>
 
 </manifest>

@@ -27,6 +27,30 @@
                     android:layout_height="wrap_content"
                     />
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top"
+                        android:src="@drawable/ic_info_outline_black_24dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_option_hint"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="describes the currently selected option"
+                        android:padding="3dp"
+                        android:layout_gravity="top"
+                        android:gravity="start"
+                        />
+
+                </LinearLayout>
+
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/edit_condition_modifier"
                     android:layout_width="match_parent"

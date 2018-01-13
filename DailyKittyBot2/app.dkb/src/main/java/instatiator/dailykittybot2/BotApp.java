@@ -2,6 +2,7 @@ package instatiator.dailykittybot2;
 
 import android.Manifest;
 import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
@@ -19,9 +20,12 @@ import java.util.UUID;
 import instatiator.dailykittybot2.service.BotService;
 
 public class BotApp extends Application {
+    public static Context appContext;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        appContext = this;
         init_service();
     }
 

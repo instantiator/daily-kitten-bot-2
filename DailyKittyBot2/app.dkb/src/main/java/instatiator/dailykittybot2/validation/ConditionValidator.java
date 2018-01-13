@@ -2,6 +2,8 @@ package instatiator.dailykittybot2.validation;
 
 import android.content.Context;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -18,6 +20,11 @@ public class ConditionValidator extends AbstractValidator<Condition> {
     @Override
     protected List<String> check_errors(Condition object) {
         List<String> errors = new LinkedList<>();
+
+        if (object.type.getRequiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
+            errors.add(context.getString(R.string.validation_condition_requires_specifics));
+        }
+
         return errors;
     }
 
@@ -25,7 +32,7 @@ public class ConditionValidator extends AbstractValidator<Condition> {
     protected List<String> check_warnings(Condition object) {
         List<String> warnings = new LinkedList<>();
 
-        if (object.type == ConditionType.NothingSelected) {
+        if (object.type == ConditionType.NeverMatch) {
             warnings.add(context.getString(R.string.validation_condition_does_nothing));
         }
 

@@ -21,7 +21,7 @@ public class DataFactory {
     public static Condition create_condition(UUID rule_id) {
         Condition condition = new Condition();
         condition.uuid = UUID.randomUUID();
-        condition.type = ConditionType.NothingSelected;
+        condition.type = ConditionType.NeverMatch;
         condition.ruleUuid = rule_id;
         return condition;
     }
@@ -29,7 +29,7 @@ public class DataFactory {
     public static Outcome create_outcome(UUID rule_id) {
         Outcome outcome = new Outcome();
         outcome.uuid = UUID.randomUUID();
-        outcome.type = OutcomeType.NothingSelected;
+        outcome.type = OutcomeType.DoNothing;
         outcome.ruleUuid = rule_id;
         return outcome;
     }
