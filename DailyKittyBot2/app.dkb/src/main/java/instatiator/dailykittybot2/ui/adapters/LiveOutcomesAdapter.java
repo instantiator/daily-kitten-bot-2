@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,6 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Outcome;
+import instatiator.dailykittybot2.validation.OutcomeValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -29,11 +32,14 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
     private Listener listener;
     private CardView empty_card;
 
+    private OutcomeValidator validator;
+
     public LiveOutcomesAdapter(AppCompatActivity activity, LiveData<List<Outcome>> live_outcomes, RecyclerView recyclerView, Listener listener, CardView empty_card) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.listener = listener;
         this.empty_card = empty_card;
+        this.validator = new OutcomeValidator(activity);
 
         this.outcomes = live_outcomes.getValue();
 
@@ -66,6 +72,11 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
         holder.outcome = outcome;
         holder.text_outcome_name.setText(outcome.type.getDescription());
         holder.text_outcome_summary.setText(outcome.modifier);
+
+        ValidationResult result = validator.validate(outcome);
+
+        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
+        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
     }
 
     @Override
@@ -78,6 +89,8 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
 
         @BindView(R.id.text_outcome_name) public TextView text_outcome_name;
         @BindView(R.id.text_outcome_summary)public TextView text_outcome_summary;
+        @BindView(R.id.icon_warning) public ImageView icon_warning;
+        @BindView(R.id.icon_error) public ImageView icon_error;
 
         public OutcomeHolder(View itemView) {
             super(itemView);

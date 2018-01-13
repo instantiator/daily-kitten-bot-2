@@ -23,6 +23,7 @@ import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.ui.adapters.LiveOutcomesAdapter;
 import instatiator.dailykittybot2.ui.adapters.LiveRulesAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
+import instatiator.dailykittybot2.validation.OutcomeValidator;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;

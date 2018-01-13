@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -18,6 +19,8 @@ import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.validation.ConditionValidator;
+import instatiator.dailykittybot2.validation.ValidationResult;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -30,11 +33,14 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
     private Listener listener;
     private CardView empty_card;
 
+    private ConditionValidator validator;
+
     public LiveConditionsAdapter(AppCompatActivity activity, LiveData<List<Condition>> live_conditions, RecyclerView recyclerView, Listener listener, CardView empty_card) {
         this.activity = activity;
         this.recyclerView = recyclerView;
         this.listener = listener;
         this.empty_card = empty_card;
+        this.validator = new ConditionValidator(activity);
 
         this.conditions = live_conditions.getValue();
 
@@ -67,6 +73,11 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
         holder.condition = condition;
         holder.text_condition_name.setText(activity.getString(condition.type.getDescription()));
         holder.text_condition_summary.setText(condition.modifier);
+
+        ValidationResult result = validator.validate(condition);
+
+        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
+        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
     }
 
     @Override
@@ -79,6 +90,8 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
 
         @BindView(R.id.text_condition_name) public TextView text_condition_name;
         @BindView(R.id.text_condition_summary)public TextView text_condition_summary;
+        @BindView(R.id.icon_warning) public ImageView icon_warning;
+        @BindView(R.id.icon_error) public ImageView icon_error;
 
         public ConditionHolder(View itemView) {
             super(itemView);

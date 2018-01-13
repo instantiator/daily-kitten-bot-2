@@ -24,6 +24,28 @@
                 android:layout_alignParentTop="true"
                 />
 
+            <ImageView
+                android:id="@+id/icon_warning"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_warning_black_24dp"
+                android:tint="#dddd22"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5dp"
+                />
+
+            <ImageView
+                android:id="@+id/icon_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_warning_black_24dp"
+                android:tint="#880000"
+                android:layout_marginStart="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                />
+
             <TextView
                 android:id="@+id/text_outcome_name"
                 android:layout_width="match_parent"
@@ -31,6 +53,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="outcome name"
                 android:layout_toEndOf="@id/icon_current"
+                android:layout_toStartOf="@id/icon_error"
                 />
 
             <TextView

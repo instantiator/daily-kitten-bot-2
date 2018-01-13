@@ -23,6 +23,7 @@ import instatiator.dailykittybot2.ui.adapters.LiveConditionsAdapter;
 import instatiator.dailykittybot2.ui.adapters.LiveRulesAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
 import instatiator.dailykittybot2.ui.viewmodels.UserOverviewViewModel;
+import instatiator.dailykittybot2.validation.ConditionValidator;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
