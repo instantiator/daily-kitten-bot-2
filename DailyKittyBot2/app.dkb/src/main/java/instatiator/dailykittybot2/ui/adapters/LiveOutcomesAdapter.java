@@ -10,12 +10,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.util.ColourConventions;
@@ -93,6 +95,9 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
         @BindView(R.id.text_outcome_name) public TextView text_outcome_name;
         @BindView(R.id.text_outcome_summary)public TextView text_outcome_summary;
         @BindView(R.id.icon_alert) public ImageView icon_alert;
+        @BindView(R.id.icon_menu) public ImageView icon_menu;
+
+        PopupMenu popup;
 
         public OutcomeHolder(View itemView) {
             super(itemView);
@@ -104,10 +109,34 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
                     listener.outcome_selected(outcome);
                 }
             });
+
+            popup = new PopupMenu(icon_menu.getContext(), icon_menu);
+            popup.getMenu().add(0, R.string.menu_outcome_view, 0, R.string.menu_outcome_view);
+            popup.getMenu().add(0, R.string.menu_outcome_delete, 0, R.string.menu_outcome_delete);
+
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.string.menu_condition_view:
+                        listener.outcome_selected(outcome);
+                        return true;
+                    case R.string.menu_outcome_delete:
+                        listener.request_delete(outcome);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
         }
+
+        @OnClick(R.id.icon_menu)
+        public void overflow_click() {
+            popup.show();
+        }
+
     }
 
     public interface Listener {
         void outcome_selected(Outcome outcome);
+        void request_delete(Outcome outcome);
     }
 }

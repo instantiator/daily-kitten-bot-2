@@ -10,6 +10,8 @@
     <string name="validation_rule_has_blank_name">Rule name is blank.</string>
     <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>
 
+    <string name="validation_first_condition_must_filter_posts">For performance reasons, the first condition must filter on posts, not comments.</string>
+
     <string name="validation_rule_has_X_condition_errors">%d conditions have errors.</string>
     <string name="validation_rule_has_X_outcome_errors">%d outcomes have errors.</string>
 

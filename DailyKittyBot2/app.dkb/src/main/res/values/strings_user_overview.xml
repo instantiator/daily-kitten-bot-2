@@ -8,6 +8,9 @@
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
 
+    <string name="dialog_title_confirm_delete_rule">Delete rule?</string>
+    <string name="dialog_message_confirm_delete_rule">Please confirm you wish to delete this rule.</string>
+
     <string name="summary_rule_subreddits">Subreddits: %s.</string>
     <string name="summary_rule_no_subreddits">No subreddits selected.</string>
     <string name="summary_rule_autorun">Auto run enabled.</string>

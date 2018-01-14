@@ -139,6 +139,11 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
+    public void run(Rule rule) {
+        informUser("running rule...");
+    }
+
+    @Override
     public LiveData<List<RuleTriplet>> get_rule_triplets_for(String username) {
         return workspace.rule_triplets_for(username);
     }
@@ -176,6 +181,28 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
                 workspace.delete_condition(condition);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
+    }
+
+    @Override
+    public void delete_outcome(Outcome outcome) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_outcome(outcome);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
+    }
+
+    @Override
+    public void delete_rule(Rule rule) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_rule(rule);
             } catch (Exception e) {
                 Log.e(TAG, "Exception encountered deleting condition", e);
             }

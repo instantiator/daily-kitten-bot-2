@@ -1,5 +1,6 @@
 package instatiator.dailykittybot2.ui.fragments;
 
+import android.app.AlertDialog;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.content.Context;
@@ -97,10 +98,33 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
         public void rule_selected(Rule rule) {
             listener.rule_selected(rule);
         }
+
+        @Override
+        public void request_delete(Rule rule) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.dialog_title_confirm_delete_rule)
+                    .setMessage(R.string.dialog_message_confirm_delete_rule)
+                    .setPositiveButton(R.string.btn_delete, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.request_delete(rule);
+                    })
+                    .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
+        }
+
+        @Override
+        public void request_run(Rule rule) {
+            listener.request_run(rule);
+        }
     };
 
     public interface Listener {
         void rule_selected(Rule rule);
         void request_create_rule();
+        void request_delete(Rule rule);
+        void request_run(Rule rule);
     }
 }

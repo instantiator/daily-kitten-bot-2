@@ -1,5 +1,6 @@
 package instatiator.dailykittybot2.ui.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -90,10 +91,27 @@ public class EditRuleOutcomesFragment extends AbstractBotFragment<EditRuleViewMo
         public void outcome_selected(Outcome outcome) {
             listener.outcome_selected(outcome);
         }
+
+        @Override
+        public void request_delete(final Outcome outcome) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.dialog_title_confirm_delete_outcome)
+                    .setMessage(R.string.dialog_message_confirm_delete_outcome)
+                    .setPositiveButton(R.string.btn_delete, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.request_delete(outcome);
+                    })
+                    .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
+        }
     };
 
     public interface Listener {
         void outcome_selected(Outcome outcome);
         void request_create_outcome();
+        void request_delete(Outcome outcome);
     }
 }

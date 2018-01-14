@@ -109,12 +109,16 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
             itemView.setOnClickListener(view -> listener.condition_selected(condition));
 
             popup = new PopupMenu(icon_menu.getContext(), icon_menu);
+            popup.getMenu().add(0, R.string.menu_condition_view, 0, R.string.menu_condition_view);
+            popup.getMenu().add(0, R.string.menu_condition_delete, 0, R.string.menu_condition_delete);
             popup.getMenu().add(0, R.string.menu_condition_move_up, 0, R.string.menu_condition_move_up);
             popup.getMenu().add(0, R.string.menu_condition_move_down, 0, R.string.menu_condition_move_down);
-            popup.getMenu().add(0, R.string.menu_condition_delete, 0, R.string.menu_condition_delete);
 
             popup.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
+                    case R.string.menu_condition_view:
+                        listener.condition_selected(condition);
+                        return true;
                     case R.string.menu_condition_move_up:
                         listener.request_move_up(condition);
                         return true;

@@ -6,10 +6,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Triple;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.ConditionType;
 import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
@@ -39,6 +41,13 @@ public class RuleValidator extends AbstractValidator<RuleTriplet> {
             errors.add(context.getString(R.string.validation_rule_has_no_subreddits));
         }
 
+        if (triplet.conditions != null && triplet.conditions.size() > 0) {
+            Condition c = findFirstRunning(triplet.conditions, true);
+            if (c != null && !c.type.isPostFilter()) {
+                errors.add(context.getString(R.string.validation_first_condition_must_filter_posts));
+            }
+        }
+
         int condition_errors = 0;
         if (triplet.conditions != null) {
             for (Condition condition : triplet.conditions) {
@@ -64,6 +73,22 @@ public class RuleValidator extends AbstractValidator<RuleTriplet> {
         }
 
         return errors;
+    }
+
+    private Condition findFirstRunning(List<Condition> conditions, boolean ignoreNeverMatch) {
+        int max_order = 0;
+        Condition found = null;
+        for (Condition c : conditions) {
+            if (ignoreNeverMatch && c.type == ConditionType.NeverMatch) {
+                continue;
+            }
+
+            if (found == null || c.ordering > max_order) {
+                found = c;
+                max_order = c.ordering;
+            }
+        }
+        return found;
     }
 
     @Override

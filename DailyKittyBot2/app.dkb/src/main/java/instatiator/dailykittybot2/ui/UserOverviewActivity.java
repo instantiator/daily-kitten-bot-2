@@ -116,4 +116,14 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
         startActivity(intent);
     }
 
+    @Override
+    public void request_delete(Rule rule) {
+        service.delete_rule(rule);
+    }
+
+    @Override
+    public void request_run(Rule rule) {
+        service.run(rule); // TODO: reporting on this + validation checks before running
+    }
+
 }

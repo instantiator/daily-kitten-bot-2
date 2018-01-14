@@ -14,12 +14,23 @@
     <string name="hint_subreddit_tag">Subreddit</string>
     <string name="button_save_rule_edits">Save</string>
 
+    <string name="menu_condition_view">View condition...</string>
     <string name="menu_condition_move_up">Move up</string>
     <string name="menu_condition_move_down">Move down</string>
-    <string name="menu_condition_delete">Delete</string>
+    <string name="menu_condition_delete">Delete condition...</string>
+
+    <string name="menu_outcome_view">View outcome...</string>
+    <string name="menu_outcome_delete">Delete outcome...</string>
+
+    <string name="menu_rule_view">View rule...</string>
+    <string name="menu_rule_delete">Delete rule...</string>
+    <string name="menu_rule_run">Run rule now...</string>
 
     <string name="dialog_title_confirm_delete_condition">Delete condition?</string>
     <string name="dialog_message_confirm_delete_condition">Please confirm that you wish to delete this condition.</string>
+
+    <string name="dialog_title_confirm_delete_outcome">Delete outcome?</string>
+    <string name="dialog_message_confirm_delete_outcome">Please confirm that you wish to delete this outcome.</string>
 
     <string name="toast_warning_rule_not_for_you">Attempt to view rule for the wrong user.</string>
 

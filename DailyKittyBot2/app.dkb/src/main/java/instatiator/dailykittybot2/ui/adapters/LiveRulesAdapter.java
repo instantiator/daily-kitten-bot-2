@@ -1,6 +1,5 @@
 package instatiator.dailykittybot2.ui.adapters;
 
-import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
@@ -12,25 +11,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import net.dean.jraw.models.PersistedAuthData;
-import net.dean.jraw.oauth.DeferredPersistentTokenStore;
-
-import org.apache.commons.lang3.tuple.ImmutableTriple;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.RuleTriplet;
-import instatiator.dailykittybot2.db.entities.Condition;
-import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
-import instatiator.dailykittybot2.service.IBotService;
 import instatiator.dailykittybot2.util.ColourConventions;
 import instatiator.dailykittybot2.validation.RuleValidator;
 import instatiator.dailykittybot2.validation.ValidationResult;
@@ -119,6 +110,9 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         @BindView(R.id.text_rule_name) public TextView text_rule_name;
         @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
         @BindView(R.id.icon_alert) public ImageView icon_alert;
+        @BindView(R.id.icon_menu) public ImageView icon_menu;
+
+        PopupMenu popup;
 
         public RuleHolder(View itemView) {
             super(itemView);
@@ -130,10 +124,39 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
                     listener.rule_selected(triplet.rule);
                 }
             });
+
+            popup = new PopupMenu(icon_menu.getContext(), icon_menu);
+            popup.getMenu().add(0, R.string.menu_rule_view, 0, R.string.menu_rule_view);
+            popup.getMenu().add(0, R.string.menu_rule_delete, 0, R.string.menu_rule_delete);
+            popup.getMenu().add(0, R.string.menu_rule_run, 0, R.string.menu_rule_run);
+
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.string.menu_rule_view:
+                        listener.rule_selected(triplet.rule);
+                        return true;
+                    case R.string.menu_rule_delete:
+                        listener.request_delete(triplet.rule);
+                        return true;
+                    case R.string.menu_rule_run:
+                        listener.request_run(triplet.rule);
+                        return true;
+                    default:
+                        return false;
+                }
+            });
         }
+
+        @OnClick(R.id.icon_menu)
+        public void overflow_click() {
+            popup.show();
+        }
+
     }
 
     public interface Listener {
         void rule_selected(Rule rule);
+        void request_delete(Rule rule);
+        void request_run(Rule rule);
     }
 }

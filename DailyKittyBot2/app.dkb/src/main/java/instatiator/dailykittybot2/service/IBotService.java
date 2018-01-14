@@ -34,6 +34,10 @@ public interface IBotService {
     void update_outcome(Outcome outcome);
 
     void delete_condition(Condition condition);
+    void delete_outcome(Outcome outcome);
+    void delete_rule(Rule rule);
+
+    void run(Rule rule); // TODO: probably not void
 
     void injectTestData(String user);
 

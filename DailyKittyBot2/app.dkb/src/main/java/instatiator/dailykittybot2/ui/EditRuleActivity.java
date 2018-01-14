@@ -170,6 +170,11 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
     }
 
     @Override
+    public void request_delete(Outcome outcome) {
+        service.delete_outcome(outcome);
+    }
+
+    @Override
     public void request_move_up(Condition condition) {
         List<Condition> conditions = model.getRuleConditions().getValue();
         int index = conditions.indexOf(condition);

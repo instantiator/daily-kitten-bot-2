@@ -76,6 +76,10 @@ public class BotWorkspace {
 
     public void delete_condition(Condition condition) { db.conditionDao().delete(condition); }
 
+    public void delete_outcome(Outcome outcome) { db.outcomeDao().delete(outcome); }
+
+    public void delete_rule(Rule rule) { db.ruleDao().delete(rule); }
+
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {
         return db.ruleTripletDao().loadAllByUsername(username);
     }
