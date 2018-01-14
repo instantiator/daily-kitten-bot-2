@@ -25,25 +25,15 @@
                 />
 
             <ImageView
-                android:id="@+id/icon_warning"
+                android:id="@+id/icon_alert"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_warning_black_24dp"
                 android:tint="#dddd22"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="5dp"
-                />
-
-            <ImageView
-                android:id="@+id/icon_error"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_warning_black_24dp"
-                android:tint="#880000"
-                android:layout_marginStart="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignEnd="@id/icon_current"
+                android:layout_below="@id/icon_current"
+                android:padding="2dp"
                 />
 
             <TextView
@@ -53,7 +43,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="rule name"
                 android:layout_toEndOf="@id/icon_current"
-                android:layout_toStartOf="@id/icon_error"
                 />
 
             <TextView

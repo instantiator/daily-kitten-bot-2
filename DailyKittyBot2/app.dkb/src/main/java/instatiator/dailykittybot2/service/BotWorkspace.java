@@ -46,6 +46,10 @@ public class BotWorkspace {
         return db.outcomeDao().loadAllByRule(rule);
     }
 
+    public int max_condition_ordering_for_rule(UUID rule) {
+        return db.conditionDao().getMaxOrderingForRule(rule);
+    }
+
     public void insert_rule(Rule rule) {
         db.ruleDao().insertAll(rule);
     }
@@ -69,6 +73,8 @@ public class BotWorkspace {
     public void update_outcome(Outcome outcome) {
         db.outcomeDao().updateAll(outcome);
     }
+
+    public void delete_condition(Condition condition) { db.conditionDao().delete(condition); }
 
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {
         return db.ruleTripletDao().loadAllByUsername(username);

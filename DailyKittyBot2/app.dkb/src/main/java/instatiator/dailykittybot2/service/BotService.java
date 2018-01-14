@@ -158,15 +158,28 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
 
     @Override
     public Condition create_condition(UUID rule_id) {
-        final Condition condition = DataFactory.create_condition(rule_id);
+        Condition condition = DataFactory.create_condition(rule_id, Integer.MAX_VALUE);
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
+                int ordering = workspace.max_condition_ordering_for_rule(rule_id) + 1;
+                condition.ordering = ordering;
                 workspace.insert_condition(condition);
             } catch (Exception e) {
                 Log.e(TAG, "Exception encountered updating rule", e);
             }
         });
         return condition;
+    }
+
+    @Override
+    public void delete_condition(Condition condition) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_condition(condition);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
     }
 
     @Override

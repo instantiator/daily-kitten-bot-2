@@ -14,6 +14,13 @@
     <string name="hint_subreddit_tag">Subreddit</string>
     <string name="button_save_rule_edits">Save</string>
 
+    <string name="menu_condition_move_up">Move up</string>
+    <string name="menu_condition_move_down">Move down</string>
+    <string name="menu_condition_delete">Delete</string>
+
+    <string name="dialog_title_confirm_delete_condition">Delete condition?</string>
+    <string name="dialog_message_confirm_delete_condition">Please confirm that you wish to delete this condition.</string>
+
     <string name="toast_warning_rule_not_for_you">Attempt to view rule for the wrong user.</string>
 
     <string name="text_describe_rules">
@@ -27,7 +34,10 @@
 
     <string name="text_no_conditions">
         You have not defined any conditions.
-        \n\nWhen a rule\'s conditions are satisfied, DKB then transforms its outcomes into recommendations.
+        \n\nConditions are filters, which will match certain posts.
+        They are processed in order, from top to bottom.
+        \n\nFor performance reasons, your first condition cannot operate on post comments.
+        \n\nWhen all of a rule\'s conditions are satisfied, DKB then transforms its outcomes into recommendations.
     </string>
 
     <string name="text_no_outcomes">

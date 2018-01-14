@@ -21,7 +21,7 @@ public class ConditionValidator extends AbstractValidator<Condition> {
     protected List<String> check_errors(Condition object) {
         List<String> errors = new LinkedList<>();
 
-        if (object.type.getRequiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
+        if (object.type.requiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
             errors.add(context.getString(R.string.validation_condition_requires_specifics));
         }
 

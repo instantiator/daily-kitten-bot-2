@@ -18,6 +18,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Outcome;
+import instatiator.dailykittybot2.util.ColourConventions;
 import instatiator.dailykittybot2.validation.OutcomeValidator;
 import instatiator.dailykittybot2.validation.ValidationResult;
 
@@ -31,7 +32,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
     private RecyclerView recyclerView;
     private Listener listener;
     private CardView empty_card;
-
+    private ColourConventions colours;
     private OutcomeValidator validator;
 
     public LiveOutcomesAdapter(AppCompatActivity activity, LiveData<List<Outcome>> live_outcomes, RecyclerView recyclerView, Listener listener, CardView empty_card) {
@@ -40,7 +41,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
         this.listener = listener;
         this.empty_card = empty_card;
         this.validator = new OutcomeValidator(activity);
-
+        this.colours = new ColourConventions(activity);
         this.outcomes = live_outcomes.getValue();
 
         update_empty_card();
@@ -75,8 +76,10 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
 
         ValidationResult result = validator.validate(outcome);
 
-        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
-        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
+        boolean errors = result.errors.size() > 0;
+        boolean warnings = result.warnings.size() > 0;
+        holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
+        holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
     }
 
     @Override
@@ -89,8 +92,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
 
         @BindView(R.id.text_outcome_name) public TextView text_outcome_name;
         @BindView(R.id.text_outcome_summary)public TextView text_outcome_summary;
-        @BindView(R.id.icon_warning) public ImageView icon_warning;
-        @BindView(R.id.icon_error) public ImageView icon_error;
+        @BindView(R.id.icon_alert) public ImageView icon_alert;
 
         public OutcomeHolder(View itemView) {
             super(itemView);

@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.widget.CardView;
 import android.text.Editable;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
@@ -20,7 +18,6 @@ import java.util.List;
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.ConditionType;
-import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.ui.viewmodels.EditConditionViewModel;
 import instatiator.dailykittybot2.validation.ConditionValidator;
@@ -28,7 +25,6 @@ import instatiator.dailykittybot2.validation.ValidationResult;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static instatiator.dailykittybot2.util.TextHelper.create_list_html;
 
 public class EditConditionDetailFragment extends AbstractBotFragment<EditConditionViewModel, EditConditionDetailFragment.Listener> {
 
@@ -132,19 +128,22 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
                 card_errors, text_errors,
                 card_warnings, text_warnings);
 
-        updateHint();
+        updateHintAndModifier();
     }
 
-    private void updateHint() {
+    private void updateHintAndModifier() {
         ConditionType selection = (ConditionType)spin_type.getSelectedItem();
         text_hint.setText(selection.getHint());
+        edit_modifier.setVisibility(selection.requiresSpecifics() ? VISIBLE : GONE);
     }
 
     private void save() {
         Condition condition = model.getItem().getValue();
-        condition.modifier = edit_modifier.getText().toString();
-        condition.type = (ConditionType) spin_type.getSelectedItem();
-        listener.save_condition_detail_now(condition);
+        if (condition != null) {
+            condition.modifier = edit_modifier.getText().toString();
+            condition.type = (ConditionType) spin_type.getSelectedItem();
+            listener.save_condition_detail_now(condition);
+        }
     }
 
     @Override
@@ -160,11 +159,11 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
     private Spinner.OnItemSelectedListener spinner_listener = new AdapterView.OnItemSelectedListener() {
         @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (watchers_enabled) { save(); }
-            updateHint();
+            updateHintAndModifier();
         }
         @Override public void onNothingSelected(AdapterView<?> adapterView) {
             if (watchers_enabled) { save(); }
-            updateHint();
+            updateHintAndModifier();
         }
     };
 

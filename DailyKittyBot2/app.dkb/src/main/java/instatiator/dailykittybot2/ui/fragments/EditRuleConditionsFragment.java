@@ -1,5 +1,6 @@
 package instatiator.dailykittybot2.ui.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -90,10 +91,39 @@ public class EditRuleConditionsFragment extends AbstractBotFragment<EditRuleView
         public void condition_selected(Condition condition) {
             listener.condition_selected(condition);
         }
+
+        @Override
+        public void request_move_up(Condition condition) {
+            listener.request_move_up(condition);
+        }
+
+        @Override
+        public void request_move_down(Condition condition) {
+            listener.request_move_down(condition);
+        }
+
+        @Override
+        public void request_delete(final Condition condition) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.dialog_title_confirm_delete_condition)
+                    .setMessage(R.string.dialog_message_confirm_delete_condition)
+                    .setPositiveButton(R.string.btn_delete, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.request_delete(condition);
+                    })
+                    .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
+        }
     };
 
     public interface Listener {
         void condition_selected(Condition condition);
         void request_create_condition();
+        void request_move_up(Condition condition);
+        void request_move_down(Condition condition);
+        void request_delete(Condition condition);
     }
 }

@@ -20,9 +20,11 @@ import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.OutcomeType;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.ui.viewmodels.EditOutcomeViewModel;
-import instatiator.dailykittybot2.validation.ConditionValidator;
 import instatiator.dailykittybot2.validation.OutcomeValidator;
 import instatiator.dailykittybot2.validation.ValidationResult;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeViewModel, EditOutcomeDetailFragment.Listener> {
 
@@ -127,9 +129,10 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
                 card_warnings, text_warnings);
     }
 
-    private void updateHint() {
+    private void updateHintAndModifier() {
         OutcomeType selection = (OutcomeType)spin_type.getSelectedItem();
         text_hint.setText(selection.getHint());
+        edit_modifier.setVisibility(selection.requiresSpecifics() ? VISIBLE : GONE);
     }
 
     private void save() {
@@ -152,11 +155,11 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
     private Spinner.OnItemSelectedListener spinner_listener = new AdapterView.OnItemSelectedListener() {
         @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
             if (watchers_enabled) { save(); }
-            updateHint();
+            updateHintAndModifier();
         }
         @Override public void onNothingSelected(AdapterView<?> adapterView) {
             if (watchers_enabled) { save(); }
-            updateHint();
+            updateHintAndModifier();
         }
     };
 

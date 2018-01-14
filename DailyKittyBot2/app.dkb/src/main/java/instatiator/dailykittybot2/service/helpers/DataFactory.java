@@ -18,11 +18,12 @@ public class DataFactory {
         return rule;
     }
 
-    public static Condition create_condition(UUID rule_id) {
+    public static Condition create_condition(UUID rule_id, int ordering) {
         Condition condition = new Condition();
         condition.uuid = UUID.randomUUID();
         condition.type = ConditionType.NeverMatch;
         condition.ruleUuid = rule_id;
+        condition.ordering = ordering;
         return condition;
     }
 

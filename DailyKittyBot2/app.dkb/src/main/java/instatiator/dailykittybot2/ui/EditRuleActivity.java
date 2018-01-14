@@ -11,6 +11,7 @@ import android.util.Log;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -163,4 +164,40 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
         startActivity(intent);
     }
 
+    @Override
+    public void request_delete(Condition condition) {
+        service.delete_condition(condition);
+    }
+
+    @Override
+    public void request_move_up(Condition condition) {
+        List<Condition> conditions = model.getRuleConditions().getValue();
+        int index = conditions.indexOf(condition);
+        if (index > 0) {
+            Condition above = conditions.get(index-1);
+
+            int swap = above.ordering;
+            above.ordering = condition.ordering;
+            condition.ordering = swap;
+
+            service.update_condition(condition);
+            service.update_condition(above);
+        }
+    }
+
+    @Override
+    public void request_move_down(Condition condition) {
+        List<Condition> conditions = model.getRuleConditions().getValue();
+        int index = conditions.indexOf(condition);
+        if (index < conditions.size() - 1) {
+            Condition below = conditions.get(index+1);
+
+            int swap = below.ordering;
+            below.ordering = condition.ordering;
+            condition.ordering = swap;
+
+            service.update_condition(condition);
+            service.update_condition(below);
+        }
+    }
 }

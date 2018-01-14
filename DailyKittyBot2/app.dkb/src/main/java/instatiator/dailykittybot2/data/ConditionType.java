@@ -53,7 +53,7 @@ public enum ConditionType {
 
     public int getHint() { return hint; }
 
-    public boolean getRequiresSpecifics() { return requires_specifics; }
+    public boolean requiresSpecifics() { return requires_specifics; }
 
     @Override
     public String toString() { return BotApp.appContext.getString(description); }

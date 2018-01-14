@@ -31,6 +31,7 @@ import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.util.ColourConventions;
 import instatiator.dailykittybot2.validation.RuleValidator;
 import instatiator.dailykittybot2.validation.ValidationResult;
 
@@ -44,7 +45,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     private RecyclerView recyclerView;
     private Listener listener;
     private CardView empty_card;
-
+    private ColourConventions colours;
     private RuleValidator validator;
 
     public LiveRulesAdapter(AppCompatActivity activity, LiveData<List<RuleTriplet>> live_rules, RecyclerView recyclerView, Listener listener, CardView empty_card) {
@@ -53,6 +54,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         this.listener = listener;
         this.empty_card = empty_card;
         this.validator = new RuleValidator(activity);
+        this.colours = new ColourConventions(activity);
 
         this.triplets = live_rules.getValue();
         update_empty_card();
@@ -87,8 +89,10 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
         ValidationResult result = validator.validate(triplet);
 
-        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
-        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
+        boolean errors = result.errors.size() > 0;
+        boolean warnings = result.warnings.size() > 0;
+        holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
+        holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
     }
 
     private String summarise(Rule rule) {
@@ -114,8 +118,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
         @BindView(R.id.text_rule_name) public TextView text_rule_name;
         @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
-        @BindView(R.id.icon_warning) public ImageView icon_warning;
-        @BindView(R.id.icon_error) public ImageView icon_error;
+        @BindView(R.id.icon_alert) public ImageView icon_alert;
 
         public RuleHolder(View itemView) {
             super(itemView);

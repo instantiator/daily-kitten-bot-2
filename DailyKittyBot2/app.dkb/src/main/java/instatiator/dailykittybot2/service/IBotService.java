@@ -33,6 +33,8 @@ public interface IBotService {
     void update_condition(Condition condition);
     void update_outcome(Outcome outcome);
 
+    void delete_condition(Condition condition);
+
     void injectTestData(String user);
 
     enum State {

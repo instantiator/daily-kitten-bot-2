@@ -22,7 +22,7 @@ public class OutcomeValidator extends AbstractValidator<Outcome> {
     protected List<String> check_errors(Outcome object) {
         List<String> errors = new LinkedList<>();
 
-        if (object.type.getRequiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
+        if (object.type.requiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
             errors.add(context.getString(R.string.validation_outcome_requires_specifics));
         }
 

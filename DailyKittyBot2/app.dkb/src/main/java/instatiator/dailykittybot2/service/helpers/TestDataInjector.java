@@ -38,7 +38,7 @@ public class TestDataInjector {
         List<Outcome> outcomes = new LinkedList<>();
 
         for (int i = 0; i < with_conditions; i++)
-            conditions.add(create_condition(rule.uuid));
+            conditions.add(create_condition(rule.uuid, i));
 
         for (int i = 0; i < with_outcomes; i++)
             outcomes.add(create_outcome(rule.uuid));
@@ -56,12 +56,13 @@ public class TestDataInjector {
         return rule;
     }
 
-    private Condition create_condition(UUID rule) {
+    private Condition create_condition(UUID rule, int ordering) {
         Condition condition = new Condition();
         condition.uuid = UUID.randomUUID();
         condition.ruleUuid = rule;
         condition.type = choose_random(ConditionType.values());
         condition.modifier = generate_word(LEN_CONDITION_MODIFIER, "Condition modifier");
+        condition.ordering = ordering;
         return condition;
     }
 

@@ -10,15 +10,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Condition;
-import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.util.ColourConventions;
 import instatiator.dailykittybot2.validation.ConditionValidator;
 import instatiator.dailykittybot2.validation.ValidationResult;
 
@@ -32,7 +34,7 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
     private RecyclerView recyclerView;
     private Listener listener;
     private CardView empty_card;
-
+    private ColourConventions colours;
     private ConditionValidator validator;
 
     public LiveConditionsAdapter(AppCompatActivity activity, LiveData<List<Condition>> live_conditions, RecyclerView recyclerView, Listener listener, CardView empty_card) {
@@ -41,7 +43,7 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
         this.listener = listener;
         this.empty_card = empty_card;
         this.validator = new ConditionValidator(activity);
-
+        this.colours = new ColourConventions(activity);
         this.conditions = live_conditions.getValue();
 
         update_empty_card();
@@ -76,8 +78,10 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
 
         ValidationResult result = validator.validate(condition);
 
-        holder.icon_error.setVisibility(result.errors.size() > 0 ? VISIBLE : GONE);
-        holder.icon_warning.setVisibility(result.warnings.size() > 0 ? VISIBLE : GONE);
+        boolean errors = result.errors.size() > 0;
+        boolean warnings = result.warnings.size() > 0;
+        holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
+        holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
     }
 
     @Override
@@ -88,25 +92,64 @@ public class LiveConditionsAdapter extends RecyclerView.Adapter<LiveConditionsAd
     public class ConditionHolder extends RecyclerView.ViewHolder {
         public Condition condition;
 
+        public PopupMenu popup;
+
         @BindView(R.id.text_condition_name) public TextView text_condition_name;
         @BindView(R.id.text_condition_summary)public TextView text_condition_summary;
-        @BindView(R.id.icon_warning) public ImageView icon_warning;
-        @BindView(R.id.icon_error) public ImageView icon_error;
+        @BindView(R.id.icon_alert) public ImageView icon_alert;
+
+        @BindView(R.id.icon_move_up) public ImageView icon_move_up;
+        @BindView(R.id.icon_move_down) public ImageView icon_move_down;
+        @BindView(R.id.icon_menu) public ImageView icon_menu;
 
         public ConditionHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.condition_selected(condition);
+            itemView.setOnClickListener(view -> listener.condition_selected(condition));
+
+            popup = new PopupMenu(icon_menu.getContext(), icon_menu);
+            popup.getMenu().add(0, R.string.menu_condition_move_up, 0, R.string.menu_condition_move_up);
+            popup.getMenu().add(0, R.string.menu_condition_move_down, 0, R.string.menu_condition_move_down);
+            popup.getMenu().add(0, R.string.menu_condition_delete, 0, R.string.menu_condition_delete);
+
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.string.menu_condition_move_up:
+                        listener.request_move_up(condition);
+                        return true;
+                    case R.string.menu_condition_move_down:
+                        listener.request_move_down(condition);
+                        return true;
+                    case R.string.menu_condition_delete:
+                        listener.request_delete(condition);
+                        return true;
+                    default:
+                        return false;
                 }
             });
+        }
+
+        @OnClick(R.id.icon_menu)
+        public void overflow_click() {
+            popup.show();
+        }
+
+        @OnClick(R.id.icon_move_up)
+        public void up_click() {
+            listener.request_move_up(condition);
+        }
+
+        @OnClick(R.id.icon_move_down)
+        public void down_click() {
+            listener.request_move_down(condition);
         }
     }
 
     public interface Listener {
-        void condition_selected(Condition cOndition);
+        void condition_selected(Condition condition);
+        void request_move_up(Condition condition);
+        void request_move_down(Condition condition);
+        void request_delete(Condition condition);
     }
 }
