@@ -86,6 +86,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
 
         holder.icon_current.getDrawable().setTint(colours.rule_icon(triplet.rule.run_periodically));
+        holder.text_rule_name.setTextColor(colours.rule_icon(triplet.rule.run_periodically));
     }
 
     private String summarise(Rule rule) {
