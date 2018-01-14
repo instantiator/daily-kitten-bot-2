@@ -84,6 +84,8 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         boolean warnings = result.warnings.size() > 0;
         holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
         holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
+
+        holder.icon_current.getDrawable().setTint(colours.rule_icon(triplet.rule.run_periodically));
     }
 
     private String summarise(Rule rule) {
@@ -107,6 +109,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     public class RuleHolder extends RecyclerView.ViewHolder {
         public RuleTriplet triplet;
 
+        @BindView(R.id.icon_current) public ImageView icon_current;
         @BindView(R.id.text_rule_name) public TextView text_rule_name;
         @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
         @BindView(R.id.icon_alert) public ImageView icon_alert;

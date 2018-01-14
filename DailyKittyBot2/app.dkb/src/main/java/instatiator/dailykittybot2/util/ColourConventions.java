@@ -13,6 +13,12 @@ public class ColourConventions {
         this.context = context;
     }
 
+    public int rule_icon(boolean autorun) {
+        return autorun ?
+                context.getColor(R.color.colorAccent) :
+                context.getColor(R.color.colorPrimary);
+    }
+
     public int icon_alert(boolean errors, boolean warnings) {
 
         if (errors) {
