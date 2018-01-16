@@ -26,6 +26,7 @@ import instatiator.dailykittybot2.BotApp;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.service.BotService;
 import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.service.RedditSession;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -35,6 +36,8 @@ public class AddAccountActivity extends AbstractServiceBoundAppCompatActivity<Bo
     @BindView(R.id.web_view) WebView web;
 
     private boolean started_process = false;
+
+    private RedditSession session;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +53,14 @@ public class AddAccountActivity extends AbstractServiceBoundAppCompatActivity<Bo
     protected void onBoundChanged(boolean isBound) {
         if (isBound && !started_process) {
             started_process = true;
+            session = new RedditSession(this, service.get_device_uuid(), null);
             begin_process();
         }
     }
 
     private void begin_process() {
         clear_web_view();
-        final StatefulAuthHelper helper = service.get_account_helper().switchToNewUser();
+        final StatefulAuthHelper helper = session.get_accountHelper().switchToNewUser();
 
         web.setWebViewClient(new WebViewClient() {
             @Override
@@ -133,7 +137,7 @@ public class AddAccountActivity extends AbstractServiceBoundAppCompatActivity<Bo
         protected Boolean doInBackground(String... urls) {
             try {
                 helper.onUserChallenge(urls[0]);
-                Log.i(TAG, "User challenge completed.");
+                Log.i(TAG, "User challenge tasks_completed.");
                 return true;
             } catch (OAuthException e) {
                 Log.i(TAG, "OAuthException received during user challenge.", e);

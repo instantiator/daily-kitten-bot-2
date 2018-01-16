@@ -1,7 +1,12 @@
 package instatiator.dailykittybot2.service;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.arch.lifecycle.LiveData;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 
 import com.flt.servicelib.AbstractBackgroundBindingService;
@@ -21,6 +26,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -30,33 +37,52 @@ import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
+import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
+import instatiator.dailykittybot2.service.execution.RuleExecutor;
 import instatiator.dailykittybot2.service.helpers.DataFactory;
 import instatiator.dailykittybot2.service.helpers.TestDataInjector;
+import instatiator.dailykittybot2.service.tasks.RunParams;
+import instatiator.dailykittybot2.service.tasks.UserInitiatedRulesTask;
 import instatiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
     private static final String TAG = BotService.class.getName();
-
-    private State state;
-
-    private AccountHelper accountHelper;
-    private SharedPreferencesTokenStore tokenStore;
 
     private UUID device_uuid;
     private BotWorkspace workspace;
 
     private static final String KEY_Device_UUID = "device.uuid";
 
+    public static final String CHANNEL_ID_EXECUTIONS = "channel_DKB_executions";
+
     @Override
     public void onCreate() {
         super.onCreate();
         init_defaults();
-        init_reddit();
         init_workspace();
-        switch_state(state.Initialised);
+        init_channel();
         EventBus.getDefault().register(this);
+    }
+
+    private void init_channel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationManager mgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            String channel_id = CHANNEL_ID_EXECUTIONS;
+            String channel_name = getString(R.string.channel_executions_name);
+            String channel_description = getString(R.string.channel_executions_description);
+            int importance = NotificationManager.IMPORTANCE_LOW;
+            NotificationChannel channel = new NotificationChannel(channel_id, channel_name, importance);
+            channel.setDescription(channel_description);
+            channel.enableLights(true);
+            channel.setLightColor(Color.YELLOW);
+            channel.setSound(null, null);
+            channel.enableVibration(false);
+            // mChannel.enableVibration(true);
+            // mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mgr.createNotificationChannel(channel);
+        }
     }
 
     @Override
@@ -73,74 +99,6 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
 
     private void init_workspace() {
         workspace = new BotWorkspace(this);
-    }
-
-    private void init_reddit() {
-        AppInfoProvider provider = new ManifestAppInfoProvider(getApplicationContext());
-
-        tokenStore = new SharedPreferencesTokenStore(getApplicationContext());
-        tokenStore.load();
-        tokenStore.setAutoPersist(true);
-
-        accountHelper = AndroidHelper.accountHelper(provider, device_uuid, tokenStore);
-
-        accountHelper.onSwitch(redditClient -> {
-            LogAdapter logAdapter = new SimpleAndroidLogAdapter(Log.VERBOSE);
-            redditClient.setLogger(new SimpleHttpLogger(SimpleHttpLogger.DEFAULT_LINE_LENGTH, logAdapter));
-
-            if (accountHelper.isAuthenticated()) {
-                switch_state(State.Authenticated, redditClient.getAuthManager().currentUsername());
-            } else {
-                switch_state(State.Initialised);
-            }
-
-            return null;
-        });
-    }
-
-    private void switch_state(State next) {
-        switch_state(next, null);
-    }
-
-    private void switch_state(State next, String account) {
-        if (state != next) {
-            state = next;
-            EventBus.getDefault().postSticky(new BotServiceStateEvent(this, state, account));
-        }
-    }
-
-    @Override
-    public State get_state() { return state; }
-
-    @Override
-    public AccountHelper get_account_helper() {
-        return accountHelper;
-    }
-
-    @Override
-    public DeferredPersistentTokenStore get_token_store() { return tokenStore; }
-
-    @Override
-    public void authenticate_as(String user) {
-        try {
-            switch_state(State.Authenticating);
-            accountHelper.switchToUser(user);
-
-            if (accountHelper.isAuthenticated()) {
-                switch_state(State.Authenticated);
-            } else {
-                switch_state(State.Initialised);
-            }
-
-        } catch (Exception e) {
-            Log.e(TAG, "Unable to switch to user " + user);
-            switch_state(State.Initialised);
-        }
-    }
-
-    @Override
-    public void run(Rule rule) {
-        informUser("running rule...");
     }
 
     @Override
@@ -256,6 +214,41 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
+    public void insert_recommendations(List<Recommendation> recommendations) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_recommendations(recommendations);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered inserting recommendations", e);
+            }
+        });
+    }
+
+    @Override
+    public void run(final String user, final RuleTriplet rule) {
+        RedditSession.Listener session_listener = new RedditSession.Listener() {
+            @Override
+            public void state_switched(RedditSession session, RedditSession.State state, String username) {
+                if (state == RedditSession.State.Authenticated) {
+                    UserInitiatedRulesTask task = new UserInitiatedRulesTask(
+                            BotService.this,
+                            session,
+                            BotService.this);
+
+                    RunParams params = new RunParams();
+                    params.account = username;
+                    params.mode = RuleExecutor.ExecutionMode.ActOnLastHourSubmissions;
+                    params.rules = Arrays.asList(rule);
+                    task.execute(params);
+                }
+            }
+        };
+
+        RedditSession session = new RedditSession(this, device_uuid, session_listener);
+        session.authenticate_as(user);
+    }
+
+    @Override
     public void injectTestData(final String user) {
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
@@ -277,6 +270,11 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     @Override
     public BotWorkspace get_workspace() {
         return workspace;
+    }
+
+    @Override
+    public UUID get_device_uuid() {
+        return device_uuid;
     }
 
     @Override

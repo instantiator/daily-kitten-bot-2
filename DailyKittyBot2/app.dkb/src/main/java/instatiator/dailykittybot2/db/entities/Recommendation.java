@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import instatiator.dailykittybot2.data.OutcomeType;
+import instatiator.dailykittybot2.data.TargetType;
 
 import static android.arch.persistence.room.ForeignKey.NO_ACTION;
 
@@ -40,11 +41,29 @@ public class Recommendation {
     @ColumnInfo(name = "ruleUuid")
     public UUID ruleUuid;
 
+    @ColumnInfo(name = "ruleName")
+    public String ruleName;
+
     @ColumnInfo(name = "type")
     public OutcomeType type;
 
     @ColumnInfo(name = "modifier")
     public String modifier;
+
+    @ColumnInfo(name = "targetType")
+    public TargetType targetType;
+
+    @ColumnInfo(name = "targetCommentId")
+    public String targetCommentId;
+
+    @ColumnInfo(name = "targetSubmissionId")
+    public String targetSubmissionId;
+
+    @ColumnInfo(name = "targetSubreddit")
+    public String targetSubreddit;
+
+    @ColumnInfo(name = "targetSummary")
+    public String targetSummary;
 
     @ColumnInfo(name = "created")
     public Date created;
@@ -52,7 +71,7 @@ public class Recommendation {
     @ColumnInfo(name = "is_complete")
     public boolean complete;
 
-    @ColumnInfo(name = "completed")
+    @ColumnInfo(name = "tasks_completed")
     public Date completed;
 
     @ColumnInfo(name = "accepted")

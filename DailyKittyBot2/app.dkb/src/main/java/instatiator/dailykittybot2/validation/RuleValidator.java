@@ -96,7 +96,7 @@ public class RuleValidator extends AbstractValidator<RuleTriplet> {
         List<String> warnings = new LinkedList<>();
 
         if (triplet.rule == null) {
-            return warnings; // do not process - a serious lack of rule has already occurred!
+            return warnings; // do not process - a serious lack tasks_of rule has already occurred!
         }
 
         if (StringUtils.isBlank(triplet.rule.rulename)) {

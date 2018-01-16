@@ -27,6 +27,7 @@ import butterknife.ButterKnife;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.service.BotService;
 import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.service.RedditSession;
 
 import static android.view.View.inflate;
 
@@ -42,11 +43,14 @@ public class AuthDataAdapter extends RecyclerView.Adapter<AuthDataAdapter.TokenV
     private RecyclerView recyclerView;
     private Listener listener;
 
+    private RedditSession session;
+
     public AuthDataAdapter(Activity activity, IBotService service, RecyclerView recyclerView, Listener listener) {
         this.activity = activity;
         this.service = service;
         this.recyclerView = recyclerView;
-        this.tokenStore = service.get_token_store();
+        this.session = new RedditSession(activity, service.get_device_uuid(), null);
+        this.tokenStore = session.get_tokenStore();
         this.listener = listener;
         this.enabled = false;
         update();
@@ -86,13 +90,7 @@ public class AuthDataAdapter extends RecyclerView.Adapter<AuthDataAdapter.TokenV
         PersistedAuthData auth = data.get(user);
         OAuthData auth_latest = auth.getLatest();
 
-        boolean authorised =
-                service.get_account_helper().isAuthenticated() &&
-                user.equals(
-                        service.get_account_helper()
-                                .getReddit()
-                                .getAuthManager()
-                                .currentUsername());
+        boolean authorised = false;
 
         if (auth_latest != null) {
             long diffMillis = auth_latest.getExpiration().getTime() - new Date().getTime();

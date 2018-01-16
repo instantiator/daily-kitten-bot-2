@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Rule;
 import instatiator.dailykittybot2.ui.AbstractBotActivity;
 import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
@@ -116,7 +117,7 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
         }
 
         @Override
-        public void request_run(Rule rule) {
+        public void request_run(RuleTriplet rule) {
             listener.request_run(rule);
         }
     };
@@ -125,6 +126,6 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
         void rule_selected(Rule rule);
         void request_create_rule();
         void request_delete(Rule rule);
-        void request_run(Rule rule);
+        void request_run(RuleTriplet rule);
     }
 }

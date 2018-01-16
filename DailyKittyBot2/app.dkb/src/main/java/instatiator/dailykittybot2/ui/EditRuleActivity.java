@@ -160,7 +160,7 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     public void request_create_condition() {
-        Intent intent = EditConditionActivity.create(this, username, rule_uuid);
+        Intent intent = EditConditionActivity.create(this, username, model.getRuleId());
         startActivity(intent);
     }
 

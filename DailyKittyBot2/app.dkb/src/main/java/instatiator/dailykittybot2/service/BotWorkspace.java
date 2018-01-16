@@ -74,6 +74,14 @@ public class BotWorkspace {
         db.outcomeDao().updateAll(outcome);
     }
 
+    public void insert_recommendations(List<Recommendation> recommendations) {
+        if (recommendations != null) {
+            db.recommendationDao()
+                    .insertAll(
+                            recommendations.toArray(new Recommendation[recommendations.size()]));
+        }
+    }
+
     public void delete_condition(Condition condition) { db.conditionDao().delete(condition); }
 
     public void delete_outcome(Outcome outcome) { db.outcomeDao().delete(outcome); }

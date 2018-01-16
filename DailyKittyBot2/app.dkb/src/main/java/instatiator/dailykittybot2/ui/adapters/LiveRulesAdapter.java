@@ -115,6 +115,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         @BindView(R.id.text_rule_summary) public TextView text_rule_summary;
         @BindView(R.id.icon_alert) public ImageView icon_alert;
         @BindView(R.id.icon_menu) public ImageView icon_menu;
+        @BindView(R.id.icon_run_now) public ImageView icon_run_now;
 
         PopupMenu popup;
 
@@ -143,7 +144,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
                         listener.request_delete(triplet.rule);
                         return true;
                     case R.string.menu_rule_run:
-                        listener.request_run(triplet.rule);
+                        listener.request_run(triplet);
                         return true;
                     default:
                         return false;
@@ -156,11 +157,13 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
             popup.show();
         }
 
+        @OnClick(R.id.icon_run_now)
+        public void run_click() { listener.request_run(triplet); }
     }
 
     public interface Listener {
         void rule_selected(Rule rule);
         void request_delete(Rule rule);
-        void request_run(Rule rule);
+        void request_run(RuleTriplet rule);
     }
 }

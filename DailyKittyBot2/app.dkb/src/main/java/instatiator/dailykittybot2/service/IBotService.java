@@ -11,17 +11,20 @@ import java.util.UUID;
 import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
+import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
 
 public interface IBotService {
 
     BotWorkspace get_workspace();
 
-    AccountHelper get_account_helper();
-    DeferredPersistentTokenStore get_token_store();
+    //AccountHelper get_account_helper();
+    //DeferredPersistentTokenStore get_token_store();
 
-    State get_state();
-    void authenticate_as(String user);
+    //State get_state();
+    //void authenticate_as(String user);
+
+    UUID get_device_uuid();
 
     LiveData<List<RuleTriplet>> get_rule_triplets_for(String username);
 
@@ -33,13 +36,15 @@ public interface IBotService {
     void update_condition(Condition condition);
     void update_outcome(Outcome outcome);
 
+    void insert_recommendations(List<Recommendation> recommendations);
+
     void delete_condition(Condition condition);
     void delete_outcome(Outcome outcome);
     void delete_rule(Rule rule);
 
-    void run(Rule rule); // TODO: probably not void
-
     void injectTestData(String user);
+
+    void run(String username, RuleTriplet rules);
 
     enum State {
         Initialised, Authenticating, Authenticated

@@ -10,16 +10,27 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import instatiator.dailykittybot2.R;
+import instatiator.dailykittybot2.data.RuleTriplet;
+import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.service.BotService;
+import instatiator.dailykittybot2.service.RedditSession;
+import instatiator.dailykittybot2.service.execution.RuleExecutor;
+import instatiator.dailykittybot2.service.tasks.RunParams;
+import instatiator.dailykittybot2.service.tasks.UserInitiatedRulesTask;
+import instatiator.dailykittybot2.ui.fragments.UserRecommendationsFragment;
 import instatiator.dailykittybot2.ui.fragments.UserRulesFragment;
 import instatiator.dailykittybot2.ui.pagers.UserOverviewPagerAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.UserOverviewViewModel;
 
-public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewModel> implements UserRulesFragment.Listener {
+public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewModel>
+        implements UserRulesFragment.Listener, UserRecommendationsFragment.Listener {
+
     private static final String EXTRA_username = "username";
 
     @BindView(R.id.pager) ViewPager pager;
@@ -122,8 +133,42 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     }
 
     @Override
-    public void request_run(Rule rule) {
-        service.run(rule); // TODO: reporting on this + validation checks before running
+    public void request_run(RuleTriplet rule) {
+        RedditSession.Listener session_listener = new RedditSession.Listener() {
+            @Override
+            public void state_switched(RedditSession session, RedditSession.State state, String username) {
+                if (state == RedditSession.State.Authenticated) {
+                    UserInitiatedRulesTask task = new UserInitiatedRulesTask(
+                            UserOverviewActivity.this,
+                            session,
+                            service);
+
+                    RunParams params = new RunParams();
+                    params.account = username;
+                    params.mode = RuleExecutor.ExecutionMode.ActOnLastHourSubmissions;
+                    params.rules = Arrays.asList(rule);
+                    task.execute(params);
+                }
+            }
+        };
+
+        RedditSession session = new RedditSession(this, service.get_device_uuid(), session_listener);
+        session.authenticate_as(rule.rule.username);
+
     }
 
+    @Override
+    public void recommendation_selected(Recommendation recommendation) {
+
+    }
+
+    @Override
+    public void accept_recommendation(Recommendation recommendation) {
+
+    }
+
+    @Override
+    public void reject_recommendation(Recommendation recommendation) {
+
+    }
 }

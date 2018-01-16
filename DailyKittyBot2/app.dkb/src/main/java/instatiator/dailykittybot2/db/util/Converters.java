@@ -13,6 +13,7 @@ import java.util.UUID;
 
 import instatiator.dailykittybot2.data.ConditionType;
 import instatiator.dailykittybot2.data.OutcomeType;
+import instatiator.dailykittybot2.data.TargetType;
 
 public class Converters {
 
@@ -38,6 +39,18 @@ public class Converters {
     public static OutcomeType toOutcomeType(String type) {
         if (type == null) { return null; }
         return OutcomeType.valueOf(type);
+    }
+
+    @TypeConverter
+    public static String fromTargetType(TargetType type) {
+        if (type == null) { return null; }
+        return type.name();
+    }
+
+    @TypeConverter
+    public static TargetType toTargetType(String type) {
+        if (type == null) { return null; }
+        return TargetType.valueOf(type);
     }
 
     @TypeConverter

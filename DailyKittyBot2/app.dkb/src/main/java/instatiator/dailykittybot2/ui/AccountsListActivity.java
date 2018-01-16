@@ -18,7 +18,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
-import instatiator.dailykittybot2.service.IBotService;
+import instatiator.dailykittybot2.service.RedditSession;
 import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.AccountsListViewModel;
 
@@ -34,6 +34,8 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
     @BindView(R.id.fab_add_account) public FloatingActionButton fab_add_account;
 
     private AuthDataAdapter adapter;
+
+    private RedditSession reddit;
 
     public AccountsListActivity() {
         super(false, true, true);
@@ -73,7 +75,7 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
     @Override
     protected void updateUI() {
         boolean permitted = !anyOutstandingPermissions();
-        boolean enabled = bound && permitted && service.get_state() != IBotService.State.Authenticating;
+        boolean enabled = bound && permitted && reddit.get_state() != RedditSession.State.Authenticating;
         boolean nothing = adapter == null || adapter.getItemCount() == 0;
 
         if (adapter != null) { adapter.setEnabled(enabled); }
@@ -82,12 +84,16 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
 
     @Override
     protected boolean initialise() {
+        reddit = new RedditSession(this, service.get_device_uuid(), reddit_listener);
+
         adapter = new AuthDataAdapter(this, service, recycler, recycler_listener);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);
         return true;
     }
+
+    private RedditSession.Listener reddit_listener = (session, state, username) -> updateUI();
 
     @Override
     protected void denitialise() {

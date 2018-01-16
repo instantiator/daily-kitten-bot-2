@@ -1,0 +1,494 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 8,
+    "identityHash": "2f6da03f8062927aba08639363175fda",
+    "entities": [
+      {
+        "tableName": "rule",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `username` TEXT, `rulename` TEXT, `autorun` INTEGER NOT NULL, `subreddits` TEXT, `last_run` INTEGER, PRIMARY KEY(`uuid`))",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "rulename",
+            "columnName": "rulename",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "run_periodically",
+            "columnName": "autorun",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "subreddits",
+            "columnName": "subreddits",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "last_run",
+            "columnName": "last_run",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_rule_username",
+            "unique": false,
+            "columnNames": [
+              "username"
+            ],
+            "createSql": "CREATE  INDEX `index_rule_username` ON `${TABLE_NAME}` (`username`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "condition",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `ruleUuid` TEXT, `type` TEXT, `modifier` TEXT, `ordering` INTEGER NOT NULL, PRIMARY KEY(`uuid`), FOREIGN KEY(`ruleUuid`) REFERENCES `rule`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ruleUuid",
+            "columnName": "ruleUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modifier",
+            "columnName": "modifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ordering",
+            "columnName": "ordering",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_condition_ruleUuid",
+            "unique": false,
+            "columnNames": [
+              "ruleUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_condition_ruleUuid` ON `${TABLE_NAME}` (`ruleUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "rule",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ruleUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "outcome",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `ruleUuid` TEXT, `type` TEXT, `modifier` TEXT, `ordering` INTEGER NOT NULL, PRIMARY KEY(`uuid`), FOREIGN KEY(`ruleUuid`) REFERENCES `rule`(`uuid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ruleUuid",
+            "columnName": "ruleUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modifier",
+            "columnName": "modifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ordering",
+            "columnName": "ordering",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_outcome_ruleUuid",
+            "unique": false,
+            "columnNames": [
+              "ruleUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_outcome_ruleUuid` ON `${TABLE_NAME}` (`ruleUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "rule",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ruleUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "recommendation",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `username` TEXT, `outcomeUuid` TEXT, `ruleUuid` TEXT, `ruleName` TEXT, `type` TEXT, `modifier` TEXT, `targetType` TEXT, `targetCommentId` TEXT, `targetSubmissionId` TEXT, `targetSubreddit` TEXT, `targetSummary` TEXT, `created` INTEGER, `is_complete` INTEGER NOT NULL, `tasks_completed` INTEGER, `accepted` INTEGER NOT NULL, PRIMARY KEY(`uuid`), FOREIGN KEY(`ruleUuid`) REFERENCES `rule`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`outcomeUuid`) REFERENCES `outcome`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outcomeUuid",
+            "columnName": "outcomeUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ruleUuid",
+            "columnName": "ruleUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ruleName",
+            "columnName": "ruleName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "modifier",
+            "columnName": "modifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "targetType",
+            "columnName": "targetType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "targetCommentId",
+            "columnName": "targetCommentId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "targetSubmissionId",
+            "columnName": "targetSubmissionId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "targetSubreddit",
+            "columnName": "targetSubreddit",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "targetSummary",
+            "columnName": "targetSummary",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "created",
+            "columnName": "created",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "complete",
+            "columnName": "is_complete",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "completed",
+            "columnName": "tasks_completed",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accepted",
+            "columnName": "accepted",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_recommendation_ruleUuid",
+            "unique": false,
+            "columnNames": [
+              "ruleUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_recommendation_ruleUuid` ON `${TABLE_NAME}` (`ruleUuid`)"
+          },
+          {
+            "name": "index_recommendation_outcomeUuid",
+            "unique": false,
+            "columnNames": [
+              "outcomeUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_recommendation_outcomeUuid` ON `${TABLE_NAME}` (`outcomeUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "rule",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ruleUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          },
+          {
+            "table": "outcome",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "outcomeUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "result",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `username` TEXT, `ruleUuid` TEXT, `recommendationUuid` TEXT, `ran` INTEGER, `ruleName` TEXT, `conditionSummaries` TEXT, `outcomeType` TEXT, `outcomeModifier` TEXT, `success` INTEGER NOT NULL, `reports` TEXT, `issues` TEXT, PRIMARY KEY(`uuid`), FOREIGN KEY(`ruleUuid`) REFERENCES `rule`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`recommendationUuid`) REFERENCES `recommendation`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "uuid",
+            "columnName": "uuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "username",
+            "columnName": "username",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ruleUuid",
+            "columnName": "ruleUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recommendationUuid",
+            "columnName": "recommendationUuid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ran",
+            "columnName": "ran",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ruleName",
+            "columnName": "ruleName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "conditionSummaries",
+            "columnName": "conditionSummaries",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outcomeType",
+            "columnName": "outcomeType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "outcomeModifier",
+            "columnName": "outcomeModifier",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "success",
+            "columnName": "success",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "reports",
+            "columnName": "reports",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "issues",
+            "columnName": "issues",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "uuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_result_username",
+            "unique": false,
+            "columnNames": [
+              "username"
+            ],
+            "createSql": "CREATE  INDEX `index_result_username` ON `${TABLE_NAME}` (`username`)"
+          },
+          {
+            "name": "index_result_ran",
+            "unique": false,
+            "columnNames": [
+              "ran"
+            ],
+            "createSql": "CREATE  INDEX `index_result_ran` ON `${TABLE_NAME}` (`ran`)"
+          },
+          {
+            "name": "index_result_ruleUuid",
+            "unique": false,
+            "columnNames": [
+              "ruleUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_result_ruleUuid` ON `${TABLE_NAME}` (`ruleUuid`)"
+          },
+          {
+            "name": "index_result_recommendationUuid",
+            "unique": false,
+            "columnNames": [
+              "recommendationUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_result_recommendationUuid` ON `${TABLE_NAME}` (`recommendationUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "rule",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "ruleUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          },
+          {
+            "table": "recommendation",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "recommendationUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2f6da03f8062927aba08639363175fda\")"
+    ]
+  }
+}

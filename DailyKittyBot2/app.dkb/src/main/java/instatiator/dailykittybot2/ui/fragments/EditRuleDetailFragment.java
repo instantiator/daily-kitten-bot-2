@@ -100,6 +100,8 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     }
 
     private void updateFromRule(Rule source) {
+        if (source == null) { return; }
+
         View had_focus = getView().findFocus();
         int selection_start = 0;
         int selection_end = 0;

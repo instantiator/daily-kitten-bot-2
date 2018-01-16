@@ -1,31 +1,14 @@
 package instatiator.dailykittybot2.ui.fragments;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Observer;
-import android.content.Context;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import instatiator.dailykittybot2.R;
 import instatiator.dailykittybot2.db.entities.Recommendation;
-import instatiator.dailykittybot2.db.entities.Rule;
-import instatiator.dailykittybot2.ui.AbstractBotActivity;
-import instatiator.dailykittybot2.ui.adapters.AuthDataAdapter;
 import instatiator.dailykittybot2.ui.adapters.LiveRecommendationsAdapter;
-import instatiator.dailykittybot2.ui.adapters.LiveRulesAdapter;
 import instatiator.dailykittybot2.ui.viewmodels.UserOverviewViewModel;
 
 import static android.view.View.GONE;
@@ -97,18 +80,18 @@ public class UserRecommendationsFragment extends AbstractBotFragment<UserOvervie
 
         @Override
         public void request_recommendation_run(Recommendation recommendation) {
-            listener.request_recommendation_run(recommendation);
+            listener.accept_recommendation(recommendation);
         }
 
         @Override
         public void request_recommendation_delete(Recommendation recommendation) {
-            listener.request_recommendation_delete(recommendation);
+            listener.reject_recommendation(recommendation);
         }
     };
 
     public interface Listener {
         void recommendation_selected(Recommendation recommendation);
-        void request_recommendation_run(Recommendation recommendation);
-        void request_recommendation_delete(Recommendation recommendation);
+        void accept_recommendation(Recommendation recommendation);
+        void reject_recommendation(Recommendation recommendation);
     }
 }
