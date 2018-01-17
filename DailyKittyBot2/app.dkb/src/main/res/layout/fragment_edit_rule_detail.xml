@@ -5,7 +5,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="10dp"
-    tools:context="instatiator.dailykittybot2.ui.EditRuleActivity">
+    tools:context="instantiator.dailykittybot2.ui.EditRuleActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

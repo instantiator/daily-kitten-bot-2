@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="instatiator.dailykittybot2.ui.AddAccountActivity">
+    tools:context="instantiator.dailykittybot2.ui.AddAccountActivity">
 
     <WebView
         android:id="@+id/web_view"
