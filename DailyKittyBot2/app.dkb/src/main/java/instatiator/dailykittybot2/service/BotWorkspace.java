@@ -12,6 +12,7 @@ import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.db.entities.RunReport;
 
 public class BotWorkspace {
 
@@ -50,6 +51,10 @@ public class BotWorkspace {
         return db.conditionDao().getMaxOrderingForRule(rule);
     }
 
+    public RunReport get_last_report_for(String username, String subreddit, UUID ruleUuid) {
+        return db.runReportDao().get_last_run_report_for(username, subreddit, ruleUuid);
+    }
+
     public void insert_rule(Rule rule) {
         db.ruleDao().insertAll(rule);
     }
@@ -76,9 +81,13 @@ public class BotWorkspace {
 
     public void insert_recommendations(List<Recommendation> recommendations) {
         if (recommendations != null) {
-            db.recommendationDao()
-                    .insertAll(
-                            recommendations.toArray(new Recommendation[recommendations.size()]));
+            db.recommendationDao().insertAll(recommendations.toArray(new Recommendation[recommendations.size()]));
+        }
+    }
+
+    public void insert_runReports(List<RunReport> reports) {
+        if (reports != null) {
+            db.runReportDao().insertAll(reports.toArray(new RunReport[reports.size()]));
         }
     }
 
@@ -87,6 +96,10 @@ public class BotWorkspace {
     public void delete_outcome(Outcome outcome) { db.outcomeDao().delete(outcome); }
 
     public void delete_rule(Rule rule) { db.ruleDao().delete(rule); }
+
+    public void delete_all_recommendations(String username) {
+        db.recommendationDao().delete_all_for(username);
+    }
 
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {
         return db.ruleTripletDao().loadAllByUsername(username);

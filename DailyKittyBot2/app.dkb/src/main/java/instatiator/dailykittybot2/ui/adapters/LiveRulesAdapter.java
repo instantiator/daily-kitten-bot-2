@@ -3,6 +3,7 @@ package instatiator.dailykittybot2.ui.adapters;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -144,7 +145,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
                         listener.request_delete(triplet.rule);
                         return true;
                     case R.string.menu_rule_run:
-                        listener.request_run(triplet);
+                        confirm_run(triplet);
                         return true;
                     default:
                         return false;
@@ -158,7 +159,24 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         }
 
         @OnClick(R.id.icon_run_now)
-        public void run_click() { listener.request_run(triplet); }
+        public void run_click() {
+            confirm_run(triplet);
+        }
+    }
+
+    private void confirm_run(final RuleTriplet triplet) {
+        new AlertDialog.Builder(activity)
+                .setTitle(R.string.dialog_title_confirm_manual_rule_run)
+                .setMessage(R.string.dialog_message_confirm_manual_rule_run)
+                .setPositiveButton(R.string.btn_run, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    listener.request_run(triplet);
+                })
+                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                })
+                .create()
+                .show();
     }
 
     public interface Listener {

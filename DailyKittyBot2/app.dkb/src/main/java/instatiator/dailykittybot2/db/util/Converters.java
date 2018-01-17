@@ -54,6 +54,27 @@ public class Converters {
     }
 
     @TypeConverter
+    public static String fromListUuid(List<UUID> uuids) {
+        if (uuids == null) { return null; }
+        List<String> uuid_strings = new LinkedList<>();
+        for (UUID uuid : uuids) {
+            uuid_strings.add(uuid.toString());
+        }
+        return TextUtils.join(",", uuid_strings);
+    }
+
+    @TypeConverter
+    public static List<UUID> toListUuid(String string) {
+        if (string == null) { return new LinkedList<>(); }
+        List<UUID> data = new LinkedList<>();
+        String[] items = TextUtils.split(string, ",");
+        for (String item : items) {
+            data.add(UUID.fromString(item));
+        }
+        return data;
+    }
+
+    @TypeConverter
     public static String fromListString(List<String> data) {
         if (data == null) { return null; }
         return TextUtils.join("_%_", data);

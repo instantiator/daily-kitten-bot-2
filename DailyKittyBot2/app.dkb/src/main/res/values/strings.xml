@@ -8,5 +8,9 @@
 
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
+    <string name="btn_run">Run</string>
+    <string name="btn_inject">Inject</string>
+    <string name="btn_delete_all">Delete all</string>
+
 
 </resources>

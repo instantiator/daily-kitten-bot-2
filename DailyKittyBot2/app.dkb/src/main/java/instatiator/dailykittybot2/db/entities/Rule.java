@@ -30,4 +30,7 @@ public class Rule {
 
     @ColumnInfo(name = "last_run")
     public Date last_run;
+
+    // TODO: track last considered item, per subreddit somehow!
+    
 }

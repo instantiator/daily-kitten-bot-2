@@ -39,6 +39,7 @@ import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.db.entities.RunReport;
 import instatiator.dailykittybot2.events.BotServiceStateEvent;
 import instatiator.dailykittybot2.service.execution.RuleExecutor;
 import instatiator.dailykittybot2.service.helpers.DataFactory;
@@ -168,6 +169,17 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
+    public void delete_all_recommendations(String username) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_all_recommendations(username);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
+    }
+
+    @Override
     public Outcome create_outcome(UUID rule_id) {
         final Outcome outcome = DataFactory.create_outcome(rule_id);
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
@@ -218,6 +230,17 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {
                 workspace.insert_recommendations(recommendations);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered inserting recommendations", e);
+            }
+        });
+    }
+
+    @Override
+    public void insert_runReports(List<RunReport> reports) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_runReports(reports);
             } catch (Exception e) {
                 Log.e(TAG, "Exception encountered inserting recommendations", e);
             }

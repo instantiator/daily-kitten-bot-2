@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -101,6 +102,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, R.string.menu_inject_test_data, 0, R.string.menu_inject_test_data);
+        menu.add(0, R.string.menu_delete_all_recommendations, 0, R.string.menu_delete_all_recommendations);
         return true;
     }
 
@@ -108,11 +110,40 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.string.menu_inject_test_data:
-                service.injectTestData(username);
+                confirm_inject_testData();
+                return true;
+            case R.string.menu_delete_all_recommendations:
+                confirm_delete_all_recommendations();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void confirm_inject_testData() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_title_confirm_inject_test_data)
+                .setMessage(R.string.dialog_message_confirm_inject_test_data)
+                .setPositiveButton(R.string.btn_inject, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    service.injectTestData(username);
+                })
+                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
+    }
+
+    private void confirm_delete_all_recommendations() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_title_confirm_delete_all_recommendations)
+                .setMessage(R.string.dialog_message_confirm_delete_all_recommendations)
+                .setPositiveButton(R.string.btn_delete_all, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    service.delete_all_recommendations(username);
+                })
+                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
     }
 
     @Override
@@ -145,7 +176,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
                     RunParams params = new RunParams();
                     params.account = username;
-                    params.mode = RuleExecutor.ExecutionMode.ActOnLastHourSubmissions;
+                    params.mode = RuleExecutor.ExecutionMode.RespectRuleLastRun;
                     params.rules = Arrays.asList(rule);
                     task.execute(params);
                 }

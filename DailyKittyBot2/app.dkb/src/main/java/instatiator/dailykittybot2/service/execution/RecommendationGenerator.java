@@ -11,6 +11,7 @@ import instatiator.dailykittybot2.data.RuleTriplet;
 import instatiator.dailykittybot2.data.TargetType;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
+import instatiator.dailykittybot2.service.IBotService;
 
 public class RecommendationGenerator {
 

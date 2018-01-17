@@ -40,4 +40,7 @@ public interface RecommendationDao {
 
     @Delete
     void delete(Recommendation recommendation);
+
+    @Query("DELETE FROM recommendation WHERE username LIKE :username")
+    void delete_all_for(String username);
 }

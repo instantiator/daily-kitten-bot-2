@@ -3,13 +3,31 @@
 
     <string name="activity_title_overview_for">Redditor: %s</string>
 
-    <string name="menu_inject_test_data">Inject test data</string>
+    <string name="menu_inject_test_data">Inject test data...</string>
+    <string name="menu_delete_all_recommendations">Delete all recommendations...</string>
 
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
 
     <string name="dialog_title_confirm_delete_rule">Delete rule?</string>
     <string name="dialog_message_confirm_delete_rule">Please confirm you wish to delete this rule.</string>
+
+    <string name="dialog_title_confirm_inject_test_data">Inject test data?</string>
+    <string name="dialog_message_confirm_inject_test_data">Please confirm you wish to inject a sample rule.</string>
+
+    <string name="dialog_title_confirm_delete_all_recommendations">Delete all recommendations?</string>
+    <string name="dialog_message_confirm_delete_all_recommendations">
+        Are you sure you want to delete all these recommendations?
+        \n\nUnless you also clear out the rule reports, they will not be generated again.
+    </string>
+
+    <string name="dialog_title_confirm_manual_rule_run">Run rule?</string>
+    <string name="dialog_message_confirm_manual_rule_run">
+        Do you wish to run this rule?
+        \n\nSubmissions in the subreddits for this rule
+        that match this rule\'s conditions
+        will generate recommendations based on this rule\'s outcomes.
+    </string>
 
     <string name="summary_rule_subreddits">Subreddits: %s.</string>
     <string name="summary_rule_no_subreddits">No subreddits selected.</string>

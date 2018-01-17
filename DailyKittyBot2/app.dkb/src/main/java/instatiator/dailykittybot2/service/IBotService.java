@@ -13,6 +13,7 @@ import instatiator.dailykittybot2.db.entities.Condition;
 import instatiator.dailykittybot2.db.entities.Outcome;
 import instatiator.dailykittybot2.db.entities.Recommendation;
 import instatiator.dailykittybot2.db.entities.Rule;
+import instatiator.dailykittybot2.db.entities.RunReport;
 
 public interface IBotService {
 
@@ -37,10 +38,13 @@ public interface IBotService {
     void update_outcome(Outcome outcome);
 
     void insert_recommendations(List<Recommendation> recommendations);
+    void insert_runReports(List<RunReport> reports);
 
     void delete_condition(Condition condition);
     void delete_outcome(Outcome outcome);
     void delete_rule(Rule rule);
+
+    void delete_all_recommendations(String username);
 
     void injectTestData(String user);
 
