@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,6 +89,14 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 
         holder.icon_current.getDrawable().setTint(colours.rule_icon(triplet.rule.run_periodically));
         holder.text_rule_name.setTextColor(colours.rule_icon(triplet.rule.run_periodically));
+
+        if (triplet.rule.last_run != null) {
+            String date = DateFormat.format(activity.getString(R.string.date_format_last_run), triplet.rule.last_run).toString();
+            holder.text_last_run_summary.setText(activity.getString(R.string.text_rule_last_run, date));
+            holder.text_last_run_summary.setVisibility(VISIBLE);
+        } else {
+            holder.text_last_run_summary.setVisibility(GONE);
+        }
     }
 
     private String summarise(Rule rule) {
@@ -117,6 +126,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         @BindView(R.id.icon_alert) public ImageView icon_alert;
         @BindView(R.id.icon_menu) public ImageView icon_menu;
         @BindView(R.id.icon_run_now) public ImageView icon_run_now;
+        @BindView(R.id.text_last_run_summary) public TextView text_last_run_summary;
 
         PopupMenu popup;
 

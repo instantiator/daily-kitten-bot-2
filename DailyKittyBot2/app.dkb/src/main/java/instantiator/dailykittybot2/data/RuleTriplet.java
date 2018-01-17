@@ -19,5 +19,4 @@ public class RuleTriplet {
 
     @Relation(parentColumn = "uuid", entityColumn = "ruleUuid")
     public List<Outcome> outcomes;
-
 }

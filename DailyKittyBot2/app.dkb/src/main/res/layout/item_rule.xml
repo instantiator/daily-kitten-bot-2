@@ -72,6 +72,17 @@
                 android:text="rule summary"
                 android:layout_below="@id/text_rule_name"
                 android:layout_alignStart="@id/text_rule_name"
+                android:layout_alignEnd="@id/text_rule_name"
+                />
+
+            <TextView
+                android:id="@+id/text_last_run_summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="last run 2 days ago"
+                android:textSize="10sp"
+                android:layout_below="@id/text_rule_summary"
+                android:layout_alignParentRight="true"
                 />
 
         </RelativeLayout>

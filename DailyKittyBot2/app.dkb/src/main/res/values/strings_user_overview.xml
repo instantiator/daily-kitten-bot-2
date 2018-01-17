@@ -29,9 +29,12 @@
         will generate recommendations based on this rule\'s outcomes.
     </string>
 
-    <string name="summary_rule_subreddits">Subreddits: %s.</string>
+    <string name="date_format_last_run">yyyy-MM-dd hh:mm:ss</string>
+    <string name="text_rule_last_run">Last run: %s</string>
+
+    <string name="summary_rule_subreddits">Subreddits: %s</string>
     <string name="summary_rule_no_subreddits">No subreddits selected.</string>
-    <string name="summary_rule_autorun">Auto run enabled.</string>
+    <string name="summary_rule_autorun">[Auto-run enabled]</string>
     <string name="summary_rule_no_autorun"></string>
 
     <string name="text_no_rules">

@@ -91,8 +91,13 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
         result.subreddits_to_results = new HashMap<>();
         result.all_run_reports = new LinkedList<>();
 
-        RuleExecutor exec = new RuleExecutor(context, service, session, this);
+        Date now = new Date();
+        for (RuleTriplet rule : params.rules) {
+            rule.rule.last_run = now;
+            service.update_rule(rule.rule);
+        }
 
+        RuleExecutor exec = new RuleExecutor(context, service, session, this);
         Map<String, List<RuleTriplet>> subreddits_to_rules = RuleExecutor.reorg_rules_per_subreddit(params.rules);
         result.total_subreddits = subreddits_to_rules.keySet().size();
 

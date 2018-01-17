@@ -6,6 +6,7 @@ import java.util.List;
 
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Recommendation;
+import instantiator.dailykittybot2.service.tasks.RunResult;
 
 public class UserOverviewViewModel extends AbstractBotViewModel {
     private String username;

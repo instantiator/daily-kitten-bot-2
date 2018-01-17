@@ -185,16 +185,16 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void recommendation_selected(Recommendation recommendation) {
-
+        // TODO
     }
 
     @Override
     public void accept_recommendation(Recommendation recommendation) {
-
+        // TODO
     }
 
     @Override
     public void reject_recommendation(Recommendation recommendation) {
-
+        // TODO
     }
 }
