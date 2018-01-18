@@ -23,7 +23,7 @@ public class EditConditionActivity extends AbstractBotActivity<EditConditionView
     private static final String KEY_rule_id = "rule.id";
     private static final String KEY_username = "username";
 
-    private enum Mode { Create, Edit }
+    private enum Mode { Edit }
 
     private Mode mode;
     private UUID condition_id;
@@ -34,14 +34,6 @@ public class EditConditionActivity extends AbstractBotActivity<EditConditionView
 
     public EditConditionActivity() {
         super(true, true, false);
-    }
-
-    public static Intent create(Context context, String username, UUID rule_id) {
-        Intent intent = new Intent(context, EditConditionActivity.class);
-        intent.putExtra(KEY_mode, Mode.Create.name());
-        intent.putExtra(KEY_rule_id, rule_id.toString());
-        intent.putExtra(KEY_username, username);
-        return intent;
     }
 
     public static Intent edit(Context context, String username, Condition condition) {
@@ -89,11 +81,6 @@ public class EditConditionActivity extends AbstractBotActivity<EditConditionView
     @Override
     @SuppressLint("StaticFieldLeak")
     protected boolean initialise() {
-
-        if (model.getItem().getValue() == null && mode == Mode.Create) {
-            Condition condition = service.create_condition(rule_id);
-            model.init(condition.uuid, username);
-        }
 
         model.getItem().observe(this, new Observer<Condition>() {
             @Override

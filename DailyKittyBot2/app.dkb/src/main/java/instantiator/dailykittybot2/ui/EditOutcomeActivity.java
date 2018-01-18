@@ -23,7 +23,7 @@ public class EditOutcomeActivity extends AbstractBotActivity<EditOutcomeViewMode
     private static final String KEY_rule_id = "rule.id";
     private static final String KEY_username = "username";
 
-    private enum Mode { Create, Edit }
+    private enum Mode { Edit }
 
     private Mode mode;
     private UUID outcome_id;
@@ -34,14 +34,6 @@ public class EditOutcomeActivity extends AbstractBotActivity<EditOutcomeViewMode
 
     public EditOutcomeActivity() {
         super(true, true, false);
-    }
-
-    public static Intent create(Context context, String username, UUID rule_id) {
-        Intent intent = new Intent(context, EditOutcomeActivity.class);
-        intent.putExtra(KEY_mode, Mode.Create.name());
-        intent.putExtra(KEY_rule_id, rule_id.toString());
-        intent.putExtra(KEY_username, username);
-        return intent;
     }
 
     public static Intent edit(Context context, String username, Outcome outcome) {
@@ -89,11 +81,6 @@ public class EditOutcomeActivity extends AbstractBotActivity<EditOutcomeViewMode
     @Override
     @SuppressLint("StaticFieldLeak")
     protected boolean initialise() {
-
-        if (model.getItem().getValue() == null && mode == Mode.Create) {
-            Outcome outcome = service.create_outcome(rule_id);
-            model.init(outcome.uuid, username);
-        }
 
         model.getItem().observe(this, new Observer<Outcome>() {
             @Override

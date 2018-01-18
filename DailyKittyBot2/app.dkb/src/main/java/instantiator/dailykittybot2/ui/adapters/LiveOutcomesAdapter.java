@@ -75,13 +75,14 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
         holder.outcome = outcome;
         holder.text_outcome_name.setText(outcome.type.getDescription());
         holder.text_outcome_summary.setText(outcome.modifier);
+        holder.icon_current.setImageResource(outcome.type.getIcon());
 
         ValidationResult result = validator.validate(outcome);
 
         boolean errors = result.errors.size() > 0;
         boolean warnings = result.warnings.size() > 0;
         holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
-        holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
+        holder.icon_alert.getDrawable().mutate().setTint(colours.icon_alert(errors, warnings));
     }
 
     @Override
@@ -94,6 +95,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
 
         @BindView(R.id.text_outcome_name) public TextView text_outcome_name;
         @BindView(R.id.text_outcome_summary)public TextView text_outcome_summary;
+        @BindView(R.id.icon_current) public ImageView icon_current;
         @BindView(R.id.icon_alert) public ImageView icon_alert;
         @BindView(R.id.icon_menu) public ImageView icon_menu;
 
@@ -116,7 +118,7 @@ public class LiveOutcomesAdapter extends RecyclerView.Adapter<LiveOutcomesAdapte
 
             popup.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
-                    case R.string.menu_condition_view:
+                    case R.string.menu_outcome_view:
                         listener.outcome_selected(outcome);
                         return true;
                     case R.string.menu_outcome_delete:

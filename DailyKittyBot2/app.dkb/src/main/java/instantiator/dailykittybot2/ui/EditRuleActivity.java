@@ -31,7 +31,7 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
     private static final String KEY_rule_id = "rule.id";
     private static final String KEY_username = "rule.username";
 
-    private enum Mode { Create, Edit }
+    private enum Mode { Edit }
 
     @BindView(R.id.pager) ViewPager pager;
     @BindView(R.id.tabs) TabLayout tabs;
@@ -44,17 +44,6 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     public EditRuleActivity() {
         super(true, true, false);
-    }
-
-    public static Intent create(Context context, IBotService service, String username) {
-
-        Rule rule_new = service.create_rule(username, null);
-        return edit(context, username, rule_new);
-
-//        Intent intent = new Intent(context, EditRuleActivity.class);
-//        intent.putExtra(KEY_mode, Mode.Create.name());
-//        intent.putExtra(KEY_username, username);
-//        return intent;
     }
 
     public static Intent edit(Context context, String username, Rule rule) {
@@ -95,20 +84,9 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     protected boolean initialise() {
-
-//        if (model.getRule().getValue() == null && mode == Mode.Create) {
-//            Rule rule_new = service.create_rule(username, null);
-//            model.init(rule_new.uuid, username);
-//        }
-
         model.getRule().observe(this, new Observer<Rule>() {
             @Override
             public void onChanged(@Nullable Rule rule) {
-//                if (rule == null && mode == Mode.Create) {
-//                    Rule rule_new = service.create_rule(username, null);
-//                    model.init(rule_new.uuid, username);
-//                }
-
                 updateTitle(rule);
             }
         });
@@ -158,7 +136,8 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     public void request_create_outcome() {
-        Intent intent = EditOutcomeActivity.create(this, username, rule_uuid);
+        Outcome outcome = service.create_outcome(model.getRuleId());
+        Intent intent = EditOutcomeActivity.edit(this, username, outcome);
         startActivity(intent);
     }
 
@@ -170,7 +149,8 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
 
     @Override
     public void request_create_condition() {
-        Intent intent = EditConditionActivity.create(this, username, model.getRuleId());
+        Condition condition = service.create_condition(model.getRuleId());
+        Intent intent = EditConditionActivity.edit(this, username, condition);
         startActivity(intent);
     }
 
