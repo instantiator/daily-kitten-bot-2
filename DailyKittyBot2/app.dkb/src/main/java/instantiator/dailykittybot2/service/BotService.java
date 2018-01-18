@@ -169,6 +169,30 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
+    public void delete_run_reports_for(UUID rule) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_run_reports_for(rule);
+                workspace.rule_forgets_last_run(rule);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
+    }
+
+    @Override
+    public void delete_run_reports_for(String username) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.delete_run_reports_for(username);
+                workspace.rules_forget_last_run_for(username);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered deleting condition", e);
+            }
+        });
+    }
+
+    @Override
     public Outcome create_outcome(UUID rule_id) {
         final Outcome outcome = DataFactory.create_outcome(rule_id);
         Executors.newSingleThreadScheduledExecutor().execute(() -> {

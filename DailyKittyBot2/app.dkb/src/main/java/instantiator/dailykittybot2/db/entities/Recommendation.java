@@ -24,10 +24,6 @@ import static android.arch.persistence.room.ForeignKey.NO_ACTION;
             @ForeignKey(entity = Outcome.class,
                 parentColumns = "uuid",
                 childColumns = "outcomeUuid",
-                onDelete = NO_ACTION),
-            @ForeignKey(entity = RunReport.class,
-                parentColumns = "uuid",
-                childColumns = "runReportUuid",
                 onDelete = NO_ACTION) },
         indices = { @Index("ruleUuid"), @Index("outcomeUuid") })
 public class Recommendation {
@@ -82,5 +78,5 @@ public class Recommendation {
     public boolean accepted;
 
     @ColumnInfo(name = "runReportUuid")
-    public UUID runReportUuid;
+    public UUID runReportUuid_unsafe;
 }

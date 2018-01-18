@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    android:layout_width="match_parent"
+<FrameLayout android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <android.support.v7.widget.CardView
         android:id="@+id/card_entry"
         android:layout_width="match_parent"
@@ -75,11 +75,11 @@
                 android:layout_alignEnd="@id/text_rule_name"
                 />
 
-            <TextView
+            <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/text_last_run_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="last run 2 days ago"
+                app:relative_time_prefix="@string/text_rule_last_run_prefix"
                 android:textSize="10sp"
                 android:layout_below="@id/text_rule_summary"
                 android:layout_alignParentRight="true"

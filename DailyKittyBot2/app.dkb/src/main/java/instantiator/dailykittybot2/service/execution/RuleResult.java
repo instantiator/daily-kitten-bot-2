@@ -9,7 +9,7 @@ import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 
 public class RuleResult {
-    public RuleTriplet rule;
+    public RuleTriplet triplet;
 
     public boolean validates;
     public List<String> errors;

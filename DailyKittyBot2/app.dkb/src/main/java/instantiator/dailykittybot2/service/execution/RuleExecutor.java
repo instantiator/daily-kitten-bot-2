@@ -3,15 +3,12 @@ package instantiator.dailykittybot2.service.execution;
 import android.content.Context;
 
 import net.dean.jraw.RedditClient;
-import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
-import net.dean.jraw.pagination.DefaultPaginator;
-import net.dean.jraw.references.SubredditReference;
+import net.dean.jraw.pagination.Paginator;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -32,7 +29,10 @@ public class RuleExecutor {
     public static final long ONE_HOUR = 1000 * 60 * 60;
     public static final long ONE_DAY = ONE_HOUR * 24;
     public static final long ONE_WEEK = ONE_DAY * 7;
-    public static final long ONE_MONTH = ONE_WEEK * 4;
+    public static final long ONE_MONTH = ONE_DAY * 31;
+    public static final long ONE_YEAR = ONE_DAY * 365;
+
+    private static final TimePeriod TIMEPERIOD_UnhelpfulDefault = TimePeriod.DAY;
 
     private Context context;
     private IBotService service;
@@ -57,116 +57,166 @@ public class RuleExecutor {
         this.generator = new RecommendationGenerator();
     }
 
-    public List<RuleResult> execute_rules_for_subreddit(String subreddit, List<RuleTriplet> rules, ExecutionMode mode) {
+    public SubredditExecutionResult execute_rules_for_subreddit(String subreddit, List<RuleTriplet> triplets, ExecutionMode mode) {
         listener.testing_subreddit(subreddit);
-
-        List<RuleResult> results = new LinkedList<>();
         RedditClient reddit = session.getClient();
+        String username = reddit.me().getUsername();
+        Date start = new Date();
 
-        // TODO: bad - the rules do NOT track their last runs, and ALSO we should use the RunReports!
-        List<TimePeriod> periods = determine_best_timeperiods(rules, mode);
+        // find the last considered item for each rule in this subreddit
+        Map<UUID, Date> last_considerations = find_last_considered_items(triplets, subreddit);
+
+        // prepare new run reports
+        SubredditExecutionResult out_result = new SubredditExecutionResult();
+        Map<UUID, RunReport> out_RunReports = prepare_blank_run_reports(triplets, username, subreddit);
+        List<RuleResult> out_RuleResults = new LinkedList<>();
+
+        // prepare time limits
+        List<TimePeriod> periods = determine_best_timeperiods(triplets, mode);
         TimePeriod longest = longest_from(periods);
-        // TODO: do these give sensible answers?
 
-        Map<RuleTriplet, Date> rules_to_last_report = new HashMap<>();
-        for (RuleTriplet triplet : rules) {
-            RunReport report = service.get_workspace().get_last_report_for(session.get_username(), subreddit, triplet.rule.uuid);
-            if (report != null) {
-                rules_to_last_report.put(triplet, report.lastConsideredItemDate);
-            }
-        }
+        // fetch submissions in range
+        List<Submission> submissions = reddit
+                .subreddit(subreddit)
+                .posts()
+                .sorting(SubredditSort.NEW)
+                .timePeriod(longest)
+                .limit(Paginator.RECOMMENDED_MAX_LIMIT)
+                .build()
+                .accumulateMerged(-1);
 
-        SubredditReference subreddit_ref = reddit.subreddit(subreddit);
+        for (Submission submission : submissions) {
+            listener.testing_submission(submission);
 
-        DefaultPaginator<Submission> paginator =
-                subreddit_ref
-                        .posts()
-                        .timePeriod(longest)
-                        .sorting(SubredditSort.NEW)
-                        .build();
+            for (RuleTriplet triplet : triplets) {
+                listener.applying_rule(triplet);
 
-        for (Listing<Submission> page : paginator) {
-            for (Submission submission : page.getChildren()) {
-                listener.testing_submission(submission);
+                RuleResult result = execute_rule_on_submission(triplet, submission, mode, longest, last_considerations);
+                out_RuleResults.add(result);
+            } // rule
+        } // submission
 
-                for (RuleTriplet triplet : rules) {
-                    listener.applying_rule(triplet);
+        Date finished = new Date();
 
-                    RuleResult result = new RuleResult();
-                    result.rule = triplet;
-                    result.username = reddit.me().getUsername();
-                    result.subreddit = subreddit;
-                    result.submission = submission;
+        // link rule results to reports
+        for (RuleResult result : out_RuleResults) {
+            RunReport report = out_RunReports.get(result.triplet.rule.uuid);
+            report.started = start;
+            report.finished = finished;
 
-                    RuleValidator validator = new RuleValidator(context);
-                    ValidationResult validation = validator.validate(triplet);
-                    result.validates = validation.validates;
-                    result.errors = validation.errors;
-                    result.warnings = validation.warnings;
-
-                    if (validation.validates) {
-                        Date latest_from_last_run = rules_to_last_report.get(triplet);
-                        if (rule_matches(triplet, submission, latest_from_last_run)) {
-                            result.matched = true;
-                            result.recommendations = generate_recommendations(triplet, submission);
-                            listener.generated_recommendations(result.recommendations.size());
-                        } else {
-                            result.matched = false;
-                        }
-                        result.ran = true;
-                    } // validated
-
-                    results.add(result);
-                } // rule
-            } // submission
-        } // listing
-
-        return results;
-    }
-
-    public Collection<RunReport> collate_reports_for_subreddit(List<RuleResult> rule_results, Date started, Date end) {
-        Map<UUID, RunReport> rule_to_run_reports = new HashMap<>();
-
-        for (RuleResult result : rule_results) {
-            if (!rule_to_run_reports.containsKey(result.rule.rule.uuid)) {
-                RunReport rr = new RunReport();
-                rr.uuid = UUID.randomUUID();
-                rr.username = result.username;
-                rr.subreddit = result.subreddit;
-                rr.ruleUuid = result.rule.rule.uuid;
-                rr.started = started;
-                rr.finished = end;
-                rule_to_run_reports.put(result.rule.rule.uuid, rr);
-            }
-
-            RunReport report = rule_to_run_reports.get(result.rule.rule.uuid);
-            if (report.lastConsideredItemDate == null || result.submission.getCreated().after(report.lastConsideredItemDate)) {
+            if (report.lastConsideredItemDate == null ||
+                result.submission.getCreated().after(report.lastConsideredItemDate)) {
                 report.lastConsideredItemDate = result.submission.getCreated();
             }
 
             if (result.recommendations != null) {
                 for (Recommendation recommendation : result.recommendations) {
-                    recommendation.runReportUuid = report.uuid;
+                    recommendation.runReportUuid_unsafe = report.uuid;
                 }
             }
         }
 
-        return rule_to_run_reports.values();
+        out_result.subreddit_rule_RunReports = out_RunReports.values();
+        out_result.subreddit_rule_RuleResults = out_RuleResults;
+        return out_result;
     }
 
-    private boolean rule_matches(RuleTriplet rule, Submission submission, Date latest_previously) {
-        if (latest_previously == null || submission.getCreated().after(latest_previously)) {
-            boolean ok = true;
-            for (Condition condition : rule.conditions) {
-                if (!condition_matches(condition, submission)) {
-                    ok = false;
-                    break;
-                }
+    private RuleResult execute_rule_on_submission(RuleTriplet triplet, Submission submission, ExecutionMode mode, TimePeriod limit, Map<UUID, Date> last_considerations) {
+        RedditClient reddit = session.getClient();
+
+        RuleResult result = new RuleResult();
+        result.triplet = triplet;
+        result.username = reddit.me().getUsername();
+        result.subreddit = submission.getSubreddit();
+        result.submission = submission;
+
+        RuleValidator validator = new RuleValidator(context);
+        ValidationResult validation = validator.validate(triplet);
+        result.validates = validation.validates;
+        result.errors = validation.errors;
+        result.warnings = validation.warnings;
+
+        if (validation.validates) {
+            Date previous_latest = mode == ExecutionMode.RespectRuleLastRun ? last_considerations.get(triplet) : null;
+            if (post_is_in_date(submission, previous_latest, limit) && rule_matches(triplet, submission)) {
+                result.matched = true;
+                result.recommendations = generate_recommendations(triplet, submission);
+                listener.generated_recommendations(result.recommendations.size());
+            } else {
+                result.matched = false; // not a good match
             }
-            return ok;
-        } else {
-            return false; // is from before the cut off!
+
+            result.ran = true;
         }
+
+        return result;
+    }
+
+    private Map<UUID, RunReport> prepare_blank_run_reports(List<RuleTriplet> triplets, String username, String subreddit) {
+        Map<UUID, RunReport> map = new HashMap<>();
+        for (RuleTriplet triplet : triplets) {
+            RunReport rr = new RunReport();
+            rr.uuid = UUID.randomUUID();
+            rr.username = username;
+            rr.subreddit = subreddit;
+            rr.ruleUuid = triplet.rule.uuid;
+            map.put(triplet.rule.uuid, rr);
+        }
+        return map;
+    }
+
+    private Map<UUID, Date> find_last_considered_items(List<RuleTriplet> triplets, String subreddit) {
+        Map<UUID, Date> map = new HashMap<>();
+        for (RuleTriplet triplet : triplets) {
+            RunReport report = service.get_workspace().get_last_report_for(session.get_username(), subreddit, triplet.rule.uuid);
+            if (report != null) {
+                map.put(triplet.rule.uuid, report.lastConsideredItemDate);
+            }
+        }
+        return map;
+    }
+
+    private boolean post_is_in_date(Submission submission, Date latest_previously, TimePeriod limit) {
+        if (latest_previously == null) {
+            latest_previously = getDateFromTimePeriod(limit);
+        }
+        return submission.getCreated().after(latest_previously);
+    }
+
+    private Date getDateFromTimePeriod(TimePeriod period) {
+        long time = new Date().getTime();
+        switch (period) {
+            case HOUR:
+                time -= ONE_HOUR;
+                break;
+            case DAY:
+                time -= ONE_DAY;
+                break;
+            case WEEK:
+                time -= ONE_WEEK;
+                break;
+            case MONTH:
+                time -= ONE_MONTH;
+                break;
+            case YEAR:
+                time -= ONE_YEAR;
+                break;
+            case ALL:
+                time = Long.MIN_VALUE;
+                break;
+        }
+        return new Date(time);
+    }
+
+    private boolean rule_matches(RuleTriplet rule, Submission submission) {
+        boolean ok = true;
+        for (Condition condition : rule.conditions) {
+            if (!condition_matches(condition, submission)) {
+                ok = false;
+                break;
+            }
+        }
+        return ok;
     }
 
     private boolean condition_matches(Condition condition, Submission submission) {
@@ -176,8 +226,6 @@ public class RuleExecutor {
     private List<Recommendation> generate_recommendations(RuleTriplet rule, Submission submission) {
         return generator.generate_recommendations_for(rule, submission);
     }
-
-    private static final TimePeriod TIMEPERIOD_UnhelpfulDefault = TimePeriod.DAY;
 
     public static List<TimePeriod> determine_best_timeperiods(List<RuleTriplet> rules, ExecutionMode mode) {
         if (mode == ExecutionMode.ActOnLastHourSubmissions) {

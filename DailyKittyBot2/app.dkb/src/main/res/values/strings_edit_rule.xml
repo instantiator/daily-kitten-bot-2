@@ -24,6 +24,7 @@
 
     <string name="menu_rule_view">View rule...</string>
     <string name="menu_rule_delete">Delete rule...</string>
+    <string name="menu_rule_forget_reports">Forget previous runs...</string>
     <string name="menu_rule_run">Run rule now...</string>
 
     <string name="dialog_title_confirm_delete_condition">Delete condition?</string>

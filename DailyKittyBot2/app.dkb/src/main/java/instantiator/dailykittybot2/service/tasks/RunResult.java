@@ -1,5 +1,6 @@
 package instantiator.dailykittybot2.service.tasks;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +13,7 @@ public class RunResult {
     public int subreddits_completed = 0;
     public int total_subreddits = 0;
 
-    public Map<String, List<RuleResult>> subreddits_to_results;
+    public Map<String, Collection<RuleResult>> subreddits_to_results;
 
     public List<RunReport> all_run_reports;
 }

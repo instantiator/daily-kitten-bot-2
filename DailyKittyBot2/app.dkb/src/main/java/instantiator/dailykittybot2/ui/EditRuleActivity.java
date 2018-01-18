@@ -90,13 +90,18 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
     protected boolean initialise() {
 
         if (model.getRule().getValue() == null && mode == Mode.Create) {
-            Rule rule = service.create_rule(username, null);
-            model.init(rule.uuid, username);
+            Rule rule_new = service.create_rule(username, null);
+            model.init(rule_new.uuid, username);
         }
 
         model.getRule().observe(this, new Observer<Rule>() {
             @Override
             public void onChanged(@Nullable Rule rule) {
+//                if (rule == null && mode == Mode.Create) {
+//                    Rule rule_new = service.create_rule(username, null);
+//                    model.init(rule_new.uuid, username);
+//                }
+
                 updateTitle(rule);
             }
         });

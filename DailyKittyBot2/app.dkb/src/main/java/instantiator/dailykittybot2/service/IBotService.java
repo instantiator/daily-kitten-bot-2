@@ -41,6 +41,8 @@ public interface IBotService {
     void delete_outcome(Outcome outcome);
     void delete_rule(Rule rule);
 
+    void delete_run_reports_for(UUID rule);
+    void delete_run_reports_for(String username);
     void delete_all_recommendations(String username);
 
     void injectTestData(String user);

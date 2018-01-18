@@ -26,6 +26,7 @@ import instantiator.dailykittybot2.service.IBotService;
 import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.execution.RuleResult;
+import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
 import instantiator.dailykittybot2.ui.UserOverviewActivity;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
@@ -104,15 +105,11 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
         current_progress = new RunProgress(params.account, result.total_subreddits);
 
         for (String subreddit : subreddits_to_rules.keySet()) {
-            Date started = new Date();
             List<RuleTriplet> rules = subreddits_to_rules.get(subreddit);
-            List<RuleResult> results = exec.execute_rules_for_subreddit(subreddit, rules, params.mode);
-            Date finished = new Date();
+            SubredditExecutionResult execution = exec.execute_rules_for_subreddit(subreddit, rules, params.mode);
 
-            Collection<RunReport> reports = exec.collate_reports_for_subreddit(results, started, finished);
-            result.all_run_reports.addAll(reports);
-
-            result.subreddits_to_results.put(subreddit, results);
+            result.all_run_reports.addAll(execution.subreddit_rule_RunReports);
+            result.subreddits_to_results.put(subreddit, execution.subreddit_rule_RuleResults);
             result.subreddits_completed++;
         }
 
@@ -129,21 +126,21 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
                         R.string.execution_notification_title_for_user,
                         p.current_username));
 
-        notification_builder.setContentText(
-                context.getString(
-                        R.string.execution_notification_content_for_details,
-                        p.current_subreddit,
-                        p.current_post,
-                        p.current_rule));
+        String content = context.getString(
+                R.string.execution_notification_content_for_details,
+                p.current_subreddit,
+                p.current_post_count);
+
+        notification_builder.setContentText(content);
+
+        notification_builder.setStyle(
+                new NotificationCompat.BigTextStyle()
+                .bigText(content));
 
         notification_builder.setNumber(current_progress.generated_recommendation_count);
 
         mgr.notify(notification_id, notification_builder.build());
 
-        String post =
-                p.current_post == null ?
-                        null :
-                        p.current_post.substring(0, Math.min(15, p.current_post.length()));
     }
 
     @Override
@@ -166,33 +163,51 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
         mgr.cancel(notification_id);
     }
 
+    private RunProgress copy_current_progress() {
+        RunProgress next = new RunProgress(current_progress.current_username, current_progress.of_subreddits_count);
+        next.current_subreddit = current_progress.current_subreddit;
+        next.current_post = current_progress.current_post;
+        next.current_rule = current_progress.current_rule;
+        next.current_post_count = current_progress.current_post_count;
+        next.current_subreddits_count = current_progress.current_subreddits_count;
+        next.generated_recommendation_count = current_progress.generated_recommendation_count;
+        return next;
+    }
+
     @Override
     public void testing_subreddit(String subreddit) {
         Log.v(TAG, "Subreddit: " + subreddit);
         current_progress.current_subreddit = subreddit;
         current_progress.current_subreddits_count++;
-        publishProgress(current_progress);
+        current_progress.current_post = null;
+        current_progress.current_rule = null;
+        RunProgress copy = copy_current_progress();
+        publishProgress(copy);
     }
 
     @Override
     public void testing_submission(Submission submission) {
-        Log.v(TAG, "Submission: " + submission);
+        Log.v(TAG, "Submission: " + submission.getTitle());
         current_progress.current_post = submission.getTitle();
         current_progress.current_post_count++;
-        publishProgress(current_progress);
+        current_progress.current_rule = null;
+        RunProgress copy = copy_current_progress();
+        publishProgress(copy);
     }
 
     @Override
     public void applying_rule(RuleTriplet rule) {
         Log.v(TAG, "Rule: " + rule.rule.rulename);
         current_progress.current_rule = rule.rule.rulename;
-        publishProgress(current_progress);
+        RunProgress copy = copy_current_progress();
+        publishProgress(copy);
     }
 
     @Override
     public void generated_recommendations(int recommendations) {
         Log.v(TAG, "Recommendations generated: " + recommendations);
         current_progress.generated_recommendation_count += recommendations;
-        publishProgress(current_progress);
+        RunProgress copy = copy_current_progress();
+        publishProgress(copy);
     }
 }

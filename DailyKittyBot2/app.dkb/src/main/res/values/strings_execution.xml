@@ -9,7 +9,7 @@
     <string name="execution_notification_ticker_starting">DKB is active</string>
 
     <string name="execution_notification_title_for_user">Running rules for %s</string>
-    <string name="execution_notification_content_for_details">Subreddit: %s\nPost: %s\nRule: %s</string>
+    <string name="execution_notification_content_for_details">Subreddit: %s\nPost: %d</string>
 
     <string name="execution_notification_content_completion">Storing %d new recommendations.</string>
 

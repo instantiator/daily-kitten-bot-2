@@ -11,6 +11,8 @@
     <string name="btn_run">Run</string>
     <string name="btn_inject">Inject</string>
     <string name="btn_delete_all">Delete all</string>
+    <string name="btn_forget">Forget</string>
+    <string name="btn_forget_all">Forget all</string>
 
 
 </resources>

@@ -104,6 +104,22 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
         }
 
         @Override
+        public void request_forget_rule_reports(Rule rule) {
+            new AlertDialog.Builder(getContext())
+                    .setTitle(R.string.dialog_title_confirm_forget_rule_run_reports)
+                    .setMessage(R.string.dialog_message_confirm_forget_rule_run_reports)
+                    .setPositiveButton(R.string.btn_forget, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.request_forget_run_reports(rule);
+                    })
+                    .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
+        }
+
+        @Override
         public void request_run(RuleTriplet rule) {
             listener.request_run(rule);
         }
@@ -114,5 +130,6 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
         void request_create_rule();
         void request_delete(Rule rule);
         void request_run(RuleTriplet rule);
+        void request_forget_run_reports(Rule rule);
     }
 }

@@ -35,4 +35,11 @@ public interface RuleDao {
 
     @Delete
     void delete(Rule user);
+
+    @Query("UPDATE rule SET last_run = null WHERE username LIKE :username")
+    void rulesForgetLastRun(String username);
+
+    @Query("UPDATE rule SET last_run = null WHERE uuid LIKE :rule")
+    void ruleForgetsLastRun(UUID rule);
+
 }

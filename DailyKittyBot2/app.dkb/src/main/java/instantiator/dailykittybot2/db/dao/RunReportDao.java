@@ -23,4 +23,10 @@ public interface RunReportDao {
     @Delete
     void delete(RunReport report);
 
+    @Query("DELETE FROM runreport WHERE ruleUuid LIKE :rule")
+    void delete_all_for(UUID rule);
+
+    @Query("DELETE FROM runreport WHERE username LIKE :username")
+    void delete_all_for(String username);
+
 }

@@ -101,6 +101,22 @@ public class BotWorkspace {
         db.recommendationDao().delete_all_for(username);
     }
 
+    public void rules_forget_last_run_for(String username) {
+        db.ruleDao().rulesForgetLastRun(username);
+    }
+
+    public void rule_forgets_last_run(UUID rule) {
+        db.ruleDao().ruleForgetsLastRun(rule);
+    }
+
+    public void delete_run_reports_for(UUID rule) {
+        db.runReportDao().delete_all_for(rule);
+    }
+
+    public void delete_run_reports_for(String username) {
+        db.runReportDao().delete_all_for(username);
+    }
+
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {
         return db.ruleTripletDao().loadAllByUsername(username);
     }

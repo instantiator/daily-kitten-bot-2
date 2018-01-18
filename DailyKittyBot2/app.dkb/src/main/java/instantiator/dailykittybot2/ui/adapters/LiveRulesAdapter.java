@@ -16,7 +16,12 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.github.curioustechizen.ago.RelativeTimeTextView;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,6 +29,7 @@ import butterknife.OnClick;
 import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Rule;
+import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.util.ColourConventions;
 import instantiator.dailykittybot2.validation.RuleValidator;
 import instantiator.dailykittybot2.validation.ValidationResult;
@@ -34,7 +40,9 @@ import static android.view.View.VISIBLE;
 public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.RuleHolder> {
 
     private final AppCompatActivity activity;
+
     private List<RuleTriplet> triplets;
+
     private RecyclerView recyclerView;
     private Listener listener;
     private CardView empty_card;
@@ -87,16 +95,22 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         holder.icon_alert.setVisibility(errors || warnings ? VISIBLE : GONE);
         holder.icon_alert.getDrawable().setTint(colours.icon_alert(errors, warnings));
 
-        holder.icon_current.getDrawable().setTint(colours.rule_icon(triplet.rule.run_periodically));
+        holder.icon_current.getDrawable().mutate().setTint(colours.rule_icon(triplet.rule.run_periodically));
         holder.text_rule_name.setTextColor(colours.rule_icon(triplet.rule.run_periodically));
 
+//        if (triplet.rule.last_run != null) {
+//            String date = DateFormat.format(activity.getString(R.string.date_format_last_run), triplet.rule.last_run).toString();
+//            holder.text_last_run_summary.setText(activity.getString(R.string.text_rule_last_run, date));
+//            holder.text_last_run_summary.setVisibility(VISIBLE);
+//        } else {
+//            holder.text_last_run_summary.setVisibility(GONE);
+//        }
+
         if (triplet.rule.last_run != null) {
-            String date = DateFormat.format(activity.getString(R.string.date_format_last_run), triplet.rule.last_run).toString();
-            holder.text_last_run_summary.setText(activity.getString(R.string.text_rule_last_run, date));
-            holder.text_last_run_summary.setVisibility(VISIBLE);
-        } else {
-            holder.text_last_run_summary.setVisibility(GONE);
+            holder.text_last_run_summary.setReferenceTime(triplet.rule.last_run.getTime());
         }
+
+        holder.text_last_run_summary.setVisibility(triplet.rule.last_run != null ? VISIBLE : GONE);
     }
 
     private String summarise(Rule rule) {
@@ -126,7 +140,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
         @BindView(R.id.icon_alert) public ImageView icon_alert;
         @BindView(R.id.icon_menu) public ImageView icon_menu;
         @BindView(R.id.icon_run_now) public ImageView icon_run_now;
-        @BindView(R.id.text_last_run_summary) public TextView text_last_run_summary;
+        @BindView(R.id.text_last_run_summary) public RelativeTimeTextView text_last_run_summary;
 
         PopupMenu popup;
 
@@ -144,7 +158,9 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
             popup = new PopupMenu(icon_menu.getContext(), icon_menu);
             popup.getMenu().add(0, R.string.menu_rule_view, 0, R.string.menu_rule_view);
             popup.getMenu().add(0, R.string.menu_rule_delete, 0, R.string.menu_rule_delete);
+            popup.getMenu().add(0, R.string.menu_rule_forget_reports, 0, R.string.menu_rule_forget_reports);
             popup.getMenu().add(0, R.string.menu_rule_run, 0, R.string.menu_rule_run);
+
 
             popup.setOnMenuItemClickListener(menuItem -> {
                 switch (menuItem.getItemId()) {
@@ -153,6 +169,9 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
                         return true;
                     case R.string.menu_rule_delete:
                         listener.request_delete(triplet.rule);
+                        return true;
+                    case R.string.menu_rule_forget_reports:
+                        listener.request_forget_rule_reports(triplet.rule);
                         return true;
                     case R.string.menu_rule_run:
                         confirm_run(triplet);
@@ -192,6 +211,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     public interface Listener {
         void rule_selected(Rule rule);
         void request_delete(Rule rule);
+        void request_forget_rule_reports(Rule rule);
         void request_run(RuleTriplet rule);
     }
 }

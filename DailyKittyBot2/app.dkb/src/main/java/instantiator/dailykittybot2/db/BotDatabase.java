@@ -26,7 +26,7 @@ import instantiator.dailykittybot2.db.util.Converters;
         Outcome.class,
         Recommendation.class,
         Result.class,
-        RunReport.class}, version = 10)
+        RunReport.class}, version = 11)
 @TypeConverters({Converters.class})
 public abstract class BotDatabase extends RoomDatabase {
 

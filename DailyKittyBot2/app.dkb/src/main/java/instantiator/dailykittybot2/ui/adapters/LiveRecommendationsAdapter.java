@@ -9,7 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.github.curioustechizen.ago.RelativeTimeTextView;
 
 import java.util.List;
 
@@ -63,8 +66,12 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
     public void onBindViewHolder(RecommendationHolder holder, int position) {
         Recommendation recommendation = recommendations.get(position);
         holder.recommendation = recommendation;
+        holder.icon_current.setImageResource(recommendation.type.getIcon());
         holder.text_recommendation_name.setText(recommendation.type.getDescription());
-        holder.text_recommendation_summary.setText(recommendation.targetSummary);
+        holder.text_recommendation_summary.setText(recommendation.modifier);
+        holder.text_recommendation_summary.setVisibility(recommendation.type.requiresSpecifics() ? VISIBLE : GONE);
+        holder.text_recommendation_location.setText(recommendation.targetSummary);
+        holder.text_recommendation_created.setReferenceTime(recommendation.created.getTime());
     }
 
     @Override
@@ -75,8 +82,11 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
     public class RecommendationHolder extends RecyclerView.ViewHolder {
         public Recommendation recommendation;
 
+        @BindView(R.id.icon_current) public ImageView icon_current;
         @BindView(R.id.text_recommendation_name) public TextView text_recommendation_name;
-        @BindView(R.id.text_recommendation_summary)public TextView text_recommendation_summary;
+        @BindView(R.id.text_recommendation_summary) public TextView text_recommendation_summary;
+        @BindView(R.id.text_recommendation_location_summary) public TextView text_recommendation_location;
+        @BindView(R.id.text_recommendation_created) public RelativeTimeTextView text_recommendation_created;
 
         public RecommendationHolder(View itemView) {
             super(itemView);

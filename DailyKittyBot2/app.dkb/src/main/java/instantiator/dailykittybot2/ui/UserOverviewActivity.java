@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.Arrays;
+import java.util.UUID;
 
 import butterknife.BindView;
 import instantiator.dailykittybot2.R;
@@ -98,6 +99,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
         super.onCreateOptionsMenu(menu);
         menu.add(0, R.string.menu_inject_test_data, 0, R.string.menu_inject_test_data);
         menu.add(0, R.string.menu_delete_all_recommendations, 0, R.string.menu_delete_all_recommendations);
+        menu.add(0, R.string.menu_forget_all_run_reports, 0, R.string.menu_forget_all_run_reports);
         return true;
     }
 
@@ -106,6 +108,9 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
         switch (item.getItemId()) {
             case R.string.menu_inject_test_data:
                 confirm_inject_testData();
+                return true;
+            case R.string.menu_forget_all_run_reports:
+                confirm_delete_all_run_reports();
                 return true;
             case R.string.menu_delete_all_recommendations:
                 confirm_delete_all_recommendations();
@@ -141,6 +146,19 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
                 .show();
     }
 
+    private void confirm_delete_all_run_reports() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_title_confirm_forget_all_run_reports)
+                .setMessage(R.string.dialog_message_confirm_forget_all_run_reports)
+                .setPositiveButton(R.string.btn_forget_all, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                    service.delete_run_reports_for(username);
+                })
+                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
+                .create()
+                .show();
+    }
+
     @Override
     public void rule_selected(Rule rule) {
         Intent intent = EditRuleActivity.edit(this, username, rule);
@@ -156,6 +174,11 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     @Override
     public void request_delete(Rule rule) {
         service.delete_rule(rule);
+    }
+
+    @Override
+    public void request_forget_run_reports(Rule rule) {
+        service.delete_run_reports_for(rule.uuid);
     }
 
     @Override
