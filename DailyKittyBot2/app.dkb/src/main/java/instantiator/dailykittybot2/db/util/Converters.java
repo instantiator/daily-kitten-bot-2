@@ -1,6 +1,7 @@
 package instantiator.dailykittybot2.db.util;
 
 import android.arch.persistence.room.TypeConverter;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +17,18 @@ import instantiator.dailykittybot2.data.OutcomeType;
 import instantiator.dailykittybot2.data.TargetType;
 
 public class Converters {
+
+    @TypeConverter
+    public static String fromUri(Uri uri) {
+        if (uri == null) { return null; }
+        return uri.toString();
+    }
+
+    @TypeConverter
+    public static Uri toUri(String uri_str) {
+        if (uri_str == null) { return null; }
+        return Uri.parse(uri_str);
+    }
 
     @TypeConverter
     public static String fromConditionType(ConditionType type) {

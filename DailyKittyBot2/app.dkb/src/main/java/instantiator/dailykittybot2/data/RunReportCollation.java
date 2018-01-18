@@ -13,7 +13,7 @@ public class RunReportCollation {
     @Embedded
     public RunReport report;
 
-    @Relation(parentColumn = "uuid", entityColumn = "runReportUuid")
-    public List<Recommendation> recommendtions;
+    @Relation(parentColumn = "uuid", entityColumn = "run_report_uuid")
+    public List<Recommendation> recommendations;
 
 }

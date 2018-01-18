@@ -8,8 +8,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+
 import java.util.Arrays;
-import java.util.UUID;
 
 import butterknife.BindView;
 import instantiator.dailykittybot2.R;
@@ -18,8 +19,10 @@ import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
+import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
+import instantiator.dailykittybot2.service.tasks.DialogUiRulesTask;
 import instantiator.dailykittybot2.service.tasks.RunParams;
-import instantiator.dailykittybot2.service.tasks.UserInitiatedRulesTask;
+import instantiator.dailykittybot2.service.tasks.NotificationUiRulesTask;
 import instantiator.dailykittybot2.ui.fragments.UserRecommendationsFragment;
 import instantiator.dailykittybot2.ui.fragments.UserRulesFragment;
 import instantiator.dailykittybot2.ui.pagers.UserOverviewPagerAdapter;
@@ -97,7 +100,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        menu.add(0, R.string.menu_inject_test_data, 0, R.string.menu_inject_test_data);
+        menu.add(0, R.string.menu_inject_sample_data, 0, R.string.menu_inject_sample_data);
         menu.add(0, R.string.menu_delete_all_recommendations, 0, R.string.menu_delete_all_recommendations);
         menu.add(0, R.string.menu_forget_all_run_reports, 0, R.string.menu_forget_all_run_reports);
         return true;
@@ -106,8 +109,8 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.string.menu_inject_test_data:
-                confirm_inject_testData();
+            case R.string.menu_inject_sample_data:
+                confirm_inject_sampleData();
                 return true;
             case R.string.menu_forget_all_run_reports:
                 confirm_delete_all_run_reports();
@@ -118,6 +121,19 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void confirm_inject_sampleData() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.dialog_title_select_sample_data)
+                .items(SampleDataInjector.get_rule_names(this))
+                .itemsCallbackSingleChoice(-1, (dialog, view, which, text) -> {
+                    service.injectSampleData(username, text.toString());
+                    return true;
+                })
+                .positiveText(R.string.btn_choose)
+                .negativeText(R.string.btn_cancel)
+                .show();
     }
 
     private void confirm_inject_testData() {
@@ -167,7 +183,8 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void request_create_rule() {
-        Intent intent = EditRuleActivity.create(this, username);
+        Rule new_rule = service.create_rule(username, null);
+        Intent intent = EditRuleActivity.edit(this, username, new_rule);
         startActivity(intent);
     }
 
@@ -187,7 +204,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
                 if (state == RedditSession.State.Authenticated) {
-                    UserInitiatedRulesTask task = new UserInitiatedRulesTask(
+                    DialogUiRulesTask task = new DialogUiRulesTask(
                             UserOverviewActivity.this,
                             session,
                             service);
@@ -204,6 +221,11 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
         RedditSession session = new RedditSession(this, service.get_device_uuid(), session_listener);
         session.authenticate_as(rule.rule.username);
 
+    }
+
+    @Override
+    public void request_view_post(Recommendation recommendation) {
+        // TODO
     }
 
     @Override

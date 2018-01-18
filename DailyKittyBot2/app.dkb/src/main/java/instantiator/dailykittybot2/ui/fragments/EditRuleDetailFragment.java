@@ -89,6 +89,11 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
     }
 
     private void updateFromRule(Rule source) {
+        boolean exists = source != null;
+        edit_name.setEnabled(exists);
+        edit_autorun.setEnabled(exists);
+        edit_subreddits.setEnabled(exists);
+
         if (source == null) { return; }
 
         View had_focus = getView().findFocus();

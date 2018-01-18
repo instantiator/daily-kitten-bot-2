@@ -27,9 +27,6 @@ public interface RecommendationDao {
     @Query("SELECT * FROM recommendation WHERE username LIKE :username ORDER BY created DESC")
     LiveData<List<Recommendation>> loadAllByUsername(String username);
 
-    @Query("SELECT * FROM recommendation WHERE username LIKE :username AND NOT is_complete ORDER BY created DESC")
-    LiveData<List<Recommendation>> getAllIncompleteFor(String username);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Recommendation... recommendations);
 

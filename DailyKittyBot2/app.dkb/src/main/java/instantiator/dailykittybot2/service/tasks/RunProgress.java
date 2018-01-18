@@ -7,6 +7,9 @@ public class RunProgress {
 
     public String current_username;
 
+    public boolean fetching_posts;
+
+    public int total_posts = 0;
     public int current_post_count = 0;
 
     public String current_subreddit;

@@ -11,7 +11,6 @@ import android.util.Log;
 
 import net.dean.jraw.models.Submission;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,7 +19,6 @@ import java.util.Map;
 
 import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
-import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.service.BotService;
 import instantiator.dailykittybot2.service.IBotService;
 import instantiator.dailykittybot2.service.RedditSession;
@@ -31,8 +29,8 @@ import instantiator.dailykittybot2.ui.UserOverviewActivity;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 
-public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, RunResult> implements RuleExecutor.Listener {
-    private static final String TAG = UserInitiatedRulesTask.class.getName();
+public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResult> implements RuleExecutor.Listener {
+    private static final String TAG = NotificationUiRulesTask.class.getName();
 
     private Context context;
     private RedditSession session;
@@ -47,7 +45,7 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
 
     private NotificationManager mgr;
 
-    public UserInitiatedRulesTask(Context context, RedditSession session, IBotService service) {
+    public NotificationUiRulesTask(Context context, RedditSession session, IBotService service) {
         this.context = context;
         this.session = session;
         this.service = service;
@@ -94,7 +92,7 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
 
         Date now = new Date();
         for (RuleTriplet rule : params.rules) {
-            rule.rule.last_run = now;
+            rule.rule.last_run_hint = now;
             service.update_rule(rule.rule);
         }
 
@@ -166,6 +164,8 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
     private RunProgress copy_current_progress() {
         RunProgress next = new RunProgress(current_progress.current_username, current_progress.of_subreddits_count);
         next.current_subreddit = current_progress.current_subreddit;
+        next.total_posts = current_progress.total_posts;
+        next.fetching_posts = current_progress.fetching_posts;
         next.current_post = current_progress.current_post;
         next.current_rule = current_progress.current_rule;
         next.current_post_count = current_progress.current_post_count;
@@ -175,12 +175,23 @@ public class UserInitiatedRulesTask extends AsyncTask<RunParams, RunProgress, Ru
     }
 
     @Override
-    public void testing_subreddit(String subreddit) {
-        Log.v(TAG, "Subreddit: " + subreddit);
+    public void fetching_subreddit_posts(String subreddit) {
+        Log.v(TAG, "Fetching... " + subreddit);
         current_progress.current_subreddit = subreddit;
         current_progress.current_subreddits_count++;
         current_progress.current_post = null;
         current_progress.current_rule = null;
+        current_progress.total_posts = 0;
+        current_progress.fetching_posts = true;
+        RunProgress copy = copy_current_progress();
+        publishProgress(copy);
+    }
+
+    @Override
+    public void testing_subreddit(String subreddit, int total_posts) {
+        Log.v(TAG, "Subreddit: " + subreddit);
+        current_progress.total_posts = total_posts;
+        current_progress.fetching_posts = false;
         RunProgress copy = copy_current_progress();
         publishProgress(copy);
     }

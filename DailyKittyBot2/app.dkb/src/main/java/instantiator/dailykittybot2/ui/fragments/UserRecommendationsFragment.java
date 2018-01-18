@@ -16,21 +16,13 @@ import static android.view.View.VISIBLE;
 
 public class UserRecommendationsFragment extends AbstractBotFragment<UserOverviewViewModel, UserRecommendationsFragment.Listener> {
 
-    private static final String KEY_username = "username";
-
-    private String username;
-
     private LiveRecommendationsAdapter adapter;
 
     @BindView(R.id.recycler) public RecyclerView recycler;
     @BindView(R.id.card_no_recommendations) public CardView card_no_recommendations;
 
-    public static UserRecommendationsFragment create(String username) {
-        UserRecommendationsFragment fragment = new UserRecommendationsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_username, username);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static UserRecommendationsFragment create() {
+        return new UserRecommendationsFragment();
     }
 
     public UserRecommendationsFragment() {
@@ -44,7 +36,7 @@ public class UserRecommendationsFragment extends AbstractBotFragment<UserOvervie
 
     @Override
     protected void extractArguments(Bundle arguments) {
-        username = getArguments().getString(KEY_username);
+        // NOP
     }
 
     @Override
@@ -74,6 +66,11 @@ public class UserRecommendationsFragment extends AbstractBotFragment<UserOvervie
     private LiveRecommendationsAdapter.Listener recommendations_listener = new LiveRecommendationsAdapter.Listener() {
 
         @Override
+        public void request_view_post(Recommendation recommendation) {
+            listener.request_view_post(recommendation);
+        }
+
+        @Override
         public void recommendation_selected(Recommendation recommendation) {
             listener.recommendation_selected(recommendation);
         }
@@ -90,6 +87,7 @@ public class UserRecommendationsFragment extends AbstractBotFragment<UserOvervie
     };
 
     public interface Listener {
+        void request_view_post(Recommendation recommendation);
         void recommendation_selected(Recommendation recommendation);
         void accept_recommendation(Recommendation recommendation);
         void reject_recommendation(Recommendation recommendation);

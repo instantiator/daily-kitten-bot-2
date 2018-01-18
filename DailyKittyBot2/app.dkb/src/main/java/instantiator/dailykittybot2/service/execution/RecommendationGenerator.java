@@ -1,5 +1,7 @@
 package instantiator.dailykittybot2.service.execution;
 
+import android.net.Uri;
+
 import net.dean.jraw.models.Submission;
 
 import java.util.Date;
@@ -33,6 +35,8 @@ public class RecommendationGenerator {
             // in future versions, it will be possible to act on comments too
             recommendation.targetType = TargetType.Post;
             recommendation.targetSubmissionId = submission.getId();
+            recommendation.targetSubmissionPosted = submission.getCreated();
+            recommendation.targetPostUri = Uri.parse(submission.getPermalink());
             recommendation.targetSummary = summarise_post(submission);
 
             recommendations.add(recommendation);

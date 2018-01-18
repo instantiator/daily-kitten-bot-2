@@ -46,6 +46,7 @@ public interface IBotService {
     void delete_all_recommendations(String username);
 
     void injectTestData(String user);
+    void injectSampleData(String user, String name);
 
     void run(String username, RuleTriplet rules);
 

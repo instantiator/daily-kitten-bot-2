@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.Date;
@@ -59,24 +60,45 @@ public class Recommendation {
     @ColumnInfo(name = "targetSubmissionId")
     public String targetSubmissionId;
 
+    @ColumnInfo(name = "targetSubmissionPosted")
+    public Date targetSubmissionPosted;
+
+    @ColumnInfo(name = "targetCommentPosted")
+    public Date targetCommentPosted;
+
     @ColumnInfo(name = "targetSubreddit")
     public String targetSubreddit;
 
     @ColumnInfo(name = "targetSummary")
     public String targetSummary;
 
+    @ColumnInfo(name = "targetPostUri")
+    public Uri targetPostUri;
+
+    @ColumnInfo(name = "targetCommentUri")
+    public Uri targetCommentUri;
+
     @ColumnInfo(name = "created")
     public Date created;
 
-    @ColumnInfo(name = "is_complete")
-    public boolean complete;
+    @ColumnInfo(name = "user_accepted")
+    public boolean userAccepted;
 
-    @ColumnInfo(name = "tasks_completed")
-    public Date completed;
+    @ColumnInfo(name = "user_rejected")
+    public boolean userRejected;
 
-    @ColumnInfo(name = "accepted")
-    public boolean accepted;
+    @ColumnInfo(name = "last_attempted")
+    public Date lastAttempted;
 
-    @ColumnInfo(name = "runReportUuid")
+    @ColumnInfo(name = "succeeded")
+    public boolean succeeded;
+
+    @ColumnInfo(name = "failed")
+    public boolean failed;
+
+    @ColumnInfo(name = "fail_message")
+    public String failMessage;
+
+    @ColumnInfo(name = "run_report_uuid")
     public UUID runReportUuid_unsafe;
 }

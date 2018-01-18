@@ -21,10 +21,7 @@ public class EditRuleViewModel extends AbstractBotViewModel {
     public void init(UUID rule_id, String username) {
         this.init_rule_id = rule_id;
         this.init_username = username;
-        rule = null; getRule();
-        conditions = null; getRuleConditions();
-        outcomes = null; getRuleOutcomes();
-
+        // nullifyData(); // it will be refetched - this is correct!
     }
 
     public UUID getRuleId() {

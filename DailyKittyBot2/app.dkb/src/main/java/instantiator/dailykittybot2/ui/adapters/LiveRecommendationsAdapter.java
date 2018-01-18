@@ -71,7 +71,10 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
         holder.text_recommendation_summary.setText(recommendation.modifier);
         holder.text_recommendation_summary.setVisibility(recommendation.type.requiresSpecifics() ? VISIBLE : GONE);
         holder.text_recommendation_location.setText(recommendation.targetSummary);
+        holder.text_recommendation_subreddit.setText(
+                activity.getString(R.string.text_recommendation_subreddit, recommendation.targetSubreddit));
         holder.text_recommendation_created.setReferenceTime(recommendation.created.getTime());
+        holder.text_submission_posted.setReferenceTime(recommendation.targetSubmissionPosted.getTime());
     }
 
     @Override
@@ -87,6 +90,8 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
         @BindView(R.id.text_recommendation_summary) public TextView text_recommendation_summary;
         @BindView(R.id.text_recommendation_location_summary) public TextView text_recommendation_location;
         @BindView(R.id.text_recommendation_created) public RelativeTimeTextView text_recommendation_created;
+        @BindView(R.id.text_recommendation_subreddit) public TextView text_recommendation_subreddit;
+        @BindView(R.id.text_recommendation_submission_posted) public RelativeTimeTextView text_submission_posted;
 
         public RecommendationHolder(View itemView) {
             super(itemView);
@@ -102,6 +107,7 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
     }
 
     public interface Listener {
+        void request_view_post(Recommendation recommendation);
         void recommendation_selected(Recommendation recommendation);
         void request_recommendation_run(Recommendation recommendation);
         void request_recommendation_delete(Recommendation recommendation);

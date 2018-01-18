@@ -17,6 +17,7 @@ import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.db.entities.Condition;
 import instantiator.dailykittybot2.db.entities.Outcome;
 import instantiator.dailykittybot2.db.entities.Rule;
+import instantiator.dailykittybot2.service.IBotService;
 import instantiator.dailykittybot2.ui.fragments.EditRuleConditionsFragment;
 import instantiator.dailykittybot2.ui.fragments.EditRuleDetailFragment;
 import instantiator.dailykittybot2.ui.fragments.EditRuleOutcomesFragment;
@@ -45,11 +46,15 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
         super(true, true, false);
     }
 
-    public static Intent create(Context context, String username) {
-        Intent intent = new Intent(context, EditRuleActivity.class);
-        intent.putExtra(KEY_mode, Mode.Create.name());
-        intent.putExtra(KEY_username, username);
-        return intent;
+    public static Intent create(Context context, IBotService service, String username) {
+
+        Rule rule_new = service.create_rule(username, null);
+        return edit(context, username, rule_new);
+
+//        Intent intent = new Intent(context, EditRuleActivity.class);
+//        intent.putExtra(KEY_mode, Mode.Create.name());
+//        intent.putExtra(KEY_username, username);
+//        return intent;
     }
 
     public static Intent edit(Context context, String username, Rule rule) {
@@ -86,13 +91,15 @@ public class EditRuleActivity extends AbstractBotActivity<EditRuleViewModel>
         model.init(rule_uuid, username);
     }
 
+    // TODO: issue seems to be that Mode is Create and so... model gets created more than once
+
     @Override
     protected boolean initialise() {
 
-        if (model.getRule().getValue() == null && mode == Mode.Create) {
-            Rule rule_new = service.create_rule(username, null);
-            model.init(rule_new.uuid, username);
-        }
+//        if (model.getRule().getValue() == null && mode == Mode.Create) {
+//            Rule rule_new = service.create_rule(username, null);
+//            model.init(rule_new.uuid, username);
+//        }
 
         model.getRule().observe(this, new Observer<Rule>() {
             @Override

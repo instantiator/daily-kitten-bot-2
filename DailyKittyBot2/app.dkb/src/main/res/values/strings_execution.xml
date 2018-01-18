@@ -13,4 +13,11 @@
 
     <string name="execution_notification_content_completion">Storing %d new recommendations.</string>
 
+    <string name="dialog_title_running_rules">Running rules</string>
+    <string name="dialog_title_running_rules_for">Running rules for %s</string>
+    <string name="dialog_message_running_rules_preparing">Preparing...</string>
+    <string name="dialog_message_running_rules_fetching_posts_in">Fetching posts for subreddit: %s</string>
+    <string name="dialog_message_running_rules_details">Post %d of %d, in: %s</string>
+    <string name="dialog_message_running_rules_completion">Storing %d new recommendations.</string>
+
 </resources>

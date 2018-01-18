@@ -22,20 +22,14 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
 
     private static final String KEY_username = "username";
 
-    private String username;
-
     private LiveRulesAdapter adapter;
 
     @BindView(R.id.recycler) public RecyclerView recycler;
     @BindView(R.id.card_no_rules) public CardView card_no_rules;
     @BindView(R.id.fab_add_rule) public FloatingActionButton fab_add_rule;
 
-    public static UserRulesFragment create(String username) {
-        UserRulesFragment fragment = new UserRulesFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(KEY_username, username);
-        fragment.setArguments(bundle);
-        return fragment;
+    public static UserRulesFragment create() {
+        return new UserRulesFragment();
     }
 
     public UserRulesFragment() {
@@ -49,7 +43,7 @@ public class UserRulesFragment extends AbstractBotFragment<UserOverviewViewModel
 
     @Override
     protected void extractArguments(Bundle arguments) {
-        username = getArguments().getString(KEY_username);
+        // NOP
     }
 
     @Override

@@ -3,8 +3,7 @@
 
     <string name="please_wait">Please wait...</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_display_oss_licenses">Display OSS licenses...</string>
 
     <string name="btn_delete">Delete</string>
     <string name="btn_cancel">Cancel</string>
@@ -13,6 +12,6 @@
     <string name="btn_delete_all">Delete all</string>
     <string name="btn_forget">Forget</string>
     <string name="btn_forget_all">Forget all</string>
-
+    <string name="btn_choose">Choose</string>
 
 </resources>

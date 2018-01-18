@@ -1,12 +1,16 @@
 package instantiator.dailykittybot2.service.execution;
 
 import android.content.Context;
+import android.text.TextUtils;
+import android.util.Log;
 
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.pagination.Paginator;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -26,6 +30,8 @@ import instantiator.dailykittybot2.validation.RuleValidator;
 import instantiator.dailykittybot2.validation.ValidationResult;
 
 public class RuleExecutor {
+    private static final String TAG = RuleExecutor.class.getName();
+
     public static final long ONE_HOUR = 1000 * 60 * 60;
     public static final long ONE_DAY = ONE_HOUR * 24;
     public static final long ONE_WEEK = ONE_DAY * 7;
@@ -58,7 +64,6 @@ public class RuleExecutor {
     }
 
     public SubredditExecutionResult execute_rules_for_subreddit(String subreddit, List<RuleTriplet> triplets, ExecutionMode mode) {
-        listener.testing_subreddit(subreddit);
         RedditClient reddit = session.getClient();
         String username = reddit.me().getUsername();
         Date start = new Date();
@@ -72,8 +77,10 @@ public class RuleExecutor {
         List<RuleResult> out_RuleResults = new LinkedList<>();
 
         // prepare time limits
-        List<TimePeriod> periods = determine_best_timeperiods(triplets, mode);
+        List<TimePeriod> periods = determine_best_timeperiods(triplets, last_considerations, mode);
         TimePeriod longest = longest_from(periods);
+
+        listener.fetching_subreddit_posts(subreddit);
 
         // fetch submissions in range
         List<Submission> submissions = reddit
@@ -84,6 +91,8 @@ public class RuleExecutor {
                 .limit(Paginator.RECOMMENDED_MAX_LIMIT)
                 .build()
                 .accumulateMerged(-1);
+
+        listener.testing_subreddit(subreddit, submissions.size());
 
         for (Submission submission : submissions) {
             listener.testing_submission(submission);
@@ -136,18 +145,32 @@ public class RuleExecutor {
         result.errors = validation.errors;
         result.warnings = validation.warnings;
 
+        if (StringUtils.containsIgnoreCase(submission.getTitle(), "google")) {
+            Log.v(TAG, "Title contains 'google': " + submission.getTitle());
+        }
+
         if (validation.validates) {
             Date previous_latest = mode == ExecutionMode.RespectRuleLastRun ? last_considerations.get(triplet) : null;
-            if (post_is_in_date(submission, previous_latest, limit) && rule_matches(triplet, submission)) {
-                result.matched = true;
-                result.recommendations = generate_recommendations(triplet, submission);
-                listener.generated_recommendations(result.recommendations.size());
+            if (post_is_in_date(submission, previous_latest, limit)) {
+                if (rule_matches(triplet, submission)) {
+                    result.matched = true;
+                    result.recommendations = generate_recommendations(triplet, submission);
+                    listener.generated_recommendations(result.recommendations.size());
+                    Log.v(TAG, "Accepted by conditions and date. Generated: " + result.recommendations.size());
+                } else {
+                    Log.v(TAG, "Rejected on conditions.");
+                    result.matched = false; // not a good match
+                }
             } else {
+                Log.v(TAG, "Rejected by date.");
                 result.matched = false; // not a good match
             }
 
             result.ran = true;
         }
+
+        //Log.d(TAG, "Rules rejected by date: " + rejected_by_date);
+        //Log.d(TAG, "Rules rejected by conditions: " + rejected_by_rules);
 
         return result;
     }
@@ -180,7 +203,14 @@ public class RuleExecutor {
         if (latest_previously == null) {
             latest_previously = getDateFromTimePeriod(limit);
         }
-        return submission.getCreated().after(latest_previously);
+        boolean is_after_cutoff = submission.getCreated().after(latest_previously);
+
+        if (!is_after_cutoff) {
+            Log.v(TAG, "Submission date: " + submission.getCreated().toGMTString());
+            Log.v(TAG, "Cut-off date: " + latest_previously.toGMTString());
+        }
+
+        return is_after_cutoff;
     }
 
     private Date getDateFromTimePeriod(TimePeriod period) {
@@ -227,7 +257,7 @@ public class RuleExecutor {
         return generator.generate_recommendations_for(rule, submission);
     }
 
-    public static List<TimePeriod> determine_best_timeperiods(List<RuleTriplet> rules, ExecutionMode mode) {
+    public static List<TimePeriod> determine_best_timeperiods(List<RuleTriplet> rules, Map<UUID, Date> last_considered_items, ExecutionMode mode) {
         if (mode == ExecutionMode.ActOnLastHourSubmissions) {
             return Arrays.asList(TimePeriod.HOUR);
         }
@@ -236,12 +266,13 @@ public class RuleExecutor {
         }
 
         List<TimePeriod> list = new LinkedList<>();
-        for (RuleTriplet rule : rules) {
-            if (rule.rule.last_run == null) {
+        for (RuleTriplet triplet : rules) {
+            Date last_run_considered = last_considered_items.get(triplet.rule.uuid);
+            if (last_run_considered == null) {
                 list.add(TIMEPERIOD_UnhelpfulDefault); // if the rule hasn't run before...
             } else {
                 Date now = new Date();
-                long diff = now.getTime() - rule.rule.last_run.getTime();
+                long diff = now.getTime() - last_run_considered.getTime();
                 if (diff < ONE_HOUR) {
                     list.add(TimePeriod.HOUR);
                 } else if (diff < ONE_DAY) {
@@ -286,7 +317,8 @@ public class RuleExecutor {
     }
 
     public interface Listener {
-        void testing_subreddit(String subreddit);
+        void fetching_subreddit_posts(String subreddit);
+        void testing_subreddit(String subreddit, int total_posts);
         void testing_submission(Submission submission);
         void applying_rule(RuleTriplet rule);
         void generated_recommendations(int recommendations);

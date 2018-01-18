@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +17,7 @@ import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +25,6 @@ import butterknife.OnClick;
 import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Rule;
-import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.util.ColourConventions;
 import instantiator.dailykittybot2.validation.RuleValidator;
 import instantiator.dailykittybot2.validation.ValidationResult;
@@ -106,11 +101,11 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
 //            holder.text_last_run_summary.setVisibility(GONE);
 //        }
 
-        if (triplet.rule.last_run != null) {
-            holder.text_last_run_summary.setReferenceTime(triplet.rule.last_run.getTime());
+        if (triplet.rule.last_run_hint != null) {
+            holder.text_last_run_summary.setReferenceTime(triplet.rule.last_run_hint.getTime());
         }
 
-        holder.text_last_run_summary.setVisibility(triplet.rule.last_run != null ? VISIBLE : GONE);
+        holder.text_last_run_summary.setVisibility(triplet.rule.last_run_hint != null ? VISIBLE : GONE);
     }
 
     private String summarise(Rule rule) {

@@ -4,14 +4,17 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.flt.servicelib.AbstractServiceBoundAppCompatActivity;
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity;
 
 import org.greenrobot.eventbus.EventBus;
 
 import butterknife.ButterKnife;
 import instantiator.dailykittybot2.BotApp;
+import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.service.BotService;
 import instantiator.dailykittybot2.service.IBotService;
 import instantiator.dailykittybot2.ui.viewmodels.AbstractBotViewModel;
@@ -129,11 +132,23 @@ public abstract class AbstractBotActivity<VM extends AbstractBotViewModel> exten
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, R.string.menu_display_oss_licenses, 0, R.string.menu_display_oss_licenses);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.string.menu_display_oss_licenses:
+                startActivity(new Intent(this, OssLicensesMenuActivity.class));
+                return true;
+
             case android.R.id.home:
                 if (uses_back_button) { finish(); }
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

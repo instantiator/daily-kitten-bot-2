@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="sample_rule_google_androiddev">Find \'google\' amongst titles in r/androiddev</string>
+    <string name="sample_rule_weekly_androiddev">Find \'weekly\' amongst titles in r/androiddev</string>
+
+</resources>

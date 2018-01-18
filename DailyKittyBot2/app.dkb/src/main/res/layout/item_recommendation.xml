@@ -52,13 +52,32 @@
                 android:layout_alignStart="@id/text_recommendation_name"
                 />
 
+            <TextView
+                android:id="@+id/text_recommendation_subreddit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/text_recommendation_subreddit"
+                android:layout_below="@id/text_recommendation_location_summary"
+                android:layout_alignStart="@id/text_recommendation_name"
+                />
+
+            <com.github.curioustechizen.ago.RelativeTimeTextView
+                android:id="@+id/text_recommendation_submission_posted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:relative_time_prefix="@string/text_recommendation_posted_prefix"
+                android:textSize="10sp"
+                android:layout_below="@id/text_recommendation_subreddit"
+                android:layout_alignParentLeft="true"
+                />
+
             <com.github.curioustechizen.ago.RelativeTimeTextView
                 android:id="@+id/text_recommendation_created"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:relative_time_prefix="@string/text_recommendation_created_prefix"
                 android:textSize="10sp"
-                android:layout_below="@id/text_recommendation_location_summary"
+                android:layout_below="@id/text_recommendation_subreddit"
                 android:layout_alignParentRight="true"
                 />
 

@@ -36,10 +36,10 @@ public class UserOverviewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return UserRulesFragment.create(username);
+                return UserRulesFragment.create();
 
             case 1:
-                return UserRecommendationsFragment.create(username);
+                return UserRecommendationsFragment.create();
 
             default:
                 throw new IllegalStateException("No fragment at index: " + position);

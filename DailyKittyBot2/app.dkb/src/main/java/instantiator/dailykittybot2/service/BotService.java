@@ -32,9 +32,10 @@ import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.events.BotServiceStateEvent;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.helpers.DataFactory;
+import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
 import instantiator.dailykittybot2.service.helpers.TestDataInjector;
 import instantiator.dailykittybot2.service.tasks.RunParams;
-import instantiator.dailykittybot2.service.tasks.UserInitiatedRulesTask;
+import instantiator.dailykittybot2.service.tasks.NotificationUiRulesTask;
 import instantiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
@@ -266,7 +267,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
                 if (state == RedditSession.State.Authenticated) {
-                    UserInitiatedRulesTask task = new UserInitiatedRulesTask(
+                    NotificationUiRulesTask task = new NotificationUiRulesTask(
                             BotService.this,
                             session,
                             BotService.this);
@@ -292,6 +293,18 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
                 injector.inject_full_test_rule(3, 3);
             } catch (Exception e) {
                 Log.e(TAG, "Exception encountered injecting test data", e);
+            }
+        });
+    }
+
+    @Override
+    public void injectSampleData(final String user, final String name_str) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                SampleDataInjector injector = new SampleDataInjector(this, user, workspace.db);
+                injector.inject(name_str);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered injecting sample data", e);
             }
         });
     }
