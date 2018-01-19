@@ -44,6 +44,38 @@
         will generate recommendations based on this rule\'s outcomes.
     </string>
 
+    <string name="dialog_title_describe_recommendation">Recommendation</string>
+    <string name="dialog_message_describe_recommendation_simple">
+        Accepting this recommendation will %s the following post in r/%s:
+        \n\n%s
+        \n\nYou can use the button below to view the post in more detail.
+    </string>
+
+    <string name="dialog_message_describe_recommendation_comment">
+        Accepting this recommendation will post a comment to the following post in r/%s:
+        \n\n%s
+        \n\nThe comment reads:
+        \n\"%s\"
+        \n\nYou can use the button below to view the post in more detail.
+    </string>
+    <string name="dialog_message_describe_recommendation_nothing">
+        Accepting this recommendation will do nothing to the following post in r/%s:
+        \n\n%s
+        \n\nYou can use the button below to view the post in more detail.
+    </string>
+
+    <string name="dialog_title_confirm_accept_recommendation">Accept recommendation?</string>
+    <string name="dialog_message_confirm_accept_recommendation">
+        Accepting this recommendation will enact it for you.
+        Are you sure you wish to do this?
+    </string>
+
+    <string name="dialog_title_confirm_reject_recommendation">Reject recommendation?</string>
+    <string name="dialog_message_confirm_reject_recommendation">
+        Rejection this recommendation will remove it from your view.
+        Are you sure you wish to do this?
+    </string>
+
     <string name="text_rule_last_run_prefix">Last run: </string>
     <string name="text_recommendation_created_prefix">Recommended: </string>
     <string name="text_recommendation_posted_prefix">Posted: </string>
@@ -51,8 +83,13 @@
 
     <string name="summary_rule_subreddits">Subreddits: %s</string>
     <string name="summary_rule_no_subreddits">No subreddits selected.</string>
-    <string name="summary_rule_autorun">[Auto-run]</string>
+    <string name="summary_rule_autorun">[auto-run]</string>
     <string name="summary_rule_no_autorun"></string>
+
+    <string name="menu_recommendation_view">View detail...</string>
+    <string name="menu_recommendation_visit_url">Open subject post...</string>
+    <string name="menu_recommendation_accept">Accept this recommendation...</string>
+    <string name="menu_recommendation_reject">Reject this recommendation...</string>
 
     <string name="text_no_rules">
         There are currently no rules for this account.

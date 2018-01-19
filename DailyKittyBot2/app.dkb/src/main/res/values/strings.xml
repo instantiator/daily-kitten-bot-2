@@ -13,5 +13,9 @@
     <string name="btn_forget">Forget</string>
     <string name="btn_forget_all">Forget all</string>
     <string name="btn_choose">Choose</string>
+    <string name="btn_accept">Accept</string>
+    <string name="btn_reject">Reject</string>
+    <string name="btn_view_post">View post...</string>
+    <string name="btn_close">Close</string>
 
 </resources>

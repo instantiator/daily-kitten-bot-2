@@ -1,5 +1,6 @@
 package instantiator.dailykittybot2.ui.fragments;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -76,13 +77,35 @@ public class UserRecommendationsFragment extends AbstractBotFragment<UserOvervie
         }
 
         @Override
-        public void request_recommendation_run(Recommendation recommendation) {
-            listener.accept_recommendation(recommendation);
+        public void request_recommendation_accept(Recommendation recommendation) {
+            new AlertDialog.Builder(bot_activity)
+                    .setTitle(R.string.dialog_title_confirm_accept_recommendation)
+                    .setMessage(R.string.dialog_message_confirm_accept_recommendation)
+                    .setPositiveButton(R.string.btn_accept, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.accept_recommendation(recommendation);
+                    })
+                    .setNegativeButton(R.string.btn_close, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
         }
 
         @Override
-        public void request_recommendation_delete(Recommendation recommendation) {
-            listener.reject_recommendation(recommendation);
+        public void request_recommendation_reject(Recommendation recommendation) {
+            new AlertDialog.Builder(bot_activity)
+                    .setTitle(R.string.dialog_title_confirm_reject_recommendation)
+                    .setMessage(R.string.dialog_message_confirm_reject_recommendation)
+                    .setPositiveButton(R.string.btn_reject, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                        listener.reject_recommendation(recommendation);
+                    })
+                    .setNegativeButton(R.string.btn_close, (dialogInterface, i) -> {
+                        dialogInterface.dismiss();
+                    })
+                    .create()
+                    .show();
         }
     };
 

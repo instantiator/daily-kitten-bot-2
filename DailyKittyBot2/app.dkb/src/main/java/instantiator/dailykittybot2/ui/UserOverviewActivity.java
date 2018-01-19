@@ -220,7 +220,6 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
         RedditSession session = new RedditSession(this, service.get_device_uuid(), session_listener);
         session.authenticate_as(rule.rule.username);
-
     }
 
     @Override
@@ -228,9 +227,48 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
         // TODO
     }
 
+    private String describe(Recommendation recommendation) {
+        switch (recommendation.type) {
+            case DownvotePost:
+            case UpvotePost:
+                return getString(
+                        R.string.dialog_message_describe_recommendation_simple,
+                            recommendation.type.getActionString(),
+                            recommendation.targetSubreddit,
+                            recommendation.targetSummary);
+
+            case AddCommentToPost:
+                return getString(
+                        R.string.dialog_message_describe_recommendation_comment,
+                        recommendation.targetSubreddit,
+                        recommendation.targetSummary,
+                        recommendation.modifier);
+
+            case DoNothing:
+                return getString(
+                        R.string.dialog_message_describe_recommendation_nothing,
+                        recommendation.targetSubreddit,
+                        recommendation.targetSummary);
+
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
     @Override
     public void recommendation_selected(Recommendation recommendation) {
-        // TODO
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_title_describe_recommendation)
+                .setMessage(describe(recommendation))
+                .setPositiveButton(R.string.btn_view_post, (dialogInterface, i) -> {
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, recommendation.targetPostUri);
+                    startActivity(browserIntent);
+                })
+                .setNegativeButton(R.string.btn_close, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                })
+                .create()
+                .show();
     }
 
     @Override

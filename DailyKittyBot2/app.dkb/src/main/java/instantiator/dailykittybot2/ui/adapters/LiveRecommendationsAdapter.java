@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
@@ -92,6 +93,11 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
         @BindView(R.id.text_recommendation_created) public RelativeTimeTextView text_recommendation_created;
         @BindView(R.id.text_recommendation_subreddit) public TextView text_recommendation_subreddit;
         @BindView(R.id.text_recommendation_submission_posted) public RelativeTimeTextView text_submission_posted;
+        @BindView(R.id.icon_menu) public ImageView icon_menu;
+        @BindView(R.id.icon_accept) public ImageView icon_accept;
+        @BindView(R.id.icon_reject) public ImageView icon_reject;
+
+        PopupMenu popup;
 
         public RecommendationHolder(View itemView) {
             super(itemView);
@@ -103,13 +109,43 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
                     listener.recommendation_selected(recommendation);
                 }
             });
+
+            popup = new PopupMenu(icon_menu.getContext(), icon_menu);
+            popup.getMenu().add(0, R.string.menu_recommendation_view, 0, R.string.menu_recommendation_view);
+            popup.getMenu().add(0, R.string.menu_recommendation_visit_url, 0, R.string.menu_recommendation_visit_url);
+            popup.getMenu().add(0, R.string.menu_recommendation_accept, 0, R.string.menu_recommendation_accept);
+            popup.getMenu().add(0, R.string.menu_recommendation_reject, 0, R.string.menu_recommendation_reject);
+
+            popup.setOnMenuItemClickListener(menuItem -> {
+                switch (menuItem.getItemId()) {
+                    case R.string.menu_recommendation_view:
+                        listener.recommendation_selected(recommendation);
+                        return true;
+
+                    case R.string.menu_recommendation_visit_url:
+                        listener.request_view_post(recommendation);
+                        return true;
+
+                    case R.string.menu_recommendation_accept:
+                        listener.request_recommendation_accept(recommendation);
+                        return true;
+
+                    case R.string.menu_recommendation_reject:
+                        listener.request_recommendation_reject(recommendation);
+                        return true;
+
+                    default:
+                        return false;
+                }
+            });
+
         }
     }
 
     public interface Listener {
         void request_view_post(Recommendation recommendation);
         void recommendation_selected(Recommendation recommendation);
-        void request_recommendation_run(Recommendation recommendation);
-        void request_recommendation_delete(Recommendation recommendation);
+        void request_recommendation_accept(Recommendation recommendation);
+        void request_recommendation_reject(Recommendation recommendation);
     }
 }
