@@ -345,6 +345,7 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
         int icon = R.drawable.ic_adb_black_24dp;
         Class activity = AccountsListActivity.class;
         defaults.setNotification(title, content, ticker, icon, activity);
+        defaults.show_notification = true;
         return defaults;
     }
 
