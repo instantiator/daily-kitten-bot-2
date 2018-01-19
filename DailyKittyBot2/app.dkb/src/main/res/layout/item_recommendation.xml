@@ -25,6 +25,17 @@
                 />
 
             <ImageView
+                android:id="@+id/icon_sad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_sentiment_very_dissatisfied_black_24dp"
+                android:tint="@color/colorError"
+                android:layout_alignStart="@id/icon_current"
+                android:layout_alignEnd="@id/icon_current"
+                android:layout_below="@id/icon_current"
+                />
+
+            <ImageView
                 android:id="@+id/icon_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,6 +124,17 @@
                 android:textSize="10sp"
                 android:layout_below="@id/text_recommendation_subreddit"
                 android:layout_alignParentEnd="true"
+                />
+
+            <TextView
+                android:id="@+id/text_previous_run_error"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="11sp"
+                android:textColor="@color/colorError"
+                android:layout_below="@id/text_recommendation_created"
+                android:layout_alignStart="@id/text_recommendation_submission_posted"
+                android:text="warnings about any errors in a previous attempt"
                 />
 
         </RelativeLayout>

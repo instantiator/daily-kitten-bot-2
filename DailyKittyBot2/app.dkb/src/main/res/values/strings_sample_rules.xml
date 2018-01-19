@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="sample_rule_google_androiddev">Find \'google\' amongst titles in r/androiddev</string>
-    <string name="sample_rule_modifier_androiddev">google</string>
+    <string name="sample_rule_upvote_all_bbc_links">Upvote links to bbc.co.uk domains in r/dailykittenbot.</string>
+    <string name="sample_rule_modifier_all_bbc_links">bbc.co.uk</string>
 
     <string name="sample_rule_match_colours">Find colours of the rainbow in r/dailykittenbot</string>
     <string name="sample_rule_modifier_colours">red,orange,yellow,green,blue,cyan,magenta</string>
 
     <string name="sample_rule_find_tomato">Find tomato in r/dailykittenbot</string>
     <string name="sample_rule_modifier_tomato">tomato</string>
-
-    <array name="sample_rule_subreddits_androiddev">
-        <item>androiddev</item>
-    </array>
 
     <array name="sample_rule_subreddits_dkb">
         <item>dailykittenbot</item>

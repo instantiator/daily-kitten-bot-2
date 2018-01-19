@@ -21,9 +21,9 @@ import instantiator.dailykittybot2.db.entities.Rule;
 public class SampleDataInjector {
 
     private static int[] sample_data_rule_names = new int[] {
-            R.string.sample_rule_google_androiddev,
             R.string.sample_rule_match_colours,
-            R.string.sample_rule_find_tomato
+            R.string.sample_rule_find_tomato,
+            R.string.sample_rule_upvote_all_bbc_links
     };
 
     private BotDatabase db;
@@ -82,13 +82,14 @@ public class SampleDataInjector {
 
     private String[] get_subreddits(int name) {
         switch (name) {
-            case R.string.sample_rule_google_androiddev:
-                return context.getResources().getStringArray(R.array.sample_rule_subreddits_androiddev);
 
             case R.string.sample_rule_match_colours:
                 return context.getResources().getStringArray(R.array.sample_rule_subreddits_dkb);
 
             case R.string.sample_rule_find_tomato:
+                return context.getResources().getStringArray(R.array.sample_rule_subreddits_dkb);
+
+            case R.string.sample_rule_upvote_all_bbc_links:
                 return context.getResources().getStringArray(R.array.sample_rule_subreddits_dkb);
 
             default:
@@ -99,34 +100,34 @@ public class SampleDataInjector {
     public List<Condition> create_conditions(int name, UUID rule) {
         List<Condition> conditions = new LinkedList<>();
         switch (name) {
-            case R.string.sample_rule_google_androiddev:
-                Condition condition_g = new Condition();
-                condition_g.uuid = UUID.randomUUID();
-                condition_g.ruleUuid = rule;
-                condition_g.ordering = 0;
-                condition_g.type = ConditionType.IfTitleContainsWordsFrom;
-                condition_g.modifier = context.getString(R.string.sample_rule_modifier_androiddev);
-                conditions.add(condition_g);
+            case R.string.sample_rule_upvote_all_bbc_links:
+                Condition condition_bbc = new Condition();
+                condition_bbc.uuid = UUID.randomUUID();
+                condition_bbc.ruleUuid = rule;
+                condition_bbc.ordering = 0;
+                condition_bbc.type = ConditionType.IfIsLinkForAnyDomainsOf;
+                condition_bbc.modifier = context.getString(R.string.sample_rule_modifier_all_bbc_links);
+                conditions.add(condition_bbc);
                 break;
 
             case R.string.sample_rule_match_colours:
-                Condition condition_w = new Condition();
-                condition_w.uuid = UUID.randomUUID();
-                condition_w.ruleUuid = rule;
-                condition_w.ordering = 0;
-                condition_w.type = ConditionType.IfTextContainsWordsFrom;
-                condition_w.modifier = context.getString(R.string.sample_rule_modifier_colours);
-                conditions.add(condition_w);
+                Condition condition_rainbow = new Condition();
+                condition_rainbow.uuid = UUID.randomUUID();
+                condition_rainbow.ruleUuid = rule;
+                condition_rainbow.ordering = 0;
+                condition_rainbow.type = ConditionType.IfTextContainsWordsFrom;
+                condition_rainbow.modifier = context.getString(R.string.sample_rule_modifier_colours);
+                conditions.add(condition_rainbow);
                 break;
 
             case R.string.sample_rule_find_tomato:
-                Condition condition_t = new Condition();
-                condition_t.uuid = UUID.randomUUID();
-                condition_t.ruleUuid = rule;
-                condition_t.ordering = 0;
-                condition_t.type = ConditionType.IfTextContainsString;
-                condition_t.modifier = context.getString(R.string.sample_rule_modifier_tomato);
-                conditions.add(condition_t);
+                Condition condition_tomato = new Condition();
+                condition_tomato.uuid = UUID.randomUUID();
+                condition_tomato.ruleUuid = rule;
+                condition_tomato.ordering = 0;
+                condition_tomato.type = ConditionType.IfTextContainsString;
+                condition_tomato.modifier = context.getString(R.string.sample_rule_modifier_tomato);
+                conditions.add(condition_tomato);
                 break;
         }
         return conditions;
@@ -134,8 +135,8 @@ public class SampleDataInjector {
 
     public List<Outcome> create_outcomes(int name, UUID rule) {
         switch (name) {
-            case R.string.sample_rule_google_androiddev:
-                return create_do_nothing_outcome(name, rule);
+            case R.string.sample_rule_upvote_all_bbc_links:
+                return create_upvote_outcome(name, rule);
 
             default:
                 return create_comment_outcome(name, rule);
@@ -150,6 +151,19 @@ public class SampleDataInjector {
         outcome.ruleUuid = rule;
         outcome.ordering = 0;
         outcome.type = OutcomeType.DoNothing;
+        outcomes.add(outcome);
+
+        return outcomes;
+    }
+
+    public List<Outcome> create_upvote_outcome(int name, UUID rule) {
+        List<Outcome> outcomes = new LinkedList<>();
+
+        Outcome outcome = new Outcome();
+        outcome.uuid = UUID.randomUUID();
+        outcome.ruleUuid = rule;
+        outcome.ordering = 0;
+        outcome.type = OutcomeType.UpvotePost;
         outcomes.add(outcome);
 
         return outcomes;

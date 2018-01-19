@@ -11,6 +11,8 @@
 
     <string name="validation_condition_specifics_too_short_min">Please provide %d characters or more to match against post titles or text.</string>
 
+    <string name="validation_cannot_parse_uri">Please provide a valid Uri, example: https://news.bbc.co.uk</string>
+
     <string name="validation_rule_has_blank_name">Rule name is blank.</string>
     <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>
 

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.github.curioustechizen.ago.RelativeTimeTextView;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -77,6 +80,10 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
                 activity.getString(R.string.text_recommendation_subreddit, recommendation.targetSubreddit));
         holder.text_recommendation_created.setReferenceTime(recommendation.created.getTime());
         holder.text_submission_posted.setReferenceTime(recommendation.targetSubmissionPosted.getTime());
+
+        holder.icon_sad.setVisibility(recommendation.failed ? VISIBLE : GONE);
+        holder.text_previous_run_error.setVisibility(recommendation.failed ? VISIBLE : GONE);
+        holder.text_previous_run_error.setText(TextUtils.join("\n", recommendation.failMessages));
     }
 
     @Override
@@ -97,6 +104,8 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
         @BindView(R.id.icon_menu) public ImageView icon_menu;
         @BindView(R.id.icon_accept) public ImageView icon_accept;
         @BindView(R.id.icon_reject) public ImageView icon_reject;
+        @BindView(R.id.text_previous_run_error) TextView text_previous_run_error;
+        @BindView(R.id.icon_sad) ImageView icon_sad;
 
         PopupMenu popup;
 

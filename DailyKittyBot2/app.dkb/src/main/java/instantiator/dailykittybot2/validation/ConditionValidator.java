@@ -1,6 +1,7 @@
 package instantiator.dailykittybot2.validation;
 
 import android.content.Context;
+import android.net.Uri;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -29,6 +30,17 @@ public class ConditionValidator extends AbstractValidator<Condition> {
                 if (object.modifier.length() < min_match_length) {
                     errors.add(context.getString(R.string.validation_condition_specifics_too_short_min, min_match_length));
                 }
+            }
+        }
+
+        if (object.type == ConditionType.IfIsExactLink) {
+            try {
+                Uri found = Uri.parse(object.modifier);
+                if (found == null) {
+                    errors.add(context.getString(R.string.validation_cannot_parse_uri));
+                }
+            } catch (Exception e) {
+                errors.add(context.getString(R.string.validation_cannot_parse_uri));
             }
         }
 

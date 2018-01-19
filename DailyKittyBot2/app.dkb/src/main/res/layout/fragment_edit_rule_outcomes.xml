@@ -35,7 +35,7 @@
         android:id="@+id/fab_add_outcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_circle_outline_black_24dp"
+        android:src="@drawable/ic_add_black_24dp"
         android:tint="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"

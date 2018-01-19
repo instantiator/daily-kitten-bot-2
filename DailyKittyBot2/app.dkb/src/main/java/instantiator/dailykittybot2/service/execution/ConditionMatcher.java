@@ -95,8 +95,7 @@ public class ConditionMatcher {
         Uri submission_uri = Uri.parse(submission.getUrl());
         String[] domains = StringUtils.split(domainstring, ',');
         for (String domain : domains) {
-            Uri domain_uri = Uri.parse(domain);
-            if (StringUtils.equalsIgnoreCase(domain_uri.getHost(), submission_uri.getHost())) {
+            if (StringUtils.containsIgnoreCase(submission_uri.getHost(), domain)) {
                 return true;
             }
         }

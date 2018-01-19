@@ -59,7 +59,7 @@ public class Enactor {
              enaction.success = true;
 
          } catch (Exception e) {
-             Log.w(TAG, "Unable to upvote submission.");
+             Log.w(TAG, "Unable to perform outcome action: " + recommendation.type.name());
              enaction.success = false;
              enaction.errors.add(e.getMessage());
          } finally {
@@ -78,13 +78,13 @@ public class Enactor {
     }
 
     private void upvote(Recommendation rec, Enaction enaction) {
-            reddit.submission(rec.targetSubmissionId).upvote();
+        reddit.submission(rec.targetSubmissionId).upvote();
 
-            enaction.description_short = context.getString(R.string.enaction_upvoted_short);
-            enaction.description_long = context.getString(
-                    R.string.enaction_upvoted_long,
-                    rec.targetSummary,
-                    rec.targetSubreddit);
+        enaction.description_short = context.getString(R.string.enaction_upvoted_short);
+        enaction.description_long = context.getString(
+                R.string.enaction_upvoted_long,
+                rec.targetSummary,
+                rec.targetSubreddit);
     }
 
     private void downvote(Recommendation rec, Enaction enaction) {
