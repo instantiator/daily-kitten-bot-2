@@ -19,6 +19,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 
@@ -138,8 +139,23 @@ public class LiveRecommendationsAdapter extends RecyclerView.Adapter<LiveRecomme
                         return false;
                 }
             });
-
         }
+
+        @OnClick(R.id.icon_menu)
+        public void overflow_click() {
+            popup.show();
+        }
+
+        @OnClick(R.id.icon_accept)
+        public void accept_click() {
+            listener.request_recommendation_accept(recommendation);
+        }
+
+        @OnClick(R.id.icon_reject)
+        public void reject_click() {
+            listener.request_recommendation_reject(recommendation);
+        }
+
     }
 
     public interface Listener {
