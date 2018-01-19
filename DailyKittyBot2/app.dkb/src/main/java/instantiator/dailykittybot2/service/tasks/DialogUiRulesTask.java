@@ -46,8 +46,10 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
         dialog = new MaterialDialog.Builder(context)
                 .title(context.getString(R.string.dialog_title_running_rules))
                 .content(R.string.dialog_message_running_rules_preparing)
-                    .progress(false, 0)
-                    .show();
+                .progress(false, 0)
+                .canceledOnTouchOutside(false)
+                .cancelable(false)
+                .show();
     }
 
     @Override

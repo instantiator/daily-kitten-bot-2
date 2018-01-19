@@ -36,7 +36,7 @@ public class RecommendationGenerator {
             recommendation.targetType = TargetType.Post;
             recommendation.targetSubmissionId = submission.getId();
             recommendation.targetSubmissionPosted = submission.getCreated();
-            recommendation.targetPostUri = Uri.parse(submission.getPermalink());
+            recommendation.targetPostUri = Uri.parse("https://www.reddit.com/" + submission.getPermalink());
             recommendation.targetSummary = summarise_post(submission);
 
             recommendations.add(recommendation);
