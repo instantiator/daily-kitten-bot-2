@@ -20,9 +20,8 @@ import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
-import instantiator.dailykittybot2.service.tasks.DialogUiRulesTask;
-import instantiator.dailykittybot2.service.tasks.RunParams;
-import instantiator.dailykittybot2.service.tasks.NotificationUiRulesTask;
+import instantiator.dailykittybot2.tasks.RunRulesDialogTask;
+import instantiator.dailykittybot2.tasks.RunRulesParams;
 import instantiator.dailykittybot2.ui.fragments.UserRecommendationsFragment;
 import instantiator.dailykittybot2.ui.fragments.UserRulesFragment;
 import instantiator.dailykittybot2.ui.pagers.UserOverviewPagerAdapter;
@@ -204,16 +203,18 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
                 if (state == RedditSession.State.Authenticated) {
-                    DialogUiRulesTask task = new DialogUiRulesTask(
+                    RunRulesDialogTask task = new RunRulesDialogTask(
                             UserOverviewActivity.this,
                             session,
                             service);
 
-                    RunParams params = new RunParams();
+                    RunRulesParams params = new RunRulesParams();
                     params.account = username;
                     params.mode = RuleExecutor.ExecutionMode.RespectRuleLastRun;
                     params.rules = Arrays.asList(rule);
                     task.execute(params);
+                } else {
+                    informUser(getString(R.string.toast_warning_cannot_authorise_username_for_execution, username));
                 }
             }
         };
@@ -224,7 +225,8 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void request_view_post(Recommendation recommendation) {
-        // TODO
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, recommendation.targetPostUri);
+        startActivity(browserIntent);
     }
 
     private String describe(Recommendation recommendation) {
@@ -257,18 +259,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void recommendation_selected(Recommendation recommendation) {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_describe_recommendation)
-                .setMessage(describe(recommendation))
-                .setPositiveButton(R.string.btn_view_post, (dialogInterface, i) -> {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, recommendation.targetPostUri);
-                    startActivity(browserIntent);
-                })
-                .setNegativeButton(R.string.btn_close, (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                })
-                .create()
-                .show();
+        show_recommendation_details(recommendation);
     }
 
     @Override
@@ -279,5 +270,19 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     @Override
     public void reject_recommendation(Recommendation recommendation) {
         // TODO
+    }
+
+    private void show_recommendation_details(Recommendation recommendation) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.dialog_title_describe_recommendation)
+                .setMessage(describe(recommendation))
+                .setPositiveButton(R.string.btn_view_post, (dialogInterface, i) -> {
+                    request_view_post(recommendation);
+                })
+                .setNegativeButton(R.string.btn_close, (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                })
+                .create()
+                .show();
     }
 }

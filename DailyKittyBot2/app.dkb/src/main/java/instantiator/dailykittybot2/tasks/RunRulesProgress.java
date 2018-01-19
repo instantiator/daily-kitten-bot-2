@@ -1,6 +1,6 @@
-package instantiator.dailykittybot2.service.tasks;
+package instantiator.dailykittybot2.tasks;
 
-public class RunProgress {
+public class RunRulesProgress {
 
     public int current_subreddits_count = 0;
     public int of_subreddits_count = 0;
@@ -18,7 +18,7 @@ public class RunProgress {
 
     public int generated_recommendation_count = 0;
 
-    public RunProgress(String user, int subreddits_count) {
+    public RunRulesProgress(String user, int subreddits_count) {
         this.of_subreddits_count = subreddits_count;
         this.current_username = user;
     }

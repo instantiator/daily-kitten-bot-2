@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="enaction_nothing_happened_short">Nothing happened.</string>
+    <string name="enaction_nothing_happened_long">Nothing done to: \"%s\" from r/%s</string>
+
+    <string name="enaction_upvoted_short">Post upvoted.</string>
+    <string name="enaction_upvoted_long">Upvoted: \"%s\" from r/%s</string>
+
+    <string name="enaction_downvoted_short">Post downvoted.</string>
+    <string name="enaction_downvoted_long">Downvoted: \"%s\" from r/%s</string>
+
+    <string name="enaction_commented_short">Post upvoted.</string>
+    <string name="enaction_commented_long">
+        Comment posted to: \"%s\" from r/%s
+        \n\n\"%s\"
+    </string>
+
+    <string name="toast_warning_cannot_authorise_username_for_enaction">Cannot authorise username: %s</string>
+
+</resources>

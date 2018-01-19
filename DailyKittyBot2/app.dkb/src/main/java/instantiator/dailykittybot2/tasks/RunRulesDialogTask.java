@@ -1,4 +1,4 @@
-package instantiator.dailykittybot2.service.tasks;
+package instantiator.dailykittybot2.tasks;
 
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -22,18 +22,18 @@ import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.execution.RuleResult;
 import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
 
-public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResult> implements RuleExecutor.Listener {
-    private static final String TAG = DialogUiRulesTask.class.getName();
+public class RunRulesDialogTask extends AsyncTask<RunRulesParams, RunRulesProgress, RunRulesResult> implements RuleExecutor.Listener {
+    private static final String TAG = RunRulesDialogTask.class.getName();
 
     private AppCompatActivity context;
     private RedditSession session;
     private IBotService service;
 
-    private RunProgress current_progress;
+    private RunRulesProgress current_progress;
 
     private MaterialDialog dialog;
 
-    public DialogUiRulesTask(AppCompatActivity context, RedditSession session, IBotService service) {
+    public RunRulesDialogTask(AppCompatActivity context, RedditSession session, IBotService service) {
         this.context = context;
         this.session = session;
         this.service = service;
@@ -53,26 +53,27 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
     }
 
     @Override
-    protected RunResult doInBackground(RunParams... runParams) {
-        RunParams params = runParams[0];
+    protected RunRulesResult doInBackground(RunRulesParams... runParams) {
+        RunRulesParams params = runParams[0];
 
         Date started = new Date();
 
-        RunResult result = new RunResult();
+        RunRulesResult result = new RunRulesResult();
         result.username = params.account;
         result.subreddits_completed = 0;
         result.subreddits_to_results = new HashMap<>();
         result.all_run_reports = new LinkedList<>();
 
-        RuleExecutor exec = new RuleExecutor(context, service, session, this);
+        //RuleExecutor exec = new RuleExecutor(context, service, session, this);
         Map<String, List<RuleTriplet>> subreddits_to_rules = RuleExecutor.reorg_rules_per_subreddit(params.rules);
         result.total_subreddits = subreddits_to_rules.keySet().size();
 
-        current_progress = new RunProgress(params.account, result.total_subreddits);
+        current_progress = new RunRulesProgress(params.account, result.total_subreddits);
 
         for (String subreddit : subreddits_to_rules.keySet()) {
             List<RuleTriplet> rules = subreddits_to_rules.get(subreddit);
-            SubredditExecutionResult execution = exec.execute_rules_for_subreddit(subreddit, rules, params.mode);
+            //SubredditExecutionResult execution = exec.execute_rules_for_subreddit(subreddit, rules, params.mode);
+            SubredditExecutionResult execution = service.execute_rules_for_subreddit(session, this, subreddit, rules, params.mode);
 
             result.all_run_reports.addAll(execution.subreddit_rule_RunReports);
             result.subreddits_to_results.put(subreddit, execution.subreddit_rule_RuleResults);
@@ -88,9 +89,9 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
     }
 
     @Override
-    protected void onProgressUpdate(RunProgress... values) {
+    protected void onProgressUpdate(RunRulesProgress... values) {
         super.onProgressUpdate(values);
-        RunProgress p = values[0];
+        RunRulesProgress p = values[0];
 
         dialog.setTitle(context.getString(R.string.dialog_title_running_rules_for, p.current_username));
 
@@ -114,7 +115,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
     }
 
     @Override
-    protected void onPostExecute(RunResult runResult) {
+    protected void onPostExecute(RunRulesResult runResult) {
         super.onPostExecute(runResult);
         dialog.setContent(context.getString(
                 R.string.execution_notification_content_completion,
@@ -133,8 +134,8 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
         dialog.dismiss();
     }
 
-    private RunProgress copy_current_progress() {
-        RunProgress next = new RunProgress(current_progress.current_username, current_progress.of_subreddits_count);
+    private RunRulesProgress copy_current_progress() {
+        RunRulesProgress next = new RunRulesProgress(current_progress.current_username, current_progress.of_subreddits_count);
         next.current_subreddit = current_progress.current_subreddit;
         next.total_posts = current_progress.total_posts;
         next.fetching_posts = current_progress.fetching_posts;
@@ -156,7 +157,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
         //current_progress.total_posts = 0;
         //current_progress.current_post_count = 0;
         current_progress.fetching_posts = true;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -165,7 +166,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
         Log.v(TAG, "Subreddit: " + subreddit);
         current_progress.total_posts += total_posts;
         current_progress.fetching_posts = false;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -175,7 +176,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
         current_progress.current_post = submission.getTitle();
         current_progress.current_post_count++;
         current_progress.current_rule = null;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -183,7 +184,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
     public void applying_rule(RuleTriplet rule) {
         Log.v(TAG, "Rule: " + rule.rule.rulename);
         current_progress.current_rule = rule.rule.rulename;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -191,7 +192,7 @@ public class DialogUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResu
     public void generated_recommendations(int recommendations) {
         Log.v(TAG, "Recommendations generated: " + recommendations);
         current_progress.generated_recommendation_count += recommendations;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 }

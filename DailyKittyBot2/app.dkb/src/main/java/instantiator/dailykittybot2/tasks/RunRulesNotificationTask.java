@@ -1,4 +1,4 @@
-package instantiator.dailykittybot2.service.tasks;
+package instantiator.dailykittybot2.tasks;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -29,14 +29,15 @@ import instantiator.dailykittybot2.ui.UserOverviewActivity;
 
 import static android.support.v4.app.NotificationCompat.PRIORITY_LOW;
 
-public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, RunResult> implements RuleExecutor.Listener {
-    private static final String TAG = NotificationUiRulesTask.class.getName();
+@Deprecated
+public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRulesProgress, RunRulesResult> implements RuleExecutor.Listener {
+    private static final String TAG = RunRulesNotificationTask.class.getName();
 
     private Context context;
     private RedditSession session;
     private IBotService service;
 
-    private RunProgress current_progress;
+    private RunRulesProgress current_progress;
 
     private static int NEXT_NOTIFICATION_ID = 6000;
 
@@ -45,7 +46,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
 
     private NotificationManager mgr;
 
-    public NotificationUiRulesTask(Context context, RedditSession session, IBotService service) {
+    public RunRulesNotificationTask(Context context, RedditSession session, IBotService service) {
         this.context = context;
         this.session = session;
         this.service = service;
@@ -81,10 +82,10 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
     }
 
     @Override
-    protected RunResult doInBackground(RunParams... runParams) {
-        RunParams params = runParams[0];
+    protected RunRulesResult doInBackground(RunRulesParams... runParams) {
+        RunRulesParams params = runParams[0];
 
-        RunResult result = new RunResult();
+        RunRulesResult result = new RunRulesResult();
         result.username = params.account;
         result.subreddits_completed = 0;
         result.subreddits_to_results = new HashMap<>();
@@ -100,7 +101,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
         Map<String, List<RuleTriplet>> subreddits_to_rules = RuleExecutor.reorg_rules_per_subreddit(params.rules);
         result.total_subreddits = subreddits_to_rules.keySet().size();
 
-        current_progress = new RunProgress(params.account, result.total_subreddits);
+        current_progress = new RunRulesProgress(params.account, result.total_subreddits);
 
         for (String subreddit : subreddits_to_rules.keySet()) {
             List<RuleTriplet> rules = subreddits_to_rules.get(subreddit);
@@ -115,9 +116,9 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
     }
 
     @Override
-    protected void onProgressUpdate(RunProgress... values) {
+    protected void onProgressUpdate(RunRulesProgress... values) {
         super.onProgressUpdate(values);
-        RunProgress p = values[0];
+        RunRulesProgress p = values[0];
 
         notification_builder.setContentTitle(
                 context.getString(
@@ -142,7 +143,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
     }
 
     @Override
-    protected void onPostExecute(RunResult runResult) {
+    protected void onPostExecute(RunRulesResult runResult) {
         super.onPostExecute(runResult);
         notification_builder.setContentText(
                 context.getString(R.string.execution_notification_content_completion,
@@ -161,8 +162,8 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
         mgr.cancel(notification_id);
     }
 
-    private RunProgress copy_current_progress() {
-        RunProgress next = new RunProgress(current_progress.current_username, current_progress.of_subreddits_count);
+    private RunRulesProgress copy_current_progress() {
+        RunRulesProgress next = new RunRulesProgress(current_progress.current_username, current_progress.of_subreddits_count);
         next.current_subreddit = current_progress.current_subreddit;
         next.total_posts = current_progress.total_posts;
         next.fetching_posts = current_progress.fetching_posts;
@@ -183,7 +184,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
         current_progress.current_rule = null;
         current_progress.total_posts = 0;
         current_progress.fetching_posts = true;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -192,7 +193,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
         Log.v(TAG, "Subreddit: " + subreddit);
         current_progress.total_posts = total_posts;
         current_progress.fetching_posts = false;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -202,7 +203,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
         current_progress.current_post = submission.getTitle();
         current_progress.current_post_count++;
         current_progress.current_rule = null;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -210,7 +211,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
     public void applying_rule(RuleTriplet rule) {
         Log.v(TAG, "Rule: " + rule.rule.rulename);
         current_progress.current_rule = rule.rule.rulename;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 
@@ -218,7 +219,7 @@ public class NotificationUiRulesTask extends AsyncTask<RunParams, RunProgress, R
     public void generated_recommendations(int recommendations) {
         Log.v(TAG, "Recommendations generated: " + recommendations);
         current_progress.generated_recommendation_count += recommendations;
-        RunProgress copy = copy_current_progress();
+        RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
     }
 }

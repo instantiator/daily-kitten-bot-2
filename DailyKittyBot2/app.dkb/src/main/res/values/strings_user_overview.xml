@@ -107,4 +107,9 @@
         \n\nYou can then choose to enact those recommendations.
     </string>
 
+    <string name="dialog_title_enacting_recommendations">Enacting recommendations</string>
+    <string name="dialog_message_enacting_recommendations_preparing">
+        Preparing to enact your recommendations. Please wait.
+    </string>
+
 </resources>

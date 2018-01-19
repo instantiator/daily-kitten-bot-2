@@ -203,14 +203,14 @@ public class RuleExecutor {
         if (latest_previously == null) {
             latest_previously = getDateFromTimePeriod(limit);
         }
-        boolean is_after_cutoff = submission.getCreated().after(latest_previously);
+        boolean is_after_age_cutoff = submission.getCreated().after(latest_previously);
 
-        if (!is_after_cutoff) {
+        if (!is_after_age_cutoff) {
             Log.v(TAG, "Submission date: " + submission.getCreated().toGMTString());
             Log.v(TAG, "Cut-off date: " + latest_previously.toGMTString());
         }
 
-        return is_after_cutoff;
+        return is_after_age_cutoff;
     }
 
     private Date getDateFromTimePeriod(TimePeriod period) {

@@ -2,15 +2,21 @@ package instantiator.dailykittybot2.service;
 
 import android.arch.lifecycle.LiveData;
 
+import net.dean.jraw.RedditClient;
+
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Condition;
+import instantiator.dailykittybot2.db.entities.Enaction;
 import instantiator.dailykittybot2.db.entities.Outcome;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.db.entities.RunReport;
+import instantiator.dailykittybot2.service.execution.RuleExecutor;
+import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
 
 public interface IBotService {
 
@@ -49,6 +55,12 @@ public interface IBotService {
     void injectSampleData(String user, String name);
 
     void run(String username, RuleTriplet rules);
+
+    SubredditExecutionResult execute_rules_for_subreddit(
+            RedditSession session, RuleExecutor.Listener progress_listener,
+            String subreddit, List<RuleTriplet> rules, RuleExecutor.ExecutionMode mode);
+
+    Enaction enact(RedditClient client, Recommendation recommendation);
 
     enum State {
         Initialised, Authenticating, Authenticated

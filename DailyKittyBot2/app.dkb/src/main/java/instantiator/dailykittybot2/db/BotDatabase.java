@@ -5,6 +5,7 @@ import android.arch.persistence.room.RoomDatabase;
 import android.arch.persistence.room.TypeConverters;
 
 import instantiator.dailykittybot2.db.dao.ConditionDao;
+import instantiator.dailykittybot2.db.dao.EnactionDao;
 import instantiator.dailykittybot2.db.dao.OutcomeDao;
 import instantiator.dailykittybot2.db.dao.RecommendationDao;
 import instantiator.dailykittybot2.db.dao.ResultDao;
@@ -13,6 +14,7 @@ import instantiator.dailykittybot2.db.dao.RuleTripletDao;
 import instantiator.dailykittybot2.db.dao.RunReportCollationDao;
 import instantiator.dailykittybot2.db.dao.RunReportDao;
 import instantiator.dailykittybot2.db.entities.Condition;
+import instantiator.dailykittybot2.db.entities.Enaction;
 import instantiator.dailykittybot2.db.entities.Outcome;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.db.entities.Result;
@@ -26,7 +28,8 @@ import instantiator.dailykittybot2.db.util.Converters;
         Outcome.class,
         Recommendation.class,
         Result.class,
-        RunReport.class}, version = 16)
+        RunReport.class,
+        Enaction.class}, version = 17)
 @TypeConverters({Converters.class})
 public abstract class BotDatabase extends RoomDatabase {
 
@@ -38,5 +41,6 @@ public abstract class BotDatabase extends RoomDatabase {
     public abstract RuleTripletDao ruleTripletDao();
     public abstract RunReportDao runReportDao();
     public abstract RunReportCollationDao runReportCollationDao();
+    public abstract EnactionDao enactionDao();
 
 }

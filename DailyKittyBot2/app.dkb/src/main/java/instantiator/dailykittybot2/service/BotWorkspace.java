@@ -9,6 +9,7 @@ import java.util.UUID;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.BotDatabase;
 import instantiator.dailykittybot2.db.entities.Condition;
+import instantiator.dailykittybot2.db.entities.Enaction;
 import instantiator.dailykittybot2.db.entities.Outcome;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.db.entities.Rule;
@@ -115,6 +116,10 @@ public class BotWorkspace {
 
     public void delete_run_reports_for(String username) {
         db.runReportDao().delete_all_for(username);
+    }
+
+    public void insert_enaction(Enaction enaction) {
+        db.enactionDao().insertAll(enaction);
     }
 
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {

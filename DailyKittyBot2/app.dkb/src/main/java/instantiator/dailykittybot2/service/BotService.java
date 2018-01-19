@@ -12,6 +12,9 @@ import android.util.Log;
 import com.flt.servicelib.AbstractBackgroundBindingService;
 import com.flt.servicelib.BackgroundServiceConfig;
 
+import net.dean.jraw.RedditClient;
+
+import org.apache.commons.lang3.NotImplementedException;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -25,17 +28,20 @@ import instantiator.dailykittybot2.BotApp;
 import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Condition;
+import instantiator.dailykittybot2.db.entities.Enaction;
 import instantiator.dailykittybot2.db.entities.Outcome;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.events.BotServiceStateEvent;
+import instantiator.dailykittybot2.service.enaction.Enactor;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
+import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
 import instantiator.dailykittybot2.service.helpers.DataFactory;
 import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
 import instantiator.dailykittybot2.service.helpers.TestDataInjector;
-import instantiator.dailykittybot2.service.tasks.RunParams;
-import instantiator.dailykittybot2.service.tasks.NotificationUiRulesTask;
+import instantiator.dailykittybot2.tasks.RunRulesParams;
+import instantiator.dailykittybot2.tasks.RunRulesNotificationTask;
 import instantiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
@@ -267,12 +273,12 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
                 if (state == RedditSession.State.Authenticated) {
-                    NotificationUiRulesTask task = new NotificationUiRulesTask(
+                    RunRulesNotificationTask task = new RunRulesNotificationTask(
                             BotService.this,
                             session,
                             BotService.this);
 
-                    RunParams params = new RunParams();
+                    RunRulesParams params = new RunRulesParams();
                     params.account = username;
                     params.mode = RuleExecutor.ExecutionMode.ActOnLastHourSubmissions;
                     params.rules = Arrays.asList(rule);
@@ -307,6 +313,23 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
                 Log.e(TAG, "Exception encountered injecting sample data", e);
             }
         });
+    }
+
+    @Override
+    public SubredditExecutionResult execute_rules_for_subreddit(
+            RedditSession session, RuleExecutor.Listener progress_listener,
+            String subreddit, List<RuleTriplet> rules, RuleExecutor.ExecutionMode mode) {
+
+        RuleExecutor exec = new RuleExecutor(this, this, session, progress_listener);
+        return exec.execute_rules_for_subreddit(subreddit, rules, mode);
+    }
+
+    @Override
+    public Enaction enact(RedditClient client, Recommendation recommendation) {
+        Enactor enactor = new Enactor(this, this, client);
+        Enaction enaction = enactor.enact(recommendation);
+        workspace.insert_enaction(enaction);
+        return enaction;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
