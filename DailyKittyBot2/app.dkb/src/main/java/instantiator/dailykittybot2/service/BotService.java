@@ -42,6 +42,7 @@ import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
 import instantiator.dailykittybot2.service.helpers.TestDataInjector;
 import instantiator.dailykittybot2.tasks.RunRulesParams;
 import instantiator.dailykittybot2.tasks.RunRulesNotificationTask;
+import instantiator.dailykittybot2.ui.AbstractBotActivity;
 import instantiator.dailykittybot2.ui.AccountsListActivity;
 
 public class BotService extends AbstractBackgroundBindingService<IBotService> implements IBotService {
@@ -325,11 +326,25 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
-    public Enaction enact(RedditClient client, Recommendation recommendation) {
-        Enactor enactor = new Enactor(this, this, client);
-        Enaction enaction = enactor.enact(recommendation);
-        workspace.insert_enaction(enaction);
-        return enaction;
+    public void insert_enaction(Enaction enaction) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.insert_enaction(enaction);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered inserting enaction", e);
+            }
+        });
+    }
+
+    @Override
+    public void update_recommendation(Recommendation recommendation) {
+        Executors.newSingleThreadScheduledExecutor().execute(() -> {
+            try {
+                workspace.update_recommendation(recommendation);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception encountered updating recommendation", e);
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

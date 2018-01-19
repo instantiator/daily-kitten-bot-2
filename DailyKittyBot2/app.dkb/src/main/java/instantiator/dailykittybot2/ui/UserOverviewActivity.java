@@ -20,6 +20,8 @@ import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
+import instantiator.dailykittybot2.tasks.EnactRecommendationDialogTask;
+import instantiator.dailykittybot2.tasks.EnactRecommendationParams;
 import instantiator.dailykittybot2.tasks.RunRulesDialogTask;
 import instantiator.dailykittybot2.tasks.RunRulesParams;
 import instantiator.dailykittybot2.ui.fragments.UserRecommendationsFragment;
@@ -198,7 +200,7 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
     }
 
     @Override
-    public void request_run(RuleTriplet rule) {
+    public void request_run(RuleTriplet rule, RuleExecutor.ExecutionMode mode) {
         RedditSession.Listener session_listener = new RedditSession.Listener() {
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
@@ -210,11 +212,9 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
                     RunRulesParams params = new RunRulesParams();
                     params.account = username;
-                    params.mode = RuleExecutor.ExecutionMode.RespectRuleLastRun;
+                    params.mode = mode;
                     params.rules = Arrays.asList(rule);
                     task.execute(params);
-                } else {
-                    informUser(getString(R.string.toast_warning_cannot_authorise_username_for_execution, username));
                 }
             }
         };
@@ -264,12 +264,34 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void accept_recommendation(Recommendation recommendation) {
-        // TODO
+        RedditSession.Listener session_listener = new RedditSession.Listener() {
+            @Override
+            public void state_switched(RedditSession session, RedditSession.State state, String username) {
+                if (state == RedditSession.State.Authenticated) {
+                    EnactRecommendationDialogTask task = new EnactRecommendationDialogTask(
+                            UserOverviewActivity.this,
+                            session,
+                            service);
+
+                    recommendation.userAccepted = true;
+                    recommendation.userRejected = false;
+                    service.update_recommendation(recommendation);
+                    EnactRecommendationParams params = new EnactRecommendationParams();
+                    params.recommendation = recommendation;
+                    task.execute(params);
+                }
+            }
+        };
+
+        RedditSession session = new RedditSession(this, service.get_device_uuid(), session_listener);
+        session.authenticate_as(recommendation.username);
     }
 
     @Override
     public void reject_recommendation(Recommendation recommendation) {
-        // TODO
+        recommendation.userAccepted = false;
+        recommendation.userRejected = true;
+        service.update_recommendation(recommendation);
     }
 
     private void show_recommendation_details(Recommendation recommendation) {

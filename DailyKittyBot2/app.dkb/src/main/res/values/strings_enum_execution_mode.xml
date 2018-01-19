@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="execution_mode_respect_last_run">Only operate on NEW posts.</string>
+    <string name="execution_mode_last_hour">Only posts &lt; 1 hour old.</string>
+    <string name="execution_mode_last_day">Only posts &lt; 1 day old.</string>
+    <string name="execution_mode_last_week">Only posts &lt; 1 week old.</string>
+    <string name="execution_mode_last_month">Only posts &lt; 1 month old.</string>
+    <string name="execution_mode_last_year">Only posts &lt; 1 year old.</string>
+    <string name="execution_mode_all">Operate on all posts.</string>
+
+</resources>

@@ -37,11 +37,21 @@
     </string>
 
     <string name="dialog_title_confirm_manual_rule_run">Run rule?</string>
-    <string name="dialog_message_confirm_manual_rule_run">
-        Do you wish to run this rule?
-        \n\nSubmissions in the subreddits for this rule
-        that match this rule\'s conditions
-        will generate recommendations based on this rule\'s outcomes.
+    <string name="dialog_message_confirm_manual_rule_run_has_previous">
+        As this rule has been run before, it is recommended to run it on
+        posts that were created after the last run. Please confirm the range
+        of posts you would like to run this rule against.
+    </string>
+    <string name="dialog_message_confirm_manual_rule_run_no_previous">
+        This rule has not been run before.
+        Please confirm the range of posts you wish this rule to run over.
+    </string>
+
+    <string name="dialog_title_warn_cannot_run_failed_validation">Rule is invalid</string>
+    <string name="dialog_message_warn_cannot_run_failed_validation">
+        Unfortunately this rule failed validation with %d errors and %d warnings.
+        \n\n%s
+        \n\nRules with errors will not run.
     </string>
 
     <string name="dialog_title_describe_recommendation">Recommendation</string>

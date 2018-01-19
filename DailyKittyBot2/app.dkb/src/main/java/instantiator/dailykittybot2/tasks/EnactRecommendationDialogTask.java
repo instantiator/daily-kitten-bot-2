@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import instantiator.dailykittybot2.R;
@@ -12,6 +13,7 @@ import instantiator.dailykittybot2.db.entities.Enaction;
 import instantiator.dailykittybot2.db.entities.Recommendation;
 import instantiator.dailykittybot2.service.IBotService;
 import instantiator.dailykittybot2.service.RedditSession;
+import instantiator.dailykittybot2.service.enaction.Enactor;
 
 public class EnactRecommendationDialogTask extends AsyncTask<EnactRecommendationParams, EnactRecommendationProgress, EnactRecommendationResult> {
     private static final String TAG = EnactRecommendationDialogTask.class.getName();
@@ -45,21 +47,34 @@ public class EnactRecommendationDialogTask extends AsyncTask<EnactRecommendation
     protected EnactRecommendationResult doInBackground(EnactRecommendationParams... enactRecommendationParams) {
         EnactRecommendationResult result = new EnactRecommendationResult();
         result.enactions = new LinkedList<>();
+        result.successes = new LinkedList<>();
+        result.failures = new LinkedList<>();
 
         EnactRecommendationProgress progress = new EnactRecommendationProgress();
         for (EnactRecommendationParams param : enactRecommendationParams) {
             progress.current_action = describe(param.recommendation);
             publishProgress(progress);
 
-            Enaction enaction = service.enact(session.getClient(), param.recommendation);
+            Enactor enactor = new Enactor(context, service, session.getClient());
+            Enaction enaction = enactor.enact(param.recommendation);
             result.enactions.add(enaction);
+
+            param.recommendation.lastAttempted = enaction.started;
+            param.recommendation.succeeded = enaction.success;
+            param.recommendation.failed = !enaction.success;
+            param.recommendation.failMessages = enaction.errors;
 
             if (enaction.success) {
                 progress.successes++;
+                result.successes.add(param.recommendation);
             } else {
                 progress.failures++;
+                result.failures.add(param.recommendation);
             }
-        }
+
+            service.insert_enaction(enaction);
+            service.update_recommendation(param.recommendation);
+        } // each param = each recommendation
 
         return result;
     }
@@ -80,10 +95,6 @@ public class EnactRecommendationDialogTask extends AsyncTask<EnactRecommendation
     @Override
     protected void onPostExecute(EnactRecommendationResult enactRecommendationResult) {
         super.onPostExecute(enactRecommendationResult);
-
-        // TODO: save all results? -- nope they're already saved
-
-
         dialog.dismiss();
     }
 }

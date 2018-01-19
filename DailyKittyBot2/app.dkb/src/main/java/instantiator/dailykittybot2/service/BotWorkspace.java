@@ -36,8 +36,12 @@ public class BotWorkspace {
         return db.ruleDao().loadAllByUsername(username);
     }
 
-    public LiveData<List<Recommendation>> recommendations_for(String username) {
-        return db.recommendationDao().loadAllByUsername(username);
+    public LiveData<List<Recommendation>> recommendations_for(String username, boolean filter_for_unenacted) {
+        if (!filter_for_unenacted) {
+            return db.recommendationDao().loadAllByUsername(username);
+        } else {
+            return db.recommendationDao().loadUnenactedByUsername(username);
+        }
     }
 
     public LiveData<List<Condition>> conditions_for(UUID rule) {
@@ -120,6 +124,10 @@ public class BotWorkspace {
 
     public void insert_enaction(Enaction enaction) {
         db.enactionDao().insertAll(enaction);
+    }
+
+    public void update_recommendation(Recommendation recommendation) {
+        db.recommendationDao().updateAll(recommendation);
     }
 
     public LiveData<List<RuleTriplet>> rule_triplets_for(String username) {

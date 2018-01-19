@@ -189,18 +189,7 @@ public class LiveRulesAdapter extends RecyclerView.Adapter<LiveRulesAdapter.Rule
     }
 
     private void confirm_run(final RuleTriplet triplet) {
-        new AlertDialog.Builder(activity)
-                .setTitle(R.string.dialog_title_confirm_manual_rule_run)
-                .setMessage(R.string.dialog_message_confirm_manual_rule_run)
-                .setPositiveButton(R.string.btn_run, (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    listener.request_run(triplet);
-                })
-                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                })
-                .create()
-                .show();
+        listener.request_run(triplet);
     }
 
     public interface Listener {

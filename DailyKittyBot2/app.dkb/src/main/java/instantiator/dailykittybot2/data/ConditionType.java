@@ -22,6 +22,18 @@ public enum ConditionType {
             true,
             true),
 
+    IfTextContainsString(
+            R.string.condition_type_text_contains_string,
+            R.string.condition_type_text_contains_string_hint,
+            true,
+            true),
+
+    IfTextContainsWordsFrom(
+            R.string.condition_type_text_contains_words,
+            R.string.condition_type_text_contains_words_hint,
+            true,
+            true),
+
     IfIsExactLink(
             R.string.condition_type_is_exact_link,
             R.string.condition_type_is_exact_link_hint,

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import instantiator.dailykittybot2.data.OutcomeType;
@@ -17,15 +18,6 @@ import instantiator.dailykittybot2.data.TargetType;
 import static android.arch.persistence.room.ForeignKey.NO_ACTION;
 
 @Entity(tableName = "recommendation",
-        foreignKeys = {
-            @ForeignKey(entity = Rule.class,
-                parentColumns = "uuid",
-                childColumns = "ruleUuid",
-                onDelete = NO_ACTION),
-            @ForeignKey(entity = Outcome.class,
-                parentColumns = "uuid",
-                childColumns = "outcomeUuid",
-                onDelete = NO_ACTION) },
         indices = { @Index("ruleUuid"), @Index("outcomeUuid") })
 public class Recommendation {
 
@@ -37,10 +29,10 @@ public class Recommendation {
     public String username;
 
     @ColumnInfo(name = "outcomeUuid")
-    public UUID outcomeUuid;
+    public UUID outcomeUuid_unsafe;
 
     @ColumnInfo(name = "ruleUuid")
-    public UUID ruleUuid;
+    public UUID ruleUuid_unsafe;
 
     @ColumnInfo(name = "ruleName")
     public String ruleName;
@@ -96,8 +88,8 @@ public class Recommendation {
     @ColumnInfo(name = "failed")
     public boolean failed;
 
-    @ColumnInfo(name = "fail_message")
-    public String failMessage;
+    @ColumnInfo(name = "fail_messages")
+    public List<String> failMessages;
 
     @ColumnInfo(name = "run_report_uuid")
     public UUID runReportUuid_unsafe;

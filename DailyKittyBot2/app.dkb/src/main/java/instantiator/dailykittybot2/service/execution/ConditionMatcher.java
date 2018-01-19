@@ -34,6 +34,12 @@ public class ConditionMatcher {
             case IfTitleContainsWordsFrom:
                 return title_contains_any_word(submission, condition.modifier);
 
+            case IfTextContainsString:
+                return text_contains(submission, condition.modifier);
+
+            case IfTextContainsWordsFrom:
+                return text_contains_any_word(submission, condition.modifier);
+
             case IfIsExactLink:
                 return is_exact_link(submission, condition.modifier);
 
@@ -59,6 +65,20 @@ public class ConditionMatcher {
         String[] words = StringUtils.split(wordstring, ',');
         for (String word : words) {
             if (title_contains(submission, word.trim())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean text_contains(Submission submission, String content) {
+        return StringUtils.containsIgnoreCase(submission.getSelfText(), content);
+    }
+
+    private boolean text_contains_any_word(Submission submission, String wordstring) {
+        String[] words = StringUtils.split(wordstring, ',');
+        for (String word : words) {
+            if (text_contains(submission, word.trim())) {
                 return true;
             }
         }

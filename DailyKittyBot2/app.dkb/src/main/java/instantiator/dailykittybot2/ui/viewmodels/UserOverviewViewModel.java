@@ -29,7 +29,7 @@ public class UserOverviewViewModel extends AbstractBotViewModel {
 
     public LiveData<List<Recommendation>> getRecommendations() {
         if (recommendations == null) {
-            recommendations = service.get_workspace().recommendations_for(username);
+            recommendations = service.get_workspace().recommendations_for(username, true);
         }
         return recommendations;
     }

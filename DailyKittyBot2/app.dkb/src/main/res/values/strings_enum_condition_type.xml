@@ -17,6 +17,17 @@
         \n\nComma-separate the words (eg. one,two,three).
     </string>
 
+    <string name="condition_type_text_contains_string">If post text contains</string>
+    <string name="condition_type_text_contains_string_hint">
+        Matches posts with main text containing the text you provide.
+    </string>
+
+    <string name="condition_type_text_contains_words">If post text contains a word from</string>
+    <string name="condition_type_text_contains_words_hint">
+        Matches posts with main text that contains one or more of the words you provide.
+        \n\nComma-separate the words (eg. one,two,three).
+    </string>
+
     <string name="condition_type_is_exact_link">If post is exact link</string>
     <string name="condition_type_is_exact_link_hint">
         Matches posts that are a link to the exact URL you provide.

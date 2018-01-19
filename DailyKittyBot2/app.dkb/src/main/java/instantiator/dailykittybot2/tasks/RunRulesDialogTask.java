@@ -21,11 +21,12 @@ import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.execution.RuleResult;
 import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
+import instantiator.dailykittybot2.ui.AbstractBotActivity;
 
 public class RunRulesDialogTask extends AsyncTask<RunRulesParams, RunRulesProgress, RunRulesResult> implements RuleExecutor.Listener {
     private static final String TAG = RunRulesDialogTask.class.getName();
 
-    private AppCompatActivity context;
+    private AbstractBotActivity<?> context;
     private RedditSession session;
     private IBotService service;
 
@@ -33,7 +34,7 @@ public class RunRulesDialogTask extends AsyncTask<RunRulesParams, RunRulesProgre
 
     private MaterialDialog dialog;
 
-    public RunRulesDialogTask(AppCompatActivity context, RedditSession session, IBotService service) {
+    public RunRulesDialogTask(AbstractBotActivity<?> context, RedditSession session, IBotService service) {
         this.context = context;
         this.session = session;
         this.service = service;

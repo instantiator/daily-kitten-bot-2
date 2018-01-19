@@ -29,7 +29,7 @@ import instantiator.dailykittybot2.db.util.Converters;
         Recommendation.class,
         Result.class,
         RunReport.class,
-        Enaction.class}, version = 17)
+        Enaction.class}, version = 18)
 @TypeConverters({Converters.class})
 public abstract class BotDatabase extends RoomDatabase {
 

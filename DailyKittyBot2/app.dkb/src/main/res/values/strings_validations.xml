@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer name="validation_min_match_size">4</integer>
+
     <string name="validation_item_is_null">Object not found.</string>
     <string name="validation_rule_is_null">No rule found.</string>
 
     <string name="validation_condition_requires_specifics">This condition cannot match anything as you have not provided any specifics.</string>
     <string name="validation_outcome_requires_specifics">This outcome will not generate a recommendation as you have not provided any specifics.</string>
+
+    <string name="validation_condition_specifics_too_short_min">Please provide %d characters or more to match against post titles or text.</string>
 
     <string name="validation_rule_has_blank_name">Rule name is blank.</string>
     <string name="validation_rule_has_no_subreddits">No subreddits specified.</string>

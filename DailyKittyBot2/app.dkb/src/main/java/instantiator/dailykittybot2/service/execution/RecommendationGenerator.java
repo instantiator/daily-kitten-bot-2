@@ -23,9 +23,9 @@ public class RecommendationGenerator {
             Recommendation recommendation = new Recommendation();
             recommendation.uuid = UUID.randomUUID();
             recommendation.created = new Date();
-            recommendation.ruleUuid = rule.rule.uuid;
+            recommendation.ruleUuid_unsafe = rule.rule.uuid;
             recommendation.ruleName = rule.rule.rulename;
-            recommendation.outcomeUuid = outcome.uuid;
+            recommendation.outcomeUuid_unsafe = outcome.uuid;
             recommendation.username = rule.rule.username;
             recommendation.type = outcome.type;
             recommendation.modifier = outcome.modifier;

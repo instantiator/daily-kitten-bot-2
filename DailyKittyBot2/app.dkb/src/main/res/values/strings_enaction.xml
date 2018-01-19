@@ -16,6 +16,4 @@
         \n\n\"%s\"
     </string>
 
-    <string name="toast_warning_cannot_authorise_username_for_enaction">Cannot authorise username: %s</string>
-
 </resources>

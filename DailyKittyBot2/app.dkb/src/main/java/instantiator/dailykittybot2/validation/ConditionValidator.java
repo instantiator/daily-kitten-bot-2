@@ -21,8 +21,15 @@ public class ConditionValidator extends AbstractValidator<Condition> {
     protected List<String> check_errors(Condition object) {
         List<String> errors = new LinkedList<>();
 
-        if (object.type.requiresSpecifics() && StringUtils.isEmpty(object.modifier)) {
-            errors.add(context.getString(R.string.validation_condition_requires_specifics));
+        if (object.type.requiresSpecifics()) {
+            if (StringUtils.isEmpty(object.modifier)) {
+                errors.add(context.getString(R.string.validation_condition_requires_specifics));
+            } else {
+                int min_match_length = context.getResources().getInteger(R.integer.validation_min_match_size);
+                if (object.modifier.length() < min_match_length) {
+                    errors.add(context.getString(R.string.validation_condition_specifics_too_short_min, min_match_length));
+                }
+            }
         }
 
         return errors;

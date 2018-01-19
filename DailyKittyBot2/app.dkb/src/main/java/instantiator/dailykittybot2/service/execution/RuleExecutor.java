@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import instantiator.dailykittybot2.BotApp;
+import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Condition;
 import instantiator.dailykittybot2.db.entities.Recommendation;
@@ -48,9 +50,41 @@ public class RuleExecutor {
     private RecommendationGenerator generator;
 
     public enum ExecutionMode {
-        RespectRuleLastRun,
-        ActOnLastHourSubmissions,
-        ActOnLastDaySubmissions
+        RespectRuleLastRun(R.string.execution_mode_respect_last_run),
+        ActOnLastHourSubmissions(R.string.execution_mode_last_hour),
+        ActOnLastDaySubmissions(R.string.execution_mode_last_day),
+        ActOnLastWeekSubmissions(R.string.execution_mode_last_week),
+        ActOnLastMonthSubmissions(R.string.execution_mode_last_month),
+        ActOnLastYearSubmissions(R.string.execution_mode_last_year),
+        ActOnAllSubmissions(R.string.execution_mode_all);
+
+        private int text;
+
+        private ExecutionMode(int text_resource) {
+            this.text = text_resource;
+        }
+
+        public int getText() { return text; }
+
+        @Override
+        public String toString() {
+            return BotApp.appContext.getString(text);
+        }
+
+        public static ExecutionMode[] all() { return ExecutionMode.values(); }
+
+        public static ExecutionMode[] allWithoutRespect() {
+            return new ExecutionMode[] {
+                    ActOnLastHourSubmissions,
+                    ActOnLastDaySubmissions,
+                    ActOnLastWeekSubmissions,
+                    ActOnLastMonthSubmissions,
+                    ActOnLastYearSubmissions,
+                    ActOnAllSubmissions
+            };
+        }
+
+
     }
 
     public RuleExecutor(Context context, IBotService service, RedditSession session, Listener listener) {
@@ -150,8 +184,20 @@ public class RuleExecutor {
         }
 
         if (validation.validates) {
-            Date previous_latest = mode == ExecutionMode.RespectRuleLastRun ? last_considerations.get(triplet) : null;
-            if (post_is_in_date(submission, previous_latest, limit)) {
+
+            Date previous_latest =
+                    mode == ExecutionMode.RespectRuleLastRun ?
+                            last_considerations.get(triplet.rule.uuid) : // respect last run, find last run
+                            getDateFromTimePeriod(limit); // get from the time period limit
+
+            if (previous_latest == null) {
+                Log.e(TAG, "previous_latest should not be null.");
+                Log.e(TAG, "ExecutionMode: " + mode.name());
+                Log.e(TAG, "Limit (TimePeriod): " + limit.name());
+                previous_latest = getDateFromTimePeriod(TIMEPERIOD_UnhelpfulDefault);
+            }
+
+            if (post_is_in_date(submission, previous_latest)) {
                 if (rule_matches(triplet, submission)) {
                     result.matched = true;
                     result.recommendations = generate_recommendations(triplet, submission);
@@ -199,10 +245,8 @@ public class RuleExecutor {
         return map;
     }
 
-    private boolean post_is_in_date(Submission submission, Date latest_previously, TimePeriod limit) {
-        if (latest_previously == null) {
-            latest_previously = getDateFromTimePeriod(limit);
-        }
+    private boolean post_is_in_date(Submission submission, Date latest_previously) {
+
         boolean is_after_age_cutoff = submission.getCreated().after(latest_previously);
 
         if (!is_after_age_cutoff) {
@@ -232,7 +276,7 @@ public class RuleExecutor {
                 time -= ONE_YEAR;
                 break;
             case ALL:
-                time = Long.MIN_VALUE;
+                time = 0;
                 break;
         }
         return new Date(time);
@@ -264,6 +308,20 @@ public class RuleExecutor {
         if (mode == ExecutionMode.ActOnLastDaySubmissions) {
             return Arrays.asList(TimePeriod.DAY);
         }
+        if (mode == ExecutionMode.ActOnLastWeekSubmissions) {
+            return Arrays.asList(TimePeriod.WEEK);
+        }
+        if (mode == ExecutionMode.ActOnLastMonthSubmissions) {
+            return Arrays.asList(TimePeriod.MONTH);
+        }
+        if (mode == ExecutionMode.ActOnLastYearSubmissions) {
+            return Arrays.asList(TimePeriod.YEAR);
+        }
+        if (mode == ExecutionMode.ActOnAllSubmissions) {
+            return Arrays.asList(TimePeriod.ALL);
+        }
+
+        // mode is RESPECT LAST run...
 
         List<TimePeriod> list = new LinkedList<>();
         for (RuleTriplet triplet : rules) {
@@ -281,6 +339,8 @@ public class RuleExecutor {
                     list.add(TimePeriod.WEEK);
                 } else if (diff < ONE_MONTH) {
                     list.add(TimePeriod.MONTH);
+                } else if (diff < ONE_YEAR) {
+                    list.add(TimePeriod.YEAR);
                 } else {
                     list.add(TimePeriod.ALL);
                 }

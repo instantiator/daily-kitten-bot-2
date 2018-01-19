@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 17,
-    "identityHash": "36a2e2549c1600ec61b56da46602e262",
+    "version": 18,
+    "identityHash": "c37be712459e8398113944a693dc0f73",
     "entities": [
       {
         "tableName": "rule",
@@ -195,7 +195,7 @@
       },
       {
         "tableName": "recommendation",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `username` TEXT, `outcomeUuid` TEXT, `ruleUuid` TEXT, `ruleName` TEXT, `type` TEXT, `modifier` TEXT, `targetType` TEXT, `targetCommentId` TEXT, `targetSubmissionId` TEXT, `targetSubmissionPosted` INTEGER, `targetCommentPosted` INTEGER, `targetSubreddit` TEXT, `targetSummary` TEXT, `targetPostUri` TEXT, `targetCommentUri` TEXT, `created` INTEGER, `user_accepted` INTEGER NOT NULL, `user_rejected` INTEGER NOT NULL, `last_attempted` INTEGER, `succeeded` INTEGER NOT NULL, `failed` INTEGER NOT NULL, `fail_messages` TEXT, `run_report_uuid` TEXT, PRIMARY KEY(`uuid`), FOREIGN KEY(`ruleUuid`) REFERENCES `rule`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`outcomeUuid`) REFERENCES `outcome`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `username` TEXT, `outcomeUuid` TEXT, `ruleUuid` TEXT, `ruleName` TEXT, `type` TEXT, `modifier` TEXT, `targetType` TEXT, `targetCommentId` TEXT, `targetSubmissionId` TEXT, `targetSubmissionPosted` INTEGER, `targetCommentPosted` INTEGER, `targetSubreddit` TEXT, `targetSummary` TEXT, `targetPostUri` TEXT, `targetCommentUri` TEXT, `created` INTEGER, `user_accepted` INTEGER NOT NULL, `user_rejected` INTEGER NOT NULL, `last_attempted` INTEGER, `succeeded` INTEGER NOT NULL, `failed` INTEGER NOT NULL, `fail_messages` TEXT, `run_report_uuid` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -210,13 +210,13 @@
             "notNull": false
           },
           {
-            "fieldPath": "outcomeUuid",
+            "fieldPath": "outcomeUuid_unsafe",
             "columnName": "outcomeUuid",
             "affinity": "TEXT",
             "notNull": false
           },
           {
-            "fieldPath": "ruleUuid",
+            "fieldPath": "ruleUuid_unsafe",
             "columnName": "ruleUuid",
             "affinity": "TEXT",
             "notNull": false
@@ -366,30 +366,7 @@
             "createSql": "CREATE  INDEX `index_recommendation_outcomeUuid` ON `${TABLE_NAME}` (`outcomeUuid`)"
           }
         ],
-        "foreignKeys": [
-          {
-            "table": "rule",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "ruleUuid"
-            ],
-            "referencedColumns": [
-              "uuid"
-            ]
-          },
-          {
-            "table": "outcome",
-            "onDelete": "NO ACTION",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "outcomeUuid"
-            ],
-            "referencedColumns": [
-              "uuid"
-            ]
-          }
-        ]
+        "foreignKeys": []
       },
       {
         "tableName": "result",
@@ -726,7 +703,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"36a2e2549c1600ec61b56da46602e262\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c37be712459e8398113944a693dc0f73\")"
     ]
   }
 }

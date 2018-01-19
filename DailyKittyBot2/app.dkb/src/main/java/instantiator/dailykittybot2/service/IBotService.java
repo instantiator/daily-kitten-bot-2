@@ -17,6 +17,7 @@ import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.db.entities.RunReport;
 import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
+import instantiator.dailykittybot2.ui.AbstractBotActivity;
 
 public interface IBotService {
 
@@ -39,9 +40,11 @@ public interface IBotService {
     void update_rule(Rule rule);
     void update_condition(Condition condition);
     void update_outcome(Outcome outcome);
+    void update_recommendation(Recommendation recommendation);
 
     void insert_recommendations(List<Recommendation> recommendations);
     void insert_runReports(List<RunReport> reports);
+    void insert_enaction(Enaction enaction);
 
     void delete_condition(Condition condition);
     void delete_outcome(Outcome outcome);
@@ -59,8 +62,6 @@ public interface IBotService {
     SubredditExecutionResult execute_rules_for_subreddit(
             RedditSession session, RuleExecutor.Listener progress_listener,
             String subreddit, List<RuleTriplet> rules, RuleExecutor.ExecutionMode mode);
-
-    Enaction enact(RedditClient client, Recommendation recommendation);
 
     enum State {
         Initialised, Authenticating, Authenticated
