@@ -10,6 +10,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 
 import butterknife.BindView;
@@ -17,6 +19,7 @@ import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.data.RuleTriplet;
 import instantiator.dailykittybot2.db.entities.Rule;
 import instantiator.dailykittybot2.ui.viewmodels.EditRuleViewModel;
+import instantiator.dailykittybot2.util.ListUtils;
 import instantiator.dailykittybot2.validation.RuleValidator;
 import instantiator.dailykittybot2.validation.ValidationResult;
 import me.gujun.android.taggroup.TagGroup;
@@ -94,30 +97,28 @@ public class EditRuleDetailFragment extends AbstractBotFragment<EditRuleViewMode
         edit_autorun.setEnabled(exists);
         edit_subreddits.setEnabled(exists);
 
-        if (source == null) { return; }
+        if (!exists) { return; }
 
-        View had_focus = getView().findFocus();
-        int selection_start = 0;
-        int selection_end = 0;
-        if (had_focus == edit_name) {
-            selection_start = edit_name.getSelectionStart();
-            selection_end = edit_name.getSelectionEnd();
+        int selection_start = edit_name.getSelectionStart();
+        int selection_end = edit_name.getSelectionEnd();
+
+        if (!StringUtils.equals(edit_name.getText().toString(), source.rulename)) {
+            edit_name.setText(source.rulename);
+            edit_name.setSelection(selection_start, selection_end);
         }
 
-        edit_name.setText(source.rulename);
-        edit_autorun.setChecked(source.run_periodically);
-        edit_subreddits.setTags(source.subreddits);
+        if (edit_autorun.isChecked() != source.run_periodically) {
+            edit_autorun.setChecked(source.run_periodically);
+        }
 
-        // tags is naughty and grabs the focus when modified
-        if (had_focus != null) {
-            had_focus.requestFocus();
-            if (had_focus == edit_name) {
-                if (selection_start > edit_name.getText().length() ||
-                        selection_end > edit_name.getText().length()) {
-                    edit_name.setSelection(edit_name.getText().length());
-                } else {
-                    edit_name.setSelection(selection_start, selection_end);
-                }
+        if (!ListUtils.sameStrings(edit_subreddits.getTags(), source.subreddits)) {
+            View focussed = bot_activity.getCurrentFocus();
+
+            edit_subreddits.setTags(source.subreddits);
+
+            focussed.requestFocus();
+            if (focussed == edit_name) {
+                edit_name.setSelection(selection_start, selection_end);
             }
         }
 

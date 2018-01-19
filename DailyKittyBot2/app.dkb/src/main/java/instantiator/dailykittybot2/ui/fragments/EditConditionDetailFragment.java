@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -97,29 +99,20 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
     }
 
     private void updateFromCondition(Condition source) {
-        View had_focus = getView().findFocus();
-        int selection_start = 0;
-        int selection_end = 0;
-        if (had_focus == edit_modifier) {
-            selection_start = edit_modifier.getSelectionStart();
-            selection_end = edit_modifier.getSelectionEnd();
-        }
+        boolean exists = source != null;
+        spin_type.setEnabled(exists);
+        edit_modifier.setEnabled(exists);
+        if (!exists) { return; }
 
-        if (source != null) {
+        if (spin_type.getSelectedItemPosition() != conditionTypes.indexOf(source.type)) {
             spin_type.setSelection(conditionTypes.indexOf(source.type));
-            edit_modifier.setText(source.modifier);
         }
 
-        if (had_focus != null) {
-            had_focus.requestFocus();
-            if (had_focus == edit_modifier) {
-                if (selection_start > edit_modifier.getText().length() ||
-                    selection_end > edit_modifier.getText().length()) {
-                    edit_modifier.setSelection(edit_modifier.getText().length());
-                } else {
-                    edit_modifier.setSelection(selection_start, selection_end);
-                }
-            }
+        if (!StringUtils.equals(edit_modifier.getText().toString(), source.modifier)) {
+            int selection_start = edit_modifier.getSelectionStart();
+            int selection_end = edit_modifier.getSelectionEnd();
+            edit_modifier.setText(source.modifier);
+            edit_modifier.setSelection(selection_start, selection_end);
         }
 
         // update validation content
@@ -128,7 +121,7 @@ public class EditConditionDetailFragment extends AbstractBotFragment<EditConditi
                 card_errors, text_errors,
                 card_warnings, text_warnings);
 
-        updateHintAndModifier();
+        //updateHintAndModifier();
     }
 
     private void updateHintAndModifier() {

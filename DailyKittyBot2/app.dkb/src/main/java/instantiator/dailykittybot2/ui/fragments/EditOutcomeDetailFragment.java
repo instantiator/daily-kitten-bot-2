@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -97,29 +99,21 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
     }
 
     private void updateFromOutcome(Outcome source) {
-        View had_focus = getView().findFocus();
-        int selection_start = 0;
-        int selection_end = 0;
-        if (had_focus == edit_modifier) {
-            selection_start = edit_modifier.getSelectionStart();
-            selection_end = edit_modifier.getSelectionEnd();
-        }
 
-        if (source != null) {
+        boolean exists = source != null;
+        spin_type.setEnabled(exists);
+        edit_modifier.setEnabled(exists);
+        if (!exists) { return; }
+
+        if (spin_type.getSelectedItemPosition() != outcomeTypes.indexOf(source.type)) {
             spin_type.setSelection(outcomeTypes.indexOf(source.type));
-            edit_modifier.setText(source.modifier);
         }
 
-        if (had_focus != null) {
-            had_focus.requestFocus();
-            if (had_focus == edit_modifier) {
-                if (selection_start > edit_modifier.getText().length() ||
-                        selection_end > edit_modifier.getText().length()) {
-                    edit_modifier.setSelection(edit_modifier.getText().length());
-                } else {
-                    edit_modifier.setSelection(selection_start, selection_end);
-                }
-            }
+        if (!StringUtils.equals(edit_modifier.getText().toString(), source.modifier)) {
+            int selection_start = edit_modifier.getSelectionStart();
+            int selection_end = edit_modifier.getSelectionEnd();
+            edit_modifier.setText(source.modifier);
+            edit_modifier.setSelection(selection_start, selection_end);
         }
 
         // update validation content
@@ -127,6 +121,8 @@ public class EditOutcomeDetailFragment extends AbstractBotFragment<EditOutcomeVi
         result.updateUI(
                 card_errors, text_errors,
                 card_warnings, text_warnings);
+
+        //updateHintAndModifier();
     }
 
     private void updateHintAndModifier() {
