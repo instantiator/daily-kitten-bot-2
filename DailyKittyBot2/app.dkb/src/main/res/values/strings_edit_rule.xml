@@ -9,7 +9,7 @@
     <string name="tab_rule_outcomes">Outcomes</string>
 
     <string name="hint_edit_rule_name">Rule name</string>
-    <string name="check_edit_rule_autorun">Automatically run this rule periodically.</string>
+    <string name="check_edit_rule_autorun">Auto-run this rule periodically (coming soon!)</string>
     <string name="text_edit_subreddits">Run on the following subreddits:</string>
     <string name="hint_subreddit_tag">Subreddit</string>
     <string name="button_save_rule_edits">Save</string>
