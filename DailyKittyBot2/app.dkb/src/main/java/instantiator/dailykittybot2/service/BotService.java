@@ -39,7 +39,6 @@ import instantiator.dailykittybot2.service.execution.RuleExecutor;
 import instantiator.dailykittybot2.service.execution.SubredditExecutionResult;
 import instantiator.dailykittybot2.service.helpers.DataFactory;
 import instantiator.dailykittybot2.service.helpers.SampleDataInjector;
-import instantiator.dailykittybot2.service.helpers.TestDataInjector;
 import instantiator.dailykittybot2.tasks.RunRulesParams;
 import instantiator.dailykittybot2.tasks.RunRulesNotificationTask;
 import instantiator.dailykittybot2.ui.AbstractBotActivity;
@@ -290,18 +289,6 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
 
         RedditSession session = new RedditSession(this, device_uuid, session_listener);
         session.authenticate_as(user);
-    }
-
-    @Override
-    public void injectTestData(final String user) {
-        Executors.newSingleThreadScheduledExecutor().execute(() -> {
-            try {
-                TestDataInjector injector = new TestDataInjector(workspace.db, user);
-                injector.inject_full_test_rule(3, 3);
-            } catch (Exception e) {
-                Log.e(TAG, "Exception encountered injecting test data", e);
-            }
-        });
     }
 
     @Override

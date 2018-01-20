@@ -137,19 +137,6 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
                 .show();
     }
 
-    private void confirm_inject_testData() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.dialog_title_confirm_inject_test_data)
-                .setMessage(R.string.dialog_message_confirm_inject_test_data)
-                .setPositiveButton(R.string.btn_inject, (dialogInterface, i) -> {
-                    dialogInterface.dismiss();
-                    service.injectTestData(username);
-                })
-                .setNegativeButton(R.string.btn_cancel, (dialogInterface, i) -> dialogInterface.dismiss())
-                .create()
-                .show();
-    }
-
     private void confirm_delete_all_recommendations() {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.dialog_title_confirm_delete_all_recommendations)

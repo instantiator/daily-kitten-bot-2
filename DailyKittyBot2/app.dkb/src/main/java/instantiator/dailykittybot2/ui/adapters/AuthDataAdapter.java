@@ -100,10 +100,10 @@ public class AuthDataAdapter extends RecyclerView.Adapter<AuthDataAdapter.TokenV
                         R.string.text_no_refresh_token :
                         R.string.text_has_refresh_token);
 
-        holder.icon.setImageResource(
-            authorised ?
-                R.drawable.ic_android_black_24dp :
-                R.drawable.ic_hotel_black_24dp);
+//        holder.icon.setImageResource(
+//            authorised ?
+//                R.drawable.ic_android_black_24dp :
+//                R.drawable.ic_hotel_black_24dp);
     }
 
     public class TokenViewHolder extends RecyclerView.ViewHolder {

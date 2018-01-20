@@ -20,6 +20,7 @@ import instantiator.dailykittybot2.R;
 import instantiator.dailykittybot2.events.BotServiceStateEvent;
 import instantiator.dailykittybot2.service.RedditSession;
 import instantiator.dailykittybot2.ui.adapters.AuthDataAdapter;
+import instantiator.dailykittybot2.ui.helpers.IntroHelper;
 import instantiator.dailykittybot2.ui.viewmodels.AccountsListViewModel;
 
 import static android.view.View.GONE;
@@ -37,6 +38,8 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
 
     private RedditSession reddit;
 
+    private IntroHelper intro;
+
     public AccountsListActivity() {
         super(false, true, true);
     }
@@ -45,6 +48,10 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitleBarToVersionWith(getString(R.string.activity_title_accounts));
+        intro = new IntroHelper(this);
+        if (!intro.has_run()) {
+            intro.initiate();
+        }
     }
 
     @Override
@@ -121,10 +128,17 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
+
         MenuItem refresh_item = menu.add(0, R.string.menu_refresh, 0, R.string.menu_refresh);
         refresh_item.setIcon(R.drawable.ic_refresh_black_24dp);
         refresh_item.getIcon().setTint(Color.WHITE);
         refresh_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        MenuItem intro_item = menu.add(0, R.string.menu_intro, 0, R.string.menu_intro);
+        intro_item.setIcon(R.drawable.ic_help_outline_black_24dp);
+        intro_item.getIcon().setTint(Color.WHITE);
+        intro_item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         return true;
     }
 
@@ -133,6 +147,10 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
         switch (item.getItemId()) {
             case R.string.menu_refresh:
                 adapter.update();
+                return true;
+
+            case R.string.menu_intro:
+                intro.initiate();
                 return true;
 
             default:

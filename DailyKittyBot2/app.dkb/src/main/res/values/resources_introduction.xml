@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="slide_1_background">#000088</color>
+    <string name="slide_1_title_welcome">Welcome to Daily Kitten Bot</string>
+    <string name="slide_1_description_welcome">
+        Daily Kitten Bot is a tool you can use every day to find posts on Reddit
+        that are important to you, and act on them.
+    </string>
+
+    <color name="slide_2_background">#880088</color>
+    <string name="slide_2_title_welcome">Daily Kitten Bot is your Reddit assistant</string>
+    <string name="slide_2_description_welcome">
+        Add your Reddit account to take actions on your favourite subreddits.
+        Don\'t worry, Daily Kitten Bot will always check with you before it does anything!
+    </string>
+
+    <color name="slide_3_background">#880000</color>
+    <string name="slide_3_title_welcome">Create rules to seek out content</string>
+    <string name="slide_3_description_welcome">
+        Rules are governed by conditions and outcomes.
+        Use conditions to determine which posts meet your criteria,
+        and then set outcomes to choose what your actions will be.
+    </string>
+
+    <color name="slide_4_background">#885500</color>
+    <string name="slide_4_title_welcome">Approve or reject recommendations</string>
+    <string name="slide_4_description_welcome">
+        Daily Kitten Bot generates recommendations from your rules.
+        Approve a recommendation to enact it on Reddit, or reject it if it\'s not
+        something you want to do.
+    </string>
+
+    <color name="slide_5_background">#999900</color>
+    <string name="slide_5_title_welcome">Check Reddit regularly!</string>
+    <string name="slide_5_description_welcome">
+        Coming soon, Daily Kitten Bot will be able to run your rules
+        regularly against each subreddit with your text.
+    </string>
+
+    <color name="slide_6_background">#008800</color>
+    <string name="slide_6_title_welcome">Get started with sample rules</string>
+    <string name="slide_6_description_welcome">
+        Use the menu to add some sample rules, and find out
+        just how easy it is to get started with Daily Kitten Bot!
+    </string>
+
+</resources>

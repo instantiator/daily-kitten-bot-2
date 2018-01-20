@@ -82,7 +82,7 @@
 
     <string name="dialog_title_confirm_reject_recommendation">Reject recommendation?</string>
     <string name="dialog_message_confirm_reject_recommendation">
-        Rejection this recommendation will remove it from your view.
+        Rejecting this recommendation will remove it from your view.
         Are you sure you wish to do this?
     </string>
 

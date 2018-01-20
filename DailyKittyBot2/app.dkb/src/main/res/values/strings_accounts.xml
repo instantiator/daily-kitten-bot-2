@@ -4,6 +4,7 @@
     <string name="activity_title_accounts">Daily Kitten Bot</string>
 
     <string name="menu_refresh">Refresh</string>
+    <string name="menu_intro">Show intro...</string>
 
     <string name="text_access_token_status">Access token expires in %d minutes</string>
     <string name="text_access_token_status_short">Expiry: %d mins</string>
