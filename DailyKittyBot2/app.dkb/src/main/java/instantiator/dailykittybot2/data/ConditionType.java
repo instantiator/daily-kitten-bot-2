@@ -46,6 +46,18 @@ public enum ConditionType {
             true,
             true),
 
+    IfTextContainsLink(
+            R.string.condition_type_text_contains_exact_link,
+            R.string.condition_type_text_contains_exact_link_hint,
+            true,
+            true),
+
+    IfTextContainsLinkForAnyDomainsOf(
+            R.string.condition_type_text_contains_link_with_domains,
+            R.string.condition_type_text_contains_link_with_domains_hint,
+            true,
+            true),
+
     IfAnyCommentContainsString(
             R.string.condition_type_any_comment_contains_string,
             R.string.condition_type_any_comment_contains_string_hint,
@@ -55,6 +67,42 @@ public enum ConditionType {
     IfNoCommentContainsString(
             R.string.condition_type_no_comment_contains_string,
             R.string.condition_type_no_comment_contains_string_hint,
+            true,
+            false),
+
+    IfAnyCommentContainsWordsFrom(
+            R.string.condition_type_any_comment_contains_words,
+            R.string.condition_type_any_comment_contains_words_hint,
+            true,
+            false),
+
+    IfNoCommentContainsWordsFrom(
+            R.string.condition_type_no_comment_contains_words,
+            R.string.condition_type_no_comment_contains_words_hint,
+            true,
+            false),
+
+    IfAnyCommentContainsLink(
+            R.string.condition_type_any_comment_contains_exact_link,
+            R.string.condition_type_any_comment_contains_exact_link_hint,
+            true,
+            false),
+
+    IfAnyCommentContainsListForAnyDomainOf(
+            R.string.condition_type_any_comment_contains_link_with_domains,
+            R.string.condition_type_any_comment_contains_link_with_domains_hint,
+            true,
+            false),
+
+    IfNoCommentContainsLink(
+            R.string.condition_type_no_comment_contains_exact_link,
+            R.string.condition_type_no_comment_contains_exact_link_hint,
+            true,
+            false),
+
+    IfNoCommentContainsLinkForAnyDomainOf(
+            R.string.condition_type_no_comment_contains_link_with_domains,
+            R.string.condition_type_no_comment_contains_link_with_domains_hint,
             true,
             false);
 

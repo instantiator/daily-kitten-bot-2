@@ -39,10 +39,10 @@ public class OutcomeValidator extends AbstractValidator<Outcome> {
                 warnings.add(context.getString(R.string.validation_outcome_does_nothing));
                 break;
 
-            case UpvotePost:
-            case DownvotePost:
-                warnings.add(context.getString(R.string.validation_upvote_and_downvote_shown_to_fail));
-                break;
+//            case UpvotePost:
+//            case DownvotePost:
+//                warnings.add(context.getString(R.string.validation_upvote_and_downvote_shown_to_fail));
+//                break;
         }
 
         return warnings;

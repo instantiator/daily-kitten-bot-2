@@ -30,6 +30,13 @@ public enum OutcomeType {
             R.string.outcome_downvote_post_hint,
             R.string.outcome_downvote_post_action,
             R.drawable.ic_thumb_down_black_24dp,
+            false),
+
+    SavePost(
+            R.string.outcome_save_post,
+            R.string.outcome_save_post_hint,
+            R.string.outcome_save_post_action,
+            R.drawable.ic_save_black_24dp,
             false);
 
     private OutcomeType(int description_resource, int hint_resource, int action_word, int icon, boolean has_specifics) {

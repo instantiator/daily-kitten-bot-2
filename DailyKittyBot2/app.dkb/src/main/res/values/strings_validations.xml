@@ -29,6 +29,8 @@
 
     <string name="validation_condition_does_nothing">Condition does not match anything.</string>
     <string name="validation_outcome_does_nothing">Outcome does nothing.</string>
+
+    <!-- see: https://www.reddit.com/r/redditdev/comments/7s33rp/api_forbids_me_from_upvoting_or_downvoting_using/ -->
     <string name="validation_upvote_and_downvote_shown_to_fail">
         Upvote and downvote outcomes seem to be rejected by the Reddit API right now.
         Your friendly developer is investigating the issue!

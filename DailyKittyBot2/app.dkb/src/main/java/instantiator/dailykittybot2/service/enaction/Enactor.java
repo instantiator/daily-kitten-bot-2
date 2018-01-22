@@ -51,6 +51,10 @@ public class Enactor {
                      downvote(recommendation, enaction);
                      break;
 
+                 case SavePost:
+                     save(recommendation, enaction);
+                     break;
+
                  default:
                      throw new IllegalArgumentException(
                              "Unrecognised outcome type in recommendation: " + recommendation.type.name());
@@ -70,6 +74,9 @@ public class Enactor {
     }
 
     private void doNothing(Recommendation rec, Enaction enaction) {
+        Log.v(TAG, "redditClient.getAuthenticationMethod().name() = " + reddit.getAuthMethod().name());
+        Log.v(TAG, "redditClient.getAuthenticationMethod().toString() = " + reddit.getAuthMethod().toString());
+        Log.v(TAG, "redditClient.me().getUsername() = " + reddit.me().getUsername());
         enaction.description_short = context.getString(R.string.enaction_nothing_happened_short);
         enaction.description_long = context.getString(
                 R.string.enaction_nothing_happened_long,
@@ -78,6 +85,9 @@ public class Enactor {
     }
 
     private void upvote(Recommendation rec, Enaction enaction) {
+        Log.v(TAG, "redditClient.getAuthenticationMethod().name() = " + reddit.getAuthMethod().name());
+        Log.v(TAG, "redditClient.getAuthenticationMethod().toString() = " + reddit.getAuthMethod().toString());
+        Log.v(TAG, "redditClient.me().getUsername() = " + reddit.me().getUsername());
         reddit.submission(rec.targetSubmissionId).upvote();
 
         enaction.description_short = context.getString(R.string.enaction_upvoted_short);
@@ -88,6 +98,9 @@ public class Enactor {
     }
 
     private void downvote(Recommendation rec, Enaction enaction) {
+        Log.v(TAG, "redditClient.getAuthenticationMethod().name() = " + reddit.getAuthMethod().name());
+        Log.v(TAG, "redditClient.getAuthenticationMethod().toString() = " + reddit.getAuthMethod().toString());
+        Log.v(TAG, "redditClient.me().getUsername() = " + reddit.me().getUsername());
         reddit.submission(rec.targetSubmissionId).downvote();
 
         enaction.description_short = context.getString(R.string.enaction_downvoted_short);
@@ -97,7 +110,23 @@ public class Enactor {
                 rec.targetSubreddit);
     }
 
+    private void save(Recommendation rec, Enaction enaction) {
+        Log.v(TAG, "redditClient.getAuthenticationMethod().name() = " + reddit.getAuthMethod().name());
+        Log.v(TAG, "redditClient.getAuthenticationMethod().toString() = " + reddit.getAuthMethod().toString());
+        Log.v(TAG, "redditClient.me().getUsername() = " + reddit.me().getUsername());
+        reddit.submission(rec.targetSubmissionId).save();
+
+        enaction.description_short = context.getString(R.string.enaction_saved_short);
+        enaction.description_long = context.getString(
+                R.string.enaction_saved_long,
+                rec.targetSummary,
+                rec.targetSubreddit);
+    }
+
     private void addComment(Recommendation rec, Enaction enaction) {
+        Log.v(TAG, "redditClient.getAuthenticationMethod().name() = " + reddit.getAuthMethod().name());
+        Log.v(TAG, "redditClient.getAuthenticationMethod().toString() = " + reddit.getAuthMethod().toString());
+        Log.v(TAG, "redditClient.me().getUsername() = " + reddit.me().getUsername());
         reddit.submission(rec.targetSubmissionId).reply(rec.modifier);
 
         enaction.description_short = context.getString(R.string.enaction_commented_short);

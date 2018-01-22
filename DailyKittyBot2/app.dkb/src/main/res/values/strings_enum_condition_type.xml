@@ -28,6 +28,17 @@
         \n\nComma-separate the words (eg. one,two,three).
     </string>
 
+    <string name="condition_type_text_contains_exact_link">If post text contains a link to</string>
+    <string name="condition_type_text_contains_exact_link_hint">
+        Matches posts with main text that a link to the URL you provide.
+    </string>
+
+    <string name="condition_type_text_contains_link_with_domains">If post text contains a link from domains</string>
+    <string name="condition_type_text_contains_link_with_domains_hint">
+        Matches posts with main text that contains a link to one of the domains that you provide.
+        \n\nComma-separate the domains (eg. google.com,yahoo.com,bing.com).
+    </string>
+
     <string name="condition_type_is_exact_link">If post is exact link</string>
     <string name="condition_type_is_exact_link_hint">
         Matches posts that are a link to the exact URL you provide.
@@ -44,9 +55,43 @@
         Matches posts that have a comment containing the text you provide.
     </string>
 
+    <string name="condition_type_any_comment_contains_words">If any comment contains a word from</string>
+    <string name="condition_type_any_comment_contains_words_hint">
+        Matches posts that have a comment containing one or more of the words you provide.
+        \n\nComma-separate the words (eg. one,two,three).
+    </string>
+
+    <string name="condition_type_no_comment_contains_words">If no comments contain any of the words from</string>
+    <string name="condition_type_no_comment_contains_words_hint">
+        Matches posts provided no comments contain any of the words you provide.
+        \n\nComma-separate the words (eg. one,two,three).
+    </string>
+
     <string name="condition_type_no_comment_contains_string">If no comment on the post contains</string>
     <string name="condition_type_no_comment_contains_string_hint">
         Matches posts that have no comments containing the text you provide.
+    </string>
+
+    <string name="condition_type_any_comment_contains_exact_link">If any comment contains a link to</string>
+    <string name="condition_type_any_comment_contains_exact_link_hint">
+        Matches posts that have a comment containing the link you provide.
+    </string>
+
+    <string name="condition_type_any_comment_contains_link_with_domains">If any comment contains a link to domains</string>
+    <string name="condition_type_any_comment_contains_link_with_domains_hint">
+        Matches posts with a comment that contains a link to one of the domains that you provide.
+        \n\nComma-separate the domains (eg. google.com,yahoo.com,bing.com).
+    </string>
+
+    <string name="condition_type_no_comment_contains_exact_link">If no comment contains a link to</string>
+    <string name="condition_type_no_comment_contains_exact_link_hint">
+        Matches posts that have no comments containing the link you provide.
+    </string>
+
+    <string name="condition_type_no_comment_contains_link_with_domains">If no comment contains a link to domains</string>
+    <string name="condition_type_no_comment_contains_link_with_domains_hint">
+        Matches posts with no comments that contains a link to one of the domains that you provide.
+        \n\nComma-separate the domains (eg. google.com,yahoo.com,bing.com).
     </string>
 
 </resources>

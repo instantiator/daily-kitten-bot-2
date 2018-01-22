@@ -22,4 +22,7 @@
     <string name="btn_stop">Stop</string>
     <string name="btn_skip_subreddit">Skip subreddit</string>
 
+    <string name="toast_warning_cannot_open_url">Unable to open this link.</string>
+    <string name="toast_warning_cannot_open_uri">Unable to open this URI.</string>
+
 </resources>

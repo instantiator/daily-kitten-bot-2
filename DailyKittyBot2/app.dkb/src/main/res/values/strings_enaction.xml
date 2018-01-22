@@ -10,6 +10,9 @@
     <string name="enaction_downvoted_short">Post downvoted.</string>
     <string name="enaction_downvoted_long">Downvoted: \"%s\" from r/%s</string>
 
+    <string name="enaction_saved_short">Post saved.</string>
+    <string name="enaction_saved_long">Saved: \"%s\" from r/%s</string>
+
     <string name="enaction_commented_short">Comment posted.</string>
     <string name="enaction_commented_long">
         Comment posted to: \"%s\" from r/%s

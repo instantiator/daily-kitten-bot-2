@@ -3,9 +3,9 @@
 
     <string name="activity_title_overview_for">Redditor: %s</string>
 
-    <string name="menu_inject_sample_data">Inject sample data...</string>
-    <string name="menu_delete_all_recommendations">Delete all recommendations...</string>
-    <string name="menu_forget_all_run_reports">Forget previous runs...</string>
+    <string name="menu_inject_sample_data">Inject sample data…</string>
+    <string name="menu_delete_all_recommendations">Delete all recommendations…</string>
+    <string name="menu_forget_all_run_reports">Forget previous runs…</string>
 
     <string name="tab_rules">Rules</string>
     <string name="tab_recommendations">Recommendations</string>
@@ -96,10 +96,10 @@
     <string name="summary_rule_autorun">[auto-run]</string>
     <string name="summary_rule_no_autorun"></string>
 
-    <string name="menu_recommendation_view">View detail...</string>
-    <string name="menu_recommendation_visit_url">Open subject post...</string>
-    <string name="menu_recommendation_accept">Accept this recommendation...</string>
-    <string name="menu_recommendation_reject">Reject this recommendation...</string>
+    <string name="menu_recommendation_view">View detail…</string>
+    <string name="menu_recommendation_visit_url">Open subject post…</string>
+    <string name="menu_recommendation_accept">Accept this recommendation…</string>
+    <string name="menu_recommendation_reject">Reject this recommendation…</string>
 
     <string name="text_no_rules">
         There are currently no rules for this account.

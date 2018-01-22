@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="reddit_authentication_scopes">
+        <item>read</item>
+        <item>identity</item>
+        <item>submit</item>
+        <item>save</item>
+        <item>edit</item>
+        <item>vote</item>
+    </string-array>
+
+    <string name="menu_control_reddit_apps">Control my Reddit apps…</string>
+    <string name="url_reddit_apps_preferences">https://www.reddit.com/prefs/apps/</string>
+
+</resources>

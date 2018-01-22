@@ -26,4 +26,10 @@
         Downvotes the matching posts.
     </string>
 
+    <string name="outcome_save_post">Save this post</string>
+    <string name="outcome_save_post_action">save</string>
+    <string name="outcome_save_post_hint">
+        Saves the matching post to your reddit account.
+    </string>
+
 </resources>

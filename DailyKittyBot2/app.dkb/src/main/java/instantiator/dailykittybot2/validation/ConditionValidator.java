@@ -33,15 +33,20 @@ public class ConditionValidator extends AbstractValidator<Condition> {
             }
         }
 
-        if (object.type == ConditionType.IfIsExactLink) {
-            try {
-                Uri found = Uri.parse(object.modifier);
-                if (found == null) {
+        switch (object.type) {
+            case IfIsExactLink:
+            case IfAnyCommentContainsLink:
+            case IfNoCommentContainsLink:
+            case IfTextContainsLink:
+                try {
+                    Uri found = Uri.parse(object.modifier);
+                    if (found == null) {
+                        errors.add(context.getString(R.string.validation_cannot_parse_uri));
+                    }
+                } catch (Exception e) {
                     errors.add(context.getString(R.string.validation_cannot_parse_uri));
                 }
-            } catch (Exception e) {
-                errors.add(context.getString(R.string.validation_cannot_parse_uri));
-            }
+                break;
         }
 
         return errors;

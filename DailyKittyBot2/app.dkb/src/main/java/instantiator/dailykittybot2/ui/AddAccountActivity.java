@@ -77,7 +77,7 @@ public class AddAccountActivity extends AbstractServiceBoundAppCompatActivity<Bo
 
         boolean requestRefreshToken = true;
         boolean useMobileSite = true;
-        String[] scopes = new String[] { "read", "identity", "submit", "save", "edit" };
+        String[] scopes = getResources().getStringArray(R.array.reddit_authentication_scopes);
         String authUrl = helper.getAuthorizationUrl(requestRefreshToken, useMobileSite, scopes);
 
         web.setVisibility(VISIBLE);
@@ -140,7 +140,7 @@ public class AddAccountActivity extends AbstractServiceBoundAppCompatActivity<Bo
                 Log.i(TAG, "User challenge tasks_completed.");
                 return true;
             } catch (OAuthException e) {
-                Log.i(TAG, "OAuthException received during user challenge.", e);
+                Log.w(TAG, "OAuthException received during user challenge.", e);
                 return false;
             } catch (Exception e) {
                 Log.e(TAG, "Unexpected exception received during user challenge.", e);

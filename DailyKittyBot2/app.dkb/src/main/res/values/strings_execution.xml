@@ -4,7 +4,7 @@
     <string name="channel_executions_name">DKB tasks</string>
     <string name="channel_executions_description">Work that DKB is currently doing for you.</string>
 
-    <string name="execution_notification_title_starting">Please wait...</string>
+    <string name="execution_notification_title_starting">Please wait…</string>
     <string name="execution_notification_content_starting">Daily Kitten Bot is preparing to execute your rules.</string>
     <string name="execution_notification_ticker_starting">DKB is active</string>
 
@@ -18,11 +18,11 @@
     <string name="dialog_running_rules_time_display_started_prefix">Started: </string>
     <string name="dialog_running_rules_time_display_finished_prefix">Finished: </string>
 
-    <string name="dialog_running_rules_activity_preparing">Preparing...</string>
-    <string name="dialog_running_rules_activity_fetching_posts">Fetching posts...</string>
-    <string name="dialog_running_rules_activity_applying_rules">Applying rules...</string>
+    <string name="dialog_running_rules_activity_preparing">Preparing…</string>
+    <string name="dialog_running_rules_activity_fetching_posts">Fetching posts…</string>
+    <string name="dialog_running_rules_activity_applying_rules">Applying rules…</string>
     <string name="dialog_running_rules_activity_paused">Paused.</string>
-    <string name="dialog_running_rules_activity_storing_recommendations">Storing %d recommendations...</string>
+    <string name="dialog_running_rules_activity_storing_recommendations">Storing %d recommendations…</string>
     <string name="dialog_running_rules_activity_finished">Complete.</string>
     <string name="dialog_running_rules_activity_cancelled">Cancelled by user.</string>
 

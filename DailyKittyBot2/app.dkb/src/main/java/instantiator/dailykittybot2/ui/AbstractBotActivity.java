@@ -2,8 +2,10 @@ package instantiator.dailykittybot2.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -135,6 +137,7 @@ public abstract class AbstractBotActivity<VM extends AbstractBotViewModel> exten
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         menu.add(0, R.string.menu_display_oss_licenses, 0, R.string.menu_display_oss_licenses);
+        menu.add(0, R.string.menu_control_reddit_apps, 0, R.string.menu_control_reddit_apps);
         return true;
     }
 
@@ -143,6 +146,10 @@ public abstract class AbstractBotActivity<VM extends AbstractBotViewModel> exten
         switch (item.getItemId()) {
             case R.string.menu_display_oss_licenses:
                 startActivity(new Intent(this, OssLicensesMenuActivity.class));
+                return true;
+
+            case R.string.menu_control_reddit_apps:
+                visit_url(getString(R.string.url_reddit_apps_preferences));
                 return true;
 
             case android.R.id.home:
@@ -155,6 +162,26 @@ public abstract class AbstractBotActivity<VM extends AbstractBotViewModel> exten
     }
 
     protected abstract void updateUI();
+
+    protected void visit_url(String url) {
+        try {
+            Uri uri = Uri.parse(url);
+            visit_url(uri);
+        } catch (Exception e) {
+            Log.e(TAG, "Could not parse url: " + url);
+            informUser(R.string.toast_warning_cannot_open_url);
+        }
+    }
+
+    protected void visit_url(Uri uri) {
+        try {
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(browserIntent);
+        } catch (Exception e) {
+            Log.e(TAG, "Could not open url: " + uri.toString());
+            informUser(R.string.toast_warning_cannot_open_uri);
+        }
+    }
 
     @Override protected void onGrantedOverlayPermission() { }
     @Override protected void onRefusedOverlayPermission() { }

@@ -214,14 +214,14 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
 
     @Override
     public void request_view_post(Recommendation recommendation) {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, recommendation.targetPostUri);
-        startActivity(browserIntent);
+        visit_url(recommendation.targetPostUri);
     }
 
     private String describe(Recommendation recommendation) {
         switch (recommendation.type) {
             case DownvotePost:
             case UpvotePost:
+            case SavePost:
                 return getString(
                         R.string.dialog_message_describe_recommendation_simple,
                             recommendation.type.getActionString(),
