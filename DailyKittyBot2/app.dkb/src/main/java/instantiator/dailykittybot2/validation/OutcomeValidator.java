@@ -33,8 +33,16 @@ public class OutcomeValidator extends AbstractValidator<Outcome> {
     protected List<String> check_warnings(Outcome object) {
         List<String> warnings = new LinkedList<>();
 
-        if (object.type == OutcomeType.DoNothing) {
-            warnings.add(context.getString(R.string.validation_outcome_does_nothing));
+        switch (object.type) {
+
+            case DoNothing:
+                warnings.add(context.getString(R.string.validation_outcome_does_nothing));
+                break;
+
+            case UpvotePost:
+            case DownvotePost:
+                warnings.add(context.getString(R.string.validation_upvote_and_downvote_shown_to_fail));
+                break;
         }
 
         return warnings;
