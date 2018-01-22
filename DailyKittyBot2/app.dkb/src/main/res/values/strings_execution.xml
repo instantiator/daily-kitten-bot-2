@@ -13,9 +13,27 @@
 
     <string name="execution_notification_content_completion">Storing %d new recommendations.</string>
 
-    <string name="dialog_title_running_rules">Running rules</string>
-    <string name="dialog_title_running_rules_for">Running rules for %s</string>
-    <string name="dialog_message_running_rules_preparing">Preparing...</string>
+    <string name="dialog_running_rules_title">Running rules</string>
+    <string name="dialog_running_rules_title_for">Running rules for %s</string>
+    <string name="dialog_running_rules_time_display_started_prefix">Started: </string>
+    <string name="dialog_running_rules_time_display_finished_prefix">Finished: </string>
+
+    <string name="dialog_running_rules_activity_preparing">Preparing...</string>
+    <string name="dialog_running_rules_activity_fetching_posts">Fetching posts...</string>
+    <string name="dialog_running_rules_activity_applying_rules">Applying rules...</string>
+    <string name="dialog_running_rules_activity_paused">Paused.</string>
+    <string name="dialog_running_rules_activity_storing_recommendations">Storing %d recommendations...</string>
+    <string name="dialog_running_rules_activity_finished">Complete.</string>
+    <string name="dialog_running_rules_activity_cancelled">Cancelled by user.</string>
+
+    <string name="dialog_running_rules_subreddit_is">Subreddit: %s</string>
+    <string name="dialog_running_rules_subreddit_post_counts_are">Post: %d of %d</string>
+    <string name="dialog_running_rules_post_title_is">Post: %s</string>
+    <string name="dialog_running_rules_post_created_prefix">Created: </string>
+    <string name="dialog_running_rules_rule_name_is">Applying rule: %s</string>
+    <string name="dialog_running_rules_generated_recommendations">Generated %d recommendations.</string>
+    <string name="dialog_running_rules_generated_recommendations_cancelled">Task cancelled, no recommendations were stored.</string>
+
     <string name="dialog_message_running_rules_fetching_posts_in">Fetching posts for subreddit: %s</string>
     <string name="dialog_message_running_rules_details">Post %d of %d, in: %s</string>
     <string name="dialog_message_running_rules_completion">Storing %d new recommendations.</string>

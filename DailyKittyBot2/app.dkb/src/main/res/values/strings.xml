@@ -17,5 +17,9 @@
     <string name="btn_reject">Reject</string>
     <string name="btn_view_post">View post...</string>
     <string name="btn_close">Close</string>
+    <string name="btn_done">Done</string>
+    <string name="btn_finish">Finish</string>
+    <string name="btn_stop">Stop</string>
+    <string name="btn_skip_subreddit">Skip subreddit</string>
 
 </resources>

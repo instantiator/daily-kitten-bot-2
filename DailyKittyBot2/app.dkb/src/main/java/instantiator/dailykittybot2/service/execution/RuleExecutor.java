@@ -1,13 +1,14 @@
 package instantiator.dailykittybot2.service.execution;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.util.Log;
 
 import net.dean.jraw.RedditClient;
+import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
+import net.dean.jraw.pagination.DefaultPaginator;
 import net.dean.jraw.pagination.Paginator;
 
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,11 @@ public class RuleExecutor {
     private Listener listener;
     private ConditionMatcher matcher;
     private RecommendationGenerator generator;
+
+    private boolean flag_skip_subreddit;
+    private boolean flag_finish;
+    private boolean flag_cancel;
+    private String flagged_subreddit;
 
     public enum ExecutionMode {
         RespectRuleLastRun(R.string.execution_mode_respect_last_run),
@@ -105,18 +111,107 @@ public class RuleExecutor {
         // find the last considered item for each rule in this subreddit
         Map<UUID, Date> last_considerations = find_last_considered_items(triplets, subreddit);
 
-        // prepare new run reports
-        SubredditExecutionResult out_result = new SubredditExecutionResult();
-        Map<UUID, RunReport> out_RunReports = prepare_blank_run_reports(triplets, username, subreddit);
-        List<RuleResult> out_RuleResults = new LinkedList<>();
-
         // prepare time limits
         List<TimePeriod> periods = determine_best_timeperiods(triplets, last_considerations, mode);
         TimePeriod longest = longest_from(periods);
 
-        listener.fetching_subreddit_posts(subreddit);
+        // process rules and generate a list of results
+        List<RuleResult> out_RuleResults = process_subreddit_incrementally(
+                reddit,
+                subreddit,
+                longest,
+                triplets,
+                mode,
+                last_considerations);
 
-        // fetch submissions in range
+//        List<RuleResult> out_RuleResults = process_everything_at_once(
+//                reddit,
+//                subreddit,
+//                longest,
+//                triplets,
+//                mode,
+//                last_considerations);
+
+        Date finished = new Date();
+
+        // link rule results to reports
+        Map<UUID, RunReport> out_RunReports = prepare_blank_run_reports(triplets, username, subreddit);
+        compile_rule_results(
+                out_RuleResults,
+                out_RunReports,
+                start,
+                finished);
+
+        // final result
+        SubredditExecutionResult out_result = new SubredditExecutionResult();
+        out_result.subreddit_rule_RunReports = out_RunReports.values();
+        out_result.subreddit_rule_RuleResults = out_RuleResults;
+        return out_result;
+    }
+
+    private List<RuleResult> process_subreddit_incrementally(RedditClient reddit, String subreddit, TimePeriod longest, List<RuleTriplet> triplets, ExecutionMode mode, Map<UUID, Date> last_considerations) {
+        List<RuleResult> ruleResults = new LinkedList<>();
+
+        listener.fetching_subreddit_posts(subreddit);
+        DefaultPaginator<Submission> paginator = reddit
+                .subreddit(subreddit)
+                .posts()
+                .sorting(SubredditSort.NEW)
+                .timePeriod(longest)
+                .limit(Paginator.RECOMMENDED_MAX_LIMIT)
+                .build();
+
+        int posts = 0;
+        for (Listing<Submission> listing : paginator) {
+            posts += listing.size();
+            listener.testing_subreddit(subreddit, posts);
+            for (Submission submission : listing) {
+                listener.testing_submission(submission);
+                for (RuleTriplet triplet : triplets) {
+                    listener.applying_rule(triplet);
+
+                    RuleResult result = execute_rule_on_submission(triplet, submission, mode, longest, last_considerations);
+                    ruleResults.add(result);
+
+                    if (flagged_halt_any(subreddit)) { break; }
+                } // rule
+                if (flagged_halt_any(subreddit)) { break; }
+            } // submission
+            listener.fetching_subreddit_posts(subreddit);
+
+            if (flagged_halt_any(subreddit)) { break; }
+        } // listing
+
+        unset_flags();
+        return ruleResults;
+    }
+
+    private boolean flagged_halt_any(String current_subreddit) {
+        return
+                flag_cancel ||
+                flag_finish ||
+                (flag_skip_subreddit && StringUtils.equals(current_subreddit, flagged_subreddit));
+    }
+
+    public void flag_cancel() { flag_cancel = true; }
+
+    public void flag_finish() { flag_finish = true; }
+
+    public void flag_skip_subreddit(String subreddit) {
+        flag_skip_subreddit = true;
+        flagged_subreddit = subreddit;
+    }
+
+    private void unset_flags() {
+        flag_cancel = false;
+        flag_finish = false;
+        flag_skip_subreddit = false;
+    }
+
+    private List<RuleResult> process_everything_at_once(RedditClient reddit, String subreddit, TimePeriod longest, List<RuleTriplet> triplets, ExecutionMode mode, Map<UUID, Date> last_considerations) {
+        List<RuleResult> ruleResults = new LinkedList<>();
+
+        listener.fetching_subreddit_posts(subreddit);
         List<Submission> submissions = reddit
                 .subreddit(subreddit)
                 .posts()
@@ -135,20 +230,21 @@ public class RuleExecutor {
                 listener.applying_rule(triplet);
 
                 RuleResult result = execute_rule_on_submission(triplet, submission, mode, longest, last_considerations);
-                out_RuleResults.add(result);
+                ruleResults.add(result);
             } // rule
         } // submission
 
-        Date finished = new Date();
+        return ruleResults;
+    }
 
-        // link rule results to reports
+    private void compile_rule_results(List<RuleResult> out_RuleResults, Map<UUID, RunReport> out_RunReports, Date start, Date finished) {
         for (RuleResult result : out_RuleResults) {
             RunReport report = out_RunReports.get(result.triplet.rule.uuid);
             report.started = start;
             report.finished = finished;
 
             if (report.lastConsideredItemDate == null ||
-                result.submission.getCreated().after(report.lastConsideredItemDate)) {
+                    result.submission.getCreated().after(report.lastConsideredItemDate)) {
                 report.lastConsideredItemDate = result.submission.getCreated();
             }
 
@@ -158,10 +254,6 @@ public class RuleExecutor {
                 }
             }
         }
-
-        out_result.subreddit_rule_RunReports = out_RunReports.values();
-        out_result.subreddit_rule_RuleResults = out_RuleResults;
-        return out_result;
     }
 
     private RuleResult execute_rule_on_submission(RuleTriplet triplet, Submission submission, ExecutionMode mode, TimePeriod limit, Map<UUID, Date> last_considerations) {
@@ -201,7 +293,7 @@ public class RuleExecutor {
                 if (rule_matches(triplet, submission)) {
                     result.matched = true;
                     result.recommendations = generate_recommendations(triplet, submission);
-                    listener.generated_recommendations(result.recommendations.size());
+                    listener.increment_recommendations(result.recommendations.size());
                     Log.v(TAG, "Accepted by conditions and date. Generated: " + result.recommendations.size());
                 } else {
                     Log.v(TAG, "Rejected on conditions.");
@@ -378,10 +470,10 @@ public class RuleExecutor {
 
     public interface Listener {
         void fetching_subreddit_posts(String subreddit);
-        void testing_subreddit(String subreddit, int total_posts);
+        void testing_subreddit(String subreddit, int additional_posts);
         void testing_submission(Submission submission);
         void applying_rule(RuleTriplet rule);
-        void generated_recommendations(int recommendations);
+        void increment_recommendations(int recommendations);
     }
 
 }

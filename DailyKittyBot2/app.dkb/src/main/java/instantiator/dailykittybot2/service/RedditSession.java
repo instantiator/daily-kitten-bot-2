@@ -98,7 +98,7 @@ public class RedditSession {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "Unable to switch to user " + username);
+            Log.e(TAG, "Unable to switch to user " + username, e);
             switch_state(State.Initialised, null);
         }
 

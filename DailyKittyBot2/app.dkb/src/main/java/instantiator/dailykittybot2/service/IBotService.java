@@ -58,10 +58,6 @@ public interface IBotService {
 
     void run(String username, RuleTriplet rules);
 
-    SubredditExecutionResult execute_rules_for_subreddit(
-            RedditSession session, RuleExecutor.Listener progress_listener,
-            String subreddit, List<RuleTriplet> rules, RuleExecutor.ExecutionMode mode);
-
     enum State {
         Initialised, Authenticating, Authenticated
     }

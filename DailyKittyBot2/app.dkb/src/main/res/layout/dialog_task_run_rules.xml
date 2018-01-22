@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="10dp"
+        android:id="@+id/icon_dialog_task"
+        android:src="@drawable/ic_hourglass_empty_black_24dp"
+        />
+
+    <ProgressBar
+        android:id="@+id/busy_indeterminate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/icon_dialog_task"
+        android:layout_alignEnd="@id/icon_dialog_task"
+        android:layout_below="@id/icon_dialog_task"
+        android:indeterminate="true"
+        />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/time_dialog_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:textSize="11sp"
+        android:text="time"
+        app:relative_time_prefix="@string/dialog_running_rules_time_display_started_prefix"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/icon_dialog_task"
+        android:layout_toStartOf="@id/time_dialog_time"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:text="title"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_current_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/text_dialog_title"
+        android:textStyle="bold"
+        android:text="current task"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <ProgressBar
+        android:id="@+id/busy_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/text_dialog_current_task"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_subreddit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/busy_progress"
+        android:text="subreddit"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <com.github.curioustechizen.ago.RelativeTimeTextView
+        android:id="@+id/time_dialog_post_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@id/text_dialog_subreddit"
+        android:text="post date"
+        android:textSize="11sp"
+        app:relative_time_prefix="@string/dialog_running_rules_post_created_prefix"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_post_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/text_dialog_subreddit"
+        android:layout_toStartOf="@id/time_dialog_post_date"
+        android:text="post title"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_rule_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/text_dialog_post_title"
+        android:text="rule name"
+        android:scrollHorizontally="true"
+        android:ellipsize="end"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/text_dialog_generated_recommendation_count"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/text_dialog_title"
+        android:layout_below="@id/text_dialog_rule_name"
+        android:text="generated recommendation count"
+        android:textStyle="bold"
+        android:layout_marginTop="5dp"
+        android:scrollHorizontally="true"
+        android:ellipsize="start"
+        android:singleLine="true"
+        />
+
+    <Button
+        android:id="@+id/btn_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/buttonBarPositiveButtonStyle"
+        android:text="@string/btn_done"
+        android:layout_below="@id/text_dialog_generated_recommendation_count"
+        android:layout_alignParentEnd="true"
+        />
+
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/buttonBarNegativeButtonStyle"
+        android:text="@string/btn_finish"
+        android:layout_below="@id/text_dialog_generated_recommendation_count"
+        android:layout_alignParentEnd="true"
+        />
+
+    <Button
+        android:id="@+id/btn_skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/buttonBarNeutralButtonStyle"
+        android:text="@string/btn_skip_subreddit"
+        android:layout_below="@id/text_dialog_generated_recommendation_count"
+        android:layout_toStartOf="@id/btn_finish"
+        />
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="?attr/buttonBarNegativeButtonStyle"
+        android:text="@string/btn_cancel"
+        android:layout_below="@id/text_dialog_generated_recommendation_count"
+        android:layout_alignParentStart="true"
+        />
+
+</RelativeLayout>

@@ -9,8 +9,8 @@ public class RunRulesProgress {
 
     public boolean fetching_posts;
 
-    public int total_posts = 0;
-    public int current_post_count = 0;
+    public int total_posts_this_subreddit = 0;
+    public int current_post_count_this_subreddit = 0;
 
     public String current_subreddit;
     public String current_post;

@@ -36,8 +36,6 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
 
     private AuthDataAdapter adapter;
 
-    private RedditSession reddit;
-
     private IntroHelper intro;
 
     public AccountsListActivity() {
@@ -82,7 +80,7 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
     @Override
     protected void updateUI() {
         boolean permitted = !anyOutstandingPermissions();
-        boolean enabled = bound && permitted && reddit.get_state() != RedditSession.State.Authenticating;
+        boolean enabled = bound && permitted;
         boolean nothing = adapter == null || adapter.getItemCount() == 0;
 
         if (adapter != null) { adapter.setEnabled(enabled); }
@@ -91,16 +89,12 @@ public class AccountsListActivity extends AbstractBotActivity<AccountsListViewMo
 
     @Override
     protected boolean initialise() {
-        reddit = new RedditSession(this, service.get_device_uuid(), reddit_listener);
-
         adapter = new AuthDataAdapter(this, service, recycler, recycler_listener);
         LinearLayoutManager layout = new LinearLayoutManager(this);
         recycler.setLayoutManager(layout);
         recycler.setAdapter(adapter);
         return true;
     }
-
-    private RedditSession.Listener reddit_listener = (session, state, username) -> updateUI();
 
     @Override
     protected void denitialise() {

@@ -192,10 +192,12 @@ public class UserOverviewActivity extends AbstractBotActivity<UserOverviewViewMo
             @Override
             public void state_switched(RedditSession session, RedditSession.State state, String username) {
                 if (state == RedditSession.State.Authenticated) {
+
                     RunRulesDialogTask task = new RunRulesDialogTask(
                             UserOverviewActivity.this,
                             session,
-                            service);
+                            service,
+                            username);
 
                     RunRulesParams params = new RunRulesParams();
                     params.account = username;

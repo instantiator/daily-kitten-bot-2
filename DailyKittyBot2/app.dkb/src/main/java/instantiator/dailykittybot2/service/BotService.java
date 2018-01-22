@@ -304,15 +304,6 @@ public class BotService extends AbstractBackgroundBindingService<IBotService> im
     }
 
     @Override
-    public SubredditExecutionResult execute_rules_for_subreddit(
-            RedditSession session, RuleExecutor.Listener progress_listener,
-            String subreddit, List<RuleTriplet> rules, RuleExecutor.ExecutionMode mode) {
-
-        RuleExecutor exec = new RuleExecutor(this, this, session, progress_listener);
-        return exec.execute_rules_for_subreddit(subreddit, rules, mode);
-    }
-
-    @Override
     public void insert_enaction(Enaction enaction) {
         Executors.newSingleThreadScheduledExecutor().execute(() -> {
             try {

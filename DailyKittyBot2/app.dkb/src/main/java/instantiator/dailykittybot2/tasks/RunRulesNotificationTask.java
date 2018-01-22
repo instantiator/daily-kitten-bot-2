@@ -128,7 +128,7 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
         String content = context.getString(
                 R.string.execution_notification_content_for_details,
                 p.current_subreddit,
-                p.current_post_count);
+                p.current_post_count_this_subreddit);
 
         notification_builder.setContentText(content);
 
@@ -165,11 +165,11 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
     private RunRulesProgress copy_current_progress() {
         RunRulesProgress next = new RunRulesProgress(current_progress.current_username, current_progress.of_subreddits_count);
         next.current_subreddit = current_progress.current_subreddit;
-        next.total_posts = current_progress.total_posts;
+        next.total_posts_this_subreddit = current_progress.total_posts_this_subreddit;
         next.fetching_posts = current_progress.fetching_posts;
         next.current_post = current_progress.current_post;
         next.current_rule = current_progress.current_rule;
-        next.current_post_count = current_progress.current_post_count;
+        next.current_post_count_this_subreddit = current_progress.current_post_count_this_subreddit;
         next.current_subreddits_count = current_progress.current_subreddits_count;
         next.generated_recommendation_count = current_progress.generated_recommendation_count;
         return next;
@@ -182,7 +182,7 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
         current_progress.current_subreddits_count++;
         current_progress.current_post = null;
         current_progress.current_rule = null;
-        current_progress.total_posts = 0;
+        current_progress.total_posts_this_subreddit = 0;
         current_progress.fetching_posts = true;
         RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
@@ -191,7 +191,7 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
     @Override
     public void testing_subreddit(String subreddit, int total_posts) {
         Log.v(TAG, "Subreddit: " + subreddit);
-        current_progress.total_posts = total_posts;
+        current_progress.total_posts_this_subreddit = total_posts;
         current_progress.fetching_posts = false;
         RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
@@ -201,7 +201,7 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
     public void testing_submission(Submission submission) {
         Log.v(TAG, "Submission: " + submission.getTitle());
         current_progress.current_post = submission.getTitle();
-        current_progress.current_post_count++;
+        current_progress.current_post_count_this_subreddit++;
         current_progress.current_rule = null;
         RunRulesProgress copy = copy_current_progress();
         publishProgress(copy);
@@ -216,7 +216,7 @@ public class RunRulesNotificationTask extends AsyncTask<RunRulesParams, RunRules
     }
 
     @Override
-    public void generated_recommendations(int recommendations) {
+    public void increment_recommendations(int recommendations) {
         Log.v(TAG, "Recommendations generated: " + recommendations);
         current_progress.generated_recommendation_count += recommendations;
         RunRulesProgress copy = copy_current_progress();
